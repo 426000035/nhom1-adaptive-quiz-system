@@ -1,0 +1,102 @@
+/* ==========================================================================
+   Adaptive Quiz System - Responsive Media Queries (css/responsive.css)
+   ========================================================================== */
+
+/* --- Tablet / Medium Screen Breakpoints (max-width: 992px) --- */
+@media screen and (max-width: 992px) {
+  .result-summary-card {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .summary-right {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .chart-wrapper {
+    max-width: 320px;
+  }
+
+  .ai-banner {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .btn-ai-action {
+    width: 100%;
+  }
+}
+
+/* --- Mobile Screen Breakpoints (max-width: 768px) --- */
+@media screen and (max-width: 768px) {
+  .header-container {
+    padding: 0.5rem 0;
+  }
+
+  .logo-text {
+    font-size: 1.15rem;
+  }
+
+  .user-profile-badge span {
+    display: none; /* Hide fullname on mobile header to save space */
+  }
+
+  .filter-bar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .filter-controls {
+    flex-direction: column;
+  }
+
+  .quiz-status-bar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
+  }
+
+  .timer-badge {
+    align-self: flex-end;
+  }
+
+  .question-card {
+    padding: 1.25rem;
+  }
+
+  .question-title {
+    font-size: 1.1rem;
+  }
+
+  .quiz-action-bar {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .quiz-action-bar button,
+  .action-right {
+    width: 100%;
+  }
+
+  .action-right {
+    flex-direction: column;
+  }
+
+  .score-huge {
+    font-size: 2.75rem;
+  }
+}
+
+/* --- Small Mobile Screen Breakpoints (max-width: 480px) --- */
+@media screen and (max-width: 480px) {
+  .auth-box {
+    padding: 1.5rem;
+  }
+
+  .quiz-grid {
+    grid-template-columns: 1fr;
+  }
+}
