@@ -1,0 +1,55 @@
+<!-- ==========================================================================
+   Adaptive Quiz System - View 3: Student Quiz Execution Component (views/student-quiz.html)
+   Giao diện thực thi bài kiểm tra dành cho Học viên, bao gồm thanh trạng thái,
+   đồng hồ đếm ngược, thẻ nội dung câu hỏi và thanh thao tác chuyển câu.
+   ========================================================================== -->
+
+<div class="quiz-execution-container">
+  <!-- Thanh trạng thái bài thi (Thông tin đề, Số câu, Tiến trình, Đồng hồ) -->
+  <div class="quiz-status-bar">
+    <div class="quiz-info-mini">
+      <span id="current-quiz-title" class="quiz-title-text">Đề Thi Trắc Nghiệm</span>
+      <span id="question-tracker" class="tracker-text">Câu 1 / 10</span>
+    </div>
+
+    <!-- Thanh tiến trình hoàn thành bài thi -->
+    <div class="progress-container">
+      <div id="quiz-progress-bar" class="progress-bar-fill" style="width: 0%;"></div>
+    </div>
+
+    <!-- Đồng hồ đếm ngược thời gian làm bài -->
+    <div class="timer-badge">
+      <i data-lucide="clock" class="timer-icon"></i>
+      <span id="countdown-timer">15:00</span>
+    </div>
+  </div>
+
+  <!-- Thẻ hiển thị nội dung câu hỏi và các phương án lựa chọn -->
+  <div class="question-card">
+    <div class="question-header">
+      <span id="question-topic-tag" class="tag tag-topic">JavaScript</span>
+      <span id="question-type-tag" class="tag tag-type">Radio (Chọn 1)</span>
+    </div>
+    
+    <!-- Tiêu đề câu hỏi -->
+    <h3 id="question-text" class="question-title">Nội dung câu hỏi đang tải...</h3>
+
+    <!-- Container chứa danh sách đáp án -->
+    <div id="options-container" class="options-group"></div>
+  </div>
+
+  <!-- Thanh thao tác điều hướng (Câu trước, Câu tiếp, Nộp bài) -->
+  <div class="quiz-action-bar">
+    <button id="btn-prev-question" class="btn btn-outline" disabled>
+      <i data-lucide="arrow-left"></i> Câu Trước
+    </button>
+    <div class="action-right">
+      <button id="btn-next-question" class="btn btn-secondary">
+        Câu Tiếp <i data-lucide="arrow-right"></i>
+      </button>
+      <button id="btn-submit-quiz" class="btn btn-success">
+        <i data-lucide="check-circle"></i> Nộp Bài
+      </button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,55 @@
+<!-- ==========================================================================
+   Adaptive Quiz System - View 5: Admin Dashboard Layout (views/admin-dashboard.html)
+   Khung chứa giao diện Quản trị chính của Giáo viên, nhúng 5 Tab thành phần
+   từ thư mục views/admin/
+   ========================================================================== -->
+
+<div class="container">
+  <!-- Header tiêu đề trang Admin -->
+  <div class="catalog-header" style="margin-bottom: 1.5rem;">
+    <div>
+      <h2 style="display: flex; align-items: center; gap: 0.5rem; color: var(--text-main);">
+        <i data-lucide="shield-check" style="color: var(--accent-ai);"></i> Trang Quản Trị Hệ Thống (Giáo Viên)
+      </h2>
+      <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 0.25rem;">Quản lý bài thi, ngân hàng câu hỏi, tài khoản học viên, báo cáo thống kê</p>
+    </div>
+    <span class="badge badge-admin">Role: Admin</span>
+  </div>
+
+  <!-- Thanh Tab Chuyển Đổi (Admin Navigation) -->
+  <div class="admin-tabs" style="display: flex; gap: 0.75rem; margin-bottom: 1.5rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.75rem; overflow-x: auto;">
+    <button class="btn btn-primary admin-tab-btn active" data-tab="tab-quizzes">
+      <i data-lucide="book-open"></i> Quản Lý Bài Thi
+    </button>
+    <button class="btn btn-outline admin-tab-btn" data-tab="tab-question-bank">
+      <i data-lucide="database"></i> Ngân Hàng Câu Hỏi
+    </button>
+    <button class="btn btn-outline admin-tab-btn" data-tab="tab-users">
+      <i data-lucide="users"></i> Quản Lý Học Viên
+    </button>
+    <button class="btn btn-outline admin-tab-btn" data-tab="tab-reports">
+      <i data-lucide="bar-chart-3"></i> Báo Cáo & Thống Kê
+    </button>
+    <button class="btn btn-outline admin-tab-btn" data-tab="tab-tools">
+      <i data-lucide="folder-output"></i> Nhập / Xuất & Trộn Đề
+    </button>
+  </div>
+
+  <!-- CONTAINER NHÚNG 5 TAB THÀNH PHẦN -->
+  <div id="admin-tab-container">
+    <!-- Tab 1: Quản lý bài thi & Cài đặt (Nạp từ views/admin/tab-quizzes.html) -->
+    <div id="holder-tab-quizzes"></div>
+
+    <!-- Tab 2: Ngân hàng câu hỏi (Nạp từ views/admin/tab-bank.html) -->
+    <div id="holder-tab-bank"></div>
+
+    <!-- Tab 3: Quản lý học viên (Nạp từ views/admin/tab-users.html) -->
+    <div id="holder-tab-users"></div>
+
+    <!-- Tab 4: Báo cáo & Thống kê (Nạp từ views/admin/tab-reports.html) -->
+    <div id="holder-tab-reports"></div>
+
+    <!-- Tab 5: Nhập / Xuất & Trộn đề (Nạp từ views/admin/tab-tools.html) -->
+    <div id="holder-tab-tools"></div>
+  </div>
+</div>

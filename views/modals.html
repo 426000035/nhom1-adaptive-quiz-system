@@ -1,0 +1,220 @@
+<!-- ==========================================================================
+   Adaptive Quiz System - Modals & Overlays Component (views/modals.html)
+   ========================================================================== -->
+
+<!-- DANH SÁCH 6: CÂU HỎI TRONG BÀI THI (MODAL 1) -->
+<div id="modal-manage-questions" class="modal-overlay hidden">
+  <div class="modal-card" style="max-width: 950px; width: 90%; text-align: left; max-height: 85vh; display: flex; flex-direction: column;">
+    <!-- Modal Header -->
+    <div style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 1rem; border-bottom: 1px solid var(--border-color);">
+      <div>
+        <h3 style="display: flex; align-items: center; gap: 0.5rem; color: var(--accent-ai); font-size: 1.2rem;">
+          <i data-lucide="list-checks"></i> Quản Lý Câu Hỏi: <span id="selected-quiz-title-display" style="color: var(--text-main);">...</span>
+        </h3>
+        <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.25rem;">Mã bài thi: <code id="selected-quiz-id-display">---</code></p>
+      </div>
+      <button id="btn-close-questions-modal" class="btn btn-outline" style="padding: 0.35rem 0.65rem;">
+        <i data-lucide="x"></i> Đóng
+      </button>
+    </div>
+
+    <!-- Action Buttons -->
+    <div style="display: flex; justify-content: flex-end; gap: 0.75rem; margin: 1rem 0;">
+      <button id="btn-admin-import-from-bank" class="btn btn-outline" style="color: var(--accent-ai);">
+        <i data-lucide="database"></i> Chọn Từ Ngân Hàng
+      </button>
+      <button id="btn-admin-add-q-to-quiz" class="btn btn-secondary">
+        <i data-lucide="plus"></i> Thêm Câu Hỏi Mới
+      </button>
+    </div>
+
+    <!-- Control Bar lọc câu hỏi trong bài thi -->
+    <div style="display: flex; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 1rem;">
+      <input type="text" id="search-quiz-questions" class="select-control" style="flex: 2; min-width: 180px;" placeholder="Tìm nội dung câu hỏi...">
+      <select id="sort-quiz-questions" class="select-control" style="flex: 1; min-width: 130px;">
+        <option value="TITLE_ASC">Câu hỏi (A - Z)</option>
+        <option value="TITLE_DESC">Câu hỏi (Z - A)</option>
+      </select>
+      <select id="pagesize-quiz-questions" class="select-control" style="width: 110px;">
+        <option value="10">10 / trang</option>
+        <option value="20">20 / trang</option>
+        <option value="50">50 / trang</option>
+        <option value="ALL">Hiện tất cả</option>
+      </select>
+    </div>
+
+    <!-- Bảng danh sách câu hỏi trong bài thi -->
+    <div style="overflow-y: auto; flex: 1;">
+      <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.875rem;">
+        <thead>
+          <tr style="border-bottom: 2px solid var(--border-color); color: var(--primary); position: sticky; top: 0; background: var(--bg-card);">
+            <th style="padding: 0.75rem;">STT</th>
+            <th style="padding: 0.75rem;">Mã Câu</th>
+            <th style="padding: 0.75rem;">Nội Dung Câu Hỏi</th>
+            <th style="padding: 0.75rem;">Đáp Án Đúng</th>
+            <th style="padding: 0.75rem; text-align: center;">Thao Tác</th>
+          </tr>
+        </thead>
+        <tbody id="admin-quiz-questions-tbody"></tbody>
+      </table>
+    </div>
+
+    <!-- Phân trang -->
+    <div id="pagination-quiz-questions" class="pagination-wrapper" style="display: flex; justify-content: center; gap: 0.5rem; margin-top: 1rem;"></div>
+  </div>
+</div>
+
+<!-- DANH SÁCH 7: CHỌN CÂU HỎI TỪ NGÂN HÀNG (MODAL 2) -->
+<div id="modal-select-from-bank" class="modal-overlay hidden" style="z-index: 1060;">
+  <div class="modal-card" style="max-width: 850px; width: 90%; text-align: left; max-height: 80vh; display: flex; flex-direction: column;">
+    <h3 style="margin-bottom: 1rem; color: var(--primary); display: flex; align-items: center; gap: 0.5rem;">
+      <i data-lucide="database"></i> Chọn Câu Hỏi Từ Ngân Hàng Có Sẵn
+    </h3>
+
+    <!-- Control Bar -->
+    <div style="display: flex; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 1rem;">
+      <input type="text" id="search-modal-bank" class="select-control" style="flex: 2; min-width: 180px;" placeholder="Tìm câu hỏi...">
+      <select id="sort-modal-bank" class="select-control" style="flex: 1; min-width: 130px;">
+        <option value="TITLE_ASC">Câu hỏi (A - Z)</option>
+        <option value="TITLE_DESC">Câu hỏi (Z - A)</option>
+      </select>
+      <select id="pagesize-modal-bank" class="select-control" style="width: 110px;">
+        <option value="10">10 / trang</option>
+        <option value="20">20 / trang</option>
+        <option value="50">50 / trang</option>
+        <option value="ALL">Hiện tất cả</option>
+      </select>
+    </div>
+
+    <!-- Bảng chọn câu hỏi -->
+    <div style="overflow-y: auto; flex: 1; margin-bottom: 1rem;">
+      <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.875rem;">
+        <thead>
+          <tr style="border-bottom: 2px solid var(--border-color); color: var(--primary);">
+            <th style="padding: 0.75rem; text-align: center;"><input type="checkbox" id="chk-select-all-bank"></th>
+            <th style="padding: 0.75rem;">Mã Câu</th>
+            <th style="padding: 0.75rem;">Nội Dung Câu Hỏi</th>
+            <th style="padding: 0.75rem;">Chủ Đề</th>
+          </tr>
+        </thead>
+        <tbody id="bank-questions-select-tbody"></tbody>
+      </table>
+    </div>
+
+    <div id="pagination-modal-bank" class="pagination-wrapper" style="display: flex; justify-content: center; gap: 0.5rem; margin-bottom: 1rem;"></div>
+
+    <div style="display: flex; justify-content: flex-end; gap: 0.75rem;">
+      <button type="button" id="btn-cancel-bank-select" class="btn btn-outline">Hủy</button>
+      <button type="button" id="btn-confirm-bank-select" class="btn btn-primary">Thêm Các Câu Đã Chọn</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL TẠO / SỬA BÀI THI -->
+<div id="modal-quiz-form" class="modal-overlay hidden">
+  <div class="modal-card" style="max-width: 500px; text-align: left;">
+    <h3 id="modal-quiz-title" style="margin-bottom: 1rem; color: var(--primary);">Tạo Bài Thi Mới</h3>
+    <form id="form-manage-quiz">
+      <input type="hidden" id="quiz-form-id" value="">
+      <div class="form-group">
+        <label>Tên Bài Thi / Đề Thi</label>
+        <input type="text" id="quiz-form-title-input" class="select-control" style="width: 100%;" placeholder="Nhập tên bài thi..." required>
+      </div>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+        <div class="form-group">
+          <label>Chủ Đề</label>
+          <select id="quiz-form-topic-select" class="select-control" style="width: 100%;" required></select>
+        </div>
+        <div class="form-group">
+          <label>Độ Khó</label>
+          <select id="quiz-form-diff-select" class="select-control" style="width: 100%;" required></select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Thời Gian Làm Bài (Phút)</label>
+        <input type="number" id="quiz-form-time-input" class="select-control" style="width: 100%;" value="10" min="1" max="180" required>
+      </div>
+      <div style="display: flex; justify-content: flex-end; gap: 0.75rem; margin-top: 1.5rem;">
+        <button type="button" id="btn-cancel-quiz-form" class="btn btn-outline">Hủy</button>
+        <button type="submit" class="btn btn-primary">Lưu Bài Thi</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- MODAL FORM THÊM / SỬA CÂU HỎI (ĐÃ CẬP NHẬT ĐỦ THUỘC TÍNH CHỦ ĐỀ & ĐỘ KHÓ) -->
+<div id="modal-question-form" class="modal-overlay hidden" style="z-index: 1070;">
+  <div class="modal-card" style="max-width: 600px; text-align: left;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+      <h3 id="modal-question-title" style="color: var(--primary);">Thêm Câu Hỏi Mới</h3>
+      <button type="button" id="btn-close-q-modal" class="btn btn-outline" style="padding: 0.25rem 0.5rem;">✕</button>
+    </div>
+
+    <form id="form-manage-question">
+      <input type="hidden" id="q-form-id" value="">
+
+      <!-- Hàng Lựa Chọn Chủ Đề & Độ Khó -->
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+        <div class="form-group">
+          <label style="display: block; font-weight: 600; margin-bottom: 0.35rem;">Chủ Đề</label>
+          <select id="q-form-topic" class="select-control" style="width: 100%;" required>
+            <option value="Lập trình Web">Lập trình Web</option>
+            <option value="Cơ sở dữ liệu">Cơ sở dữ liệu</option>
+            <option value="Mạng máy tính">Mạng máy tính</option>
+            <option value="Toán rời rạc">Toán rời rạc</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label style="display: block; font-weight: 600; margin-bottom: 0.35rem;">Độ Khó</label>
+          <select id="q-form-difficulty" class="select-control" style="width: 100%;" required>
+            <option value="Easy">Dễ (Easy)</option>
+            <option value="Medium">Trung bình (Medium)</option>
+            <option value="Hard">Khó (Hard)</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label style="display: block; font-weight: 600; margin-bottom: 0.35rem;">Nội Dung Câu Hỏi</label>
+        <textarea id="q-form-text" class="select-control" style="width: 100%; min-height: 70px;" placeholder="Nhập nội dung câu hỏi..." required></textarea>
+      </div>
+
+      <div class="form-group">
+        <label style="display: block; font-weight: 600; margin-bottom: 0.35rem;">4 Phương Án Trả Lời (A, B, C, D)</label>
+        <input type="text" id="q-form-opt0" class="select-control" style="width: 100%; margin-bottom: 0.35rem;" placeholder="Đáp án A" required>
+        <input type="text" id="q-form-opt1" class="select-control" style="width: 100%; margin-bottom: 0.35rem;" placeholder="Đáp án B" required>
+        <input type="text" id="q-form-opt2" class="select-control" style="width: 100%; margin-bottom: 0.35rem;" placeholder="Đáp án C" required>
+        <input type="text" id="q-form-opt3" class="select-control" style="width: 100%;" placeholder="Đáp án D" required>
+      </div>
+
+      <div class="form-group">
+        <label style="display: block; font-weight: 600; margin-bottom: 0.35rem;">Đáp Án Đúng</label>
+        <select id="q-form-correct" class="select-control" style="width: 100%;" required>
+          <option value="0">Đáp án A</option>
+          <option value="1">Đáp án B</option>
+          <option value="2">Đáp án C</option>
+          <option value="3">Đáp án D</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label style="display: block; font-weight: 600; margin-bottom: 0.35rem;">Lời Giải Thích Chi Tiết</label>
+        <input type="text" id="q-form-explanation" class="select-control" style="width: 100%;" placeholder="Nhập lời giải thích...">
+      </div>
+
+      <div style="display: flex; justify-content: flex-end; gap: 0.75rem; margin-top: 1.5rem;">
+        <button type="button" id="btn-cancel-q-form" class="btn btn-outline">Hủy</button>
+        <button type="submit" class="btn btn-primary">Lưu Câu Hỏi</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- AI LOADING MODAL -->
+<div id="ai-loading-modal" class="modal-overlay hidden">
+  <div class="modal-card">
+    <div class="spinner-pulse"></div>
+    <h3>Gemini AI Đang Xử Lý...</h3>
+    <p>Hệ thống đang phân tích các câu làm sai và khởi tạo bài kiểm tra bổ trợ thích ứng cho bạn.</p>
+  </div>
+</div>

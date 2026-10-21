@@ -1,0 +1,55 @@
+<!-- ==========================================================================
+   Adaptive Quiz System - View 4: Student Result Component (views/student-result.html)
+   Giao diện hiển thị tổng quan kết quả bài làm, thẻ điểm số, biểu đồ phân tích
+   kỹ năng, gợi ý luyện tập câu sai từ AI và danh sách xem lại chi tiết.
+   ========================================================================== -->
+
+<div class="container">
+  <!-- Thẻ tổng quan kết quả (Thẻ điểm số & Biểu đồ kỹ năng) -->
+  <div class="result-summary-card">
+    <!-- Cột bên trái: Điểm số & Nhận xét -->
+    <div class="summary-left">
+      <h2 class="result-title">Kết Quả Bài Kiểm Tra</h2>
+      <p id="result-quiz-name">Chủ đề: JavaScript Cơ Bản</p>
+      
+      <!-- Hiển thị điểm số lớn -->
+      <div class="score-display">
+        <span id="result-score-number" class="score-huge">8.0</span>
+        <span class="score-total">/ 10</span>
+      </div>
+      
+      <!-- Thông điệp phản hồi từ hệ thống -->
+      <p id="result-feedback-msg" class="feedback-text">Thật tuyệt vời! Bạn đã nắm chắc kiến thức cơ bản.</p>
+    </div>
+
+    <!-- Cột bên phải: Biểu đồ phân tích kỹ năng -->
+    <div class="summary-right">
+      <h4><i data-lucide="pie-chart"></i> Phân Tích Kỹ Năng</h4>
+      <div class="chart-wrapper">
+        <canvas id="skills-chart"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- Banner kích hoạt tính năng Luyện tập câu sai cùng Gemini AI -->
+  <div class="ai-banner">
+    <div class="ai-banner-content">
+      <h3><i data-lucide="sparkles" class="ai-sparkle-icon"></i> Củng Cố Lỗ Hổng Kiến Thức Với AI</h3>
+      <p>Hệ thống tự động phân tích câu sai và tạo riêng cho bạn bài luyện tập mới nhờ Google Gemini AI.</p>
+    </div>
+    <button id="btn-trigger-ai" class="btn btn-ai-action">✨ Luyện tập câu sai với AI</button>
+  </div>
+
+  <!-- Khu vực xem lại danh sách các câu làm sai -->
+  <div class="review-section">
+    <h3><i data-lucide="file-text"></i> Xem Lại Chi Tiết Các Câu Sai</h3>
+    <div id="wrong-questions-container" class="review-list"></div>
+  </div>
+
+  <!-- Nút điều hướng quay về Danh sách bài kiểm tra -->
+  <div class="result-footer-actions">
+    <button id="btn-return-catalog" class="btn btn-outline">
+      <i data-lucide="home"></i> Quay Lại Danh Sách Đề Thi
+    </button>
+  </div>
+</div>
