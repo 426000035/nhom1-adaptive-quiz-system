@@ -1,0 +1,53 @@
+<!-- ==========================================================================
+   Adaptive Quiz System - View 2: Student Catalog Component (views/student-catalog.html)
+   Giao diện danh sách bài kiểm tra dành cho Học viên, tích hợp bộ lọc, tìm kiếm,
+   sắp xếp và phân trang.
+   ========================================================================== -->
+
+<div class="container">
+  <!-- Thanh công cụ tìm kiếm và lọc dữ liệu (Control Bar) -->
+  <div class="filter-bar" style="display: flex; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 1.5rem;">
+    <!-- Ô tìm kiếm bài kiểm tra theo tiêu đề -->
+    <div class="search-box" style="flex: 2; min-width: 200px;">
+      <i data-lucide="search" class="search-icon"></i>
+      <input type="text" id="input-search-quiz" placeholder="Tìm kiếm bài kiểm tra...">
+    </div>
+
+    <!-- Bộ lọc theo Chủ đề -->
+    <select id="filter-topic" class="select-control" style="flex: 1; min-width: 130px;">
+      <option value="ALL">Tất cả Chủ đề</option>
+    </select>
+
+    <!-- Bộ lọc theo Độ khó -->
+    <select id="filter-difficulty" class="select-control" style="flex: 1; min-width: 120px;">
+      <option value="ALL">Tất cả Độ khó</option>
+    </select>
+
+    <!-- Tùy chọn Sắp xếp danh sách -->
+    <select id="sort-quiz-catalog" class="select-control" style="flex: 1; min-width: 140px;">
+      <option value="DEFAULT">Sắp xếp: Mặc định</option>
+      <option value="TITLE_ASC">Tiêu đề (A - Z)</option>
+      <option value="TITLE_DESC">Tiêu đề (Z - A)</option>
+    </select>
+
+    <!-- Chọn số lượng bài thi hiển thị trên 1 trang -->
+    <select id="pagesize-quiz-catalog" class="select-control" style="width: 110px;">
+      <option value="10">10 / trang</option>
+      <option value="20">20 / trang</option>
+      <option value="50">50 / trang</option>
+      <option value="ALL">Hiện tất cả</option>
+    </select>
+  </div>
+
+  <!-- Tiêu đề mục và Thẻ đếm tổng số bài thi -->
+  <div class="catalog-header">
+    <h3><i data-lucide="book-open"></i> Danh Sách Bài Kiểm Tra</h3>
+    <span id="quiz-count-badge" class="count-badge">0 đề thi</span>
+  </div>
+
+  <!-- Container chứa danh sách các thẻ bài thi (Grid Layout) -->
+  <div id="quiz-grid-container" class="quiz-grid"></div>
+
+  <!-- Thanh phân trang (Pagination) -->
+  <div id="pagination-quiz-catalog" class="pagination-wrapper" style="display: flex; justify-content: center; gap: 0.5rem; margin-top: 1.5rem;"></div>
+</div>

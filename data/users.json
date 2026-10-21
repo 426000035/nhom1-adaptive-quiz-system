@@ -1,7 +1,7 @@
 [
   {
     "id": "usr_01",
-    "username": "student",
+    "username": "student1",
     "password": "123",
     "fullName": "Phan Thị Ngọc Duyên",
     "role": "student",
@@ -10,7 +10,7 @@
   {
     "id": "usr_02",
     "username": "admin",
-    "password": "123",
+    "password": "adminpassword",
     "fullName": "Giáo viên Quản trị",
     "role": "admin"
   }

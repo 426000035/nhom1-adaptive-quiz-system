@@ -1,0 +1,58 @@
+<!-- ==========================================================================
+   Adaptive Quiz System - Admin Tab 5: Import/Export & Random Quiz Tools (views/admin/tab-tools.html)
+   Giao diện hỗ trợ xuất/nhập dữ liệu câu hỏi từ file JSON và công cụ trộn đề tự động.
+   ========================================================================== -->
+
+<div id="tab-tools" class="admin-tab-content hidden">
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem;">
+    <!-- Khung Nhập / Xuất File Đề Thi (JSON) -->
+    <div class="question-card">
+      <h4 style="display: flex; align-items: center; gap: 0.5rem; color: var(--primary); margin-bottom: 1rem;">
+        <i data-lucide="file-up"></i> Nhập / Xuất File Đề Thi (JSON)
+      </h4>
+      <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem;">Tải về bản sao lưu toàn bộ ngân hàng câu hỏi hoặc nhập đề thi từ file JSON có sẵn.</p>
+      
+      <!-- Nút Xuất và Nhập File -->
+      <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+        <button id="btn-export-json" class="btn btn-outline" style="flex: 1;">
+          <i data-lucide="download"></i> Xuất File JSON
+        </button>
+        <label class="btn btn-secondary" style="flex: 1; text-align: center; cursor: pointer; margin: 0;">
+          <i data-lucide="upload"></i> Nhập File JSON
+          <input type="file" id="input-import-json" accept=".json" style="display: none;">
+        </label>
+      </div>
+    </div>
+
+    <!-- Khung Trộn Đề Tự Động Từ Ngân Hàng -->
+    <div class="question-card">
+      <h4 style="display: flex; align-items: center; gap: 0.5rem; color: var(--accent-ai); margin-bottom: 1rem;">
+        <i data-lucide="shuffle"></i> Trộn Đề Tự Động Từ Ngân Hàng
+      </h4>
+      <form id="form-random-quiz">
+        <!-- Chọn Chủ Đề -->
+        <div class="form-group" style="margin-bottom: 0.75rem;">
+          <label style="font-size: 0.8rem;">Chọn Chủ Đề</label>
+          <select id="random-topic-select" class="select-control" style="width: 100%; font-size: 0.85rem;"></select>
+        </div>
+
+        <!-- Nhập Số Câu Hỏi & Thời Gian -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
+          <div class="form-group" style="margin-bottom: 0.75rem;">
+            <label style="font-size: 0.8rem;">Số Câu Hỏi</label>
+            <input type="number" id="random-count-input" class="select-control" style="width: 100%; font-size: 0.85rem;" value="5" min="1" max="50">
+          </div>
+          <div class="form-group" style="margin-bottom: 0.75rem;">
+            <label style="font-size: 0.8rem;">Thời Gian (Phút)</label>
+            <input type="number" id="random-time-input" class="select-control" style="width: 100%; font-size: 0.85rem;" value="10" min="1" max="180">
+          </div>
+        </div>
+
+        <!-- Nút Kích Hoạt Trộn Đề -->
+        <button type="submit" class="btn btn-primary btn-block" style="margin-top: 0.5rem;">
+          ✨ Tạo Bài Thi Ngẫu Nhiên
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
