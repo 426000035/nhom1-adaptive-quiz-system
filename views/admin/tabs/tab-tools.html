@@ -1,0 +1,59 @@
+<!-- ==========================================================================
+   Adaptive Quiz System - Admin Tab 5: Import/Export & Random Quiz Tools (views/admin/tabs/tab-tools.html)
+   Giao diện hỗ trợ xuất/nhập dữ liệu câu hỏi từ file JSON và công cụ trộn đề tự động.
+   ========================================================================== -->
+
+<div id="tab-tools" class="admin-tab-content hidden" role="tabpanel" aria-labelledby="admin-tab-tools" aria-hidden="true" tabindex="0">
+  <div class="admin-tools-grid">
+    <!-- Khung Trộn Đề Tự Động Từ Ngân Hàng -->
+    <div class="question-card admin-random-quiz-card">
+      <h4 class="admin-card-heading">
+        <i data-lucide="shuffle"></i> Trộn Đề Tự Động Từ Ngân Hàng
+      </h4>
+      <form id="form-random-quiz" class="admin-random-quiz-form">
+        <div class="form-group">
+          <label for="random-subject-select" class="admin-tool-label">Môn học</label>
+          <select id="random-subject-select" class="select-control admin-tool-control admin-form-control--full" required></select>
+        </div>
+        <div class="form-group">
+          <label for="random-title-input" class="admin-tool-label">Tên đề thi</label>
+          <input id="random-title-input" class="select-control admin-tool-control admin-form-control--full" type="text" placeholder="Để trống sẽ tự đặt tên">
+        </div>
+        <div class="form-group">
+          <label for="random-time-input" class="admin-tool-label">Thời Gian (Phút)</label>
+          <input type="number" id="random-time-input" class="select-control admin-tool-control admin-form-control--full" value="10" min="1" max="180">
+        </div>
+
+        <fieldset class="form-group admin-skill-allocation-fieldset">
+          <legend class="admin-tool-label">Số câu theo kỹ năng</legend>
+          <p class="admin-tool-help">Chỉ lấy câu đang hoạt động trong ngân hàng. Đặt 0 nếu không lấy câu của kỹ năng đó.</p>
+          <div id="random-skill-allocation-list" class="admin-skill-allocation-list"></div>
+        </fieldset>
+
+        <button type="submit" class="btn btn-primary btn-block admin-random-quiz-submit">
+          ✨ Tạo Đề Theo Kỹ Năng
+        </button>
+      </form>
+    </div>
+
+    <!-- Khung Nhập / Xuất File Đề Thi (JSON) -->
+    <div class="question-card admin-import-export-card">
+      <h4 class="admin-card-heading">
+        <i data-lucide="file-up"></i> Nhập / Xuất File Đề Thi (JSON)
+      </h4>
+      <p class="admin-tool-description">Tải về bản sao lưu toàn bộ ngân hàng câu hỏi hoặc nhập đề thi từ file JSON có sẵn.</p>
+
+      <div class="admin-tool-actions">
+        <button id="btn-export-json" class="btn btn-outline">
+          <i data-lucide="download"></i> Xuất File JSON
+        </button>
+        <input type="file" id="input-import-json" class="admin-file-input" accept=".json" aria-label="Chọn tệp JSON để nhập">
+        <label class="btn btn-secondary admin-file-input-label" for="input-import-json">
+          <i data-lucide="upload"></i> Nhập File JSON
+        </label>
+      </div>
+      <p class="admin-import-note">Cách nhập đề hàng loạt khác đang được phát triển và sẽ được cập nhật ở các phiên bản sau.</p>
+      <p id="admin-import-status" class="admin-operation-status" role="status" aria-live="polite"></p>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,61 @@
+<!-- ==========================================================================
+   Adaptive Quiz System - View 4: Student Result Component (views/student/result.html)
+   Giao diện hiển thị tổng quan kết quả bài làm, thẻ điểm số, biểu đồ phân tích
+   kỹ năng, gợi ý luyện tập câu sai từ AI và danh sách xem lại chi tiết.
+   ========================================================================== -->
+
+<section class="container result-page" aria-label="Kết quả bài kiểm tra">
+  <!-- Thẻ tổng quan kết quả (Thẻ điểm số & Biểu đồ theo môn) -->
+  <section class="result-summary-card" aria-labelledby="result-page-title">
+    <!-- Cột bên trái: Điểm số & Nhận xét -->
+    <div class="summary-left">
+      <h1 id="result-page-title" class="result-title">Kết quả bài kiểm tra</h1>
+      <p id="result-quiz-name">Chủ đề: JavaScript Cơ Bản</p>
+      
+      <!-- Hiển thị điểm số lớn -->
+      <p class="score-display" aria-label="Điểm số" aria-live="polite">
+        <span id="result-score-number" class="score-huge">8.0</span>
+        <span class="score-total">/ 10</span>
+      </p>
+      
+    </div>
+
+    <!-- Cột bên phải: Biểu đồ phân tích môn học -->
+    <section class="summary-right" aria-labelledby="skills-chart-title">
+      <h2 id="skills-chart-title"><i data-lucide="pie-chart" aria-hidden="true"></i> Tỷ lệ câu đúng</h2>
+      <div class="chart-wrapper">
+        <canvas id="skills-chart" role="img" aria-label="Biểu đồ kết quả theo môn học"></canvas>
+      </div>
+      <div id="skills-chart-legend" class="chart-subject-legend" aria-label="Tỷ lệ chính xác theo từng môn"></div>
+    </section>
+  </section>
+
+  <section class="skill-analysis-section" aria-labelledby="skill-analysis-title">
+    <div>
+      <h2 id="skill-analysis-title"><i data-lucide="chart-no-axes-column-increasing" aria-hidden="true"></i> Kết quả theo kỹ năng</h2>
+      <p class="skill-analysis-hint">Kỹ năng có tỷ lệ đúng dưới 60% được gợi ý là cần củng cố.</p>
+    </div>
+    <div id="result-skill-analysis" class="skill-analysis-list" aria-live="polite"></div>
+  </section>
+
+  <!-- Banner kích hoạt tính năng Luyện tập câu sai cùng Gemini AI -->
+  <section class="ai-banner" aria-labelledby="ai-banner-title">
+    <div class="ai-banner-content">
+      <h2 id="ai-banner-title"><i data-lucide="sparkles" class="ai-sparkle-icon" aria-hidden="true"></i> Củng cố lỗ hổng kiến thức với AI</h2>
+    </div>
+    <button id="btn-trigger-ai" class="btn btn-ai-action" type="button">✨ Luyện tập câu sai với AI</button>
+  </section>
+
+  <!-- Khu vực xem lại đầy đủ câu đúng và sai -->
+  <section class="review-section" aria-labelledby="review-section-title">
+    <h2 id="review-section-title"><i data-lucide="file-text" aria-hidden="true"></i> <span id="review-section-label">Xem lại chi tiết các câu sai</span></h2>
+    <div id="wrong-questions-container" class="review-list" aria-live="polite"></div>
+  </section>
+
+  <!-- Nút điều hướng quay về Danh sách bài kiểm tra -->
+  <nav class="result-footer-actions" aria-label="Điều hướng kết quả">
+    <button id="btn-return-catalog" class="btn btn-outline" type="button">
+      <i data-lucide="home" aria-hidden="true"></i> <span id="result-return-label">Quay Lại Danh Sách Đề Thi</span>
+    </button>
+  </nav>
+</section>

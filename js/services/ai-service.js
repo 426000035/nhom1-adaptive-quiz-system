@@ -1,5 +1,5 @@
 /* ==========================================================================
-   Adaptive Quiz System - Gemini AI Remediation Service (js/ai-service.js)
+   Adaptive Quiz System - Gemini AI Remediation Service (js/services/ai-service.js)
    ========================================================================== */
 
 // Khai báo API Key lấy từ Google AI Studio (aistudio.google.com)

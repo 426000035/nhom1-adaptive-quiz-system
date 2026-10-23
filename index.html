@@ -4,329 +4,108 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Adaptive Quiz System - Hệ thống Luyện tập & Kiểm tra Thích ứng</title>
+  <meta name="description" content="Adaptive Quiz System giúp học viên luyện tập, kiểm tra kiến thức và theo dõi tiến độ học tập.">
+  <meta name="robots" content="noindex, nofollow">
   
-  <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
   
-  <!-- Prism.js CSS (Syntax Highlighting for Code Questions) -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
-  
   <!-- SweetAlert2 CSS -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
   
-  <!-- Custom Stylesheets -->
   <link rel="stylesheet" href="css/main.css">
   <link rel="stylesheet" href="css/components.css">
   <link rel="stylesheet" href="css/responsive.css">
 </head>
 <body class="dark-theme">
 
-  <!-- ==========================================
-       HEADER & NAVIGATION BAR
-  =========================================== -->
+  <a class="skip-link" href="#app-main">Bỏ qua điều hướng, đến nội dung chính</a>
+
+  <!-- HEADER HỆ THỐNG -->
   <header class="app-header">
     <div class="header-container">
-      <div class="logo-area" id="brand-logo">
-        <i data-lucide="brain-circuit" class="logo-icon"></i>
-        <span class="logo-text">Adaptive<span class="highlight">Quiz</span></span>
+      <div class="header-brand">
+        <button id="mobile-menu-toggle" class="mobile-menu-toggle" type="button" aria-label="Mở menu module" aria-controls="admin-tabs student-tabs-nav" aria-expanded="false" hidden>
+          <i data-lucide="menu" aria-hidden="true"></i>
+        </button>
+        <a class="logo-area" id="brand-logo" href="#home" aria-label="Về trang chủ AdaptiveQuiz" title="Về trang chủ">
+          <i data-lucide="brain-circuit" class="logo-icon" aria-hidden="true"></i>
+          <span class="logo-text">Adaptive<span class="highlight">Quiz</span></span>
+        </a>
       </div>
 
-      <nav class="user-nav">
-        <!-- Khi chưa đăng nhập -->
-        <div id="nav-guest" class="nav-group">
-          <button class="btn btn-outline" id="btn-nav-login">Đăng nhập</button>
-          <button class="btn btn-primary" id="btn-nav-register">Đăng ký</button>
+      <nav class="user-nav" aria-label="Điều hướng tài khoản và giao diện">
+        <div class="theme-picker">
+          <button type="button" id="theme-toggle" class="btn btn-outline theme-toggle" aria-label="Bật chế độ tối" aria-pressed="false" title="Dark mode">
+            <i data-lucide="moon" class="theme-toggle-icon theme-toggle-icon--moon" aria-hidden="true"></i>
+            <i data-lucide="sun" class="theme-toggle-icon theme-toggle-icon--sun" aria-hidden="true"></i>
+            <span id="theme-toggle-label">Dark mode</span>
+          </button>
         </div>
 
-        <!-- Khi đã đăng nhập -->
+        <div id="nav-guest" class="nav-group">
+          <button class="btn btn-outline" id="btn-nav-login">Đăng nhập</button>
+        </div>
+
         <div id="nav-user" class="nav-group hidden">
           <div class="user-profile-badge">
-            <i data-lucide="user" class="avatar-icon"></i>
+            <i data-lucide="user" class="avatar-icon" aria-hidden="true"></i>
             <span id="user-fullname">Học viên</span>
             <span id="user-role-badge" class="badge badge-student">Student</span>
           </div>
-          <button class="btn btn-icon-only" id="btn-logout" title="Đăng xuất">
-            <i data-lucide="log-out"></i>
+          <button class="btn btn-icon-only" id="btn-logout" type="button" aria-label="Đăng xuất">
+            <i data-lucide="log-out" aria-hidden="true"></i>
           </button>
         </div>
       </nav>
     </div>
   </header>
+  <button id="mobile-menu-backdrop" class="mobile-menu-backdrop" type="button" aria-label="Đóng menu module" hidden></button>
 
-  <!-- ==========================================
-       MAIN APP CONTAINER (SPA VIEW ROUTING)
-  =========================================== -->
-  <main class="app-main">
-
-    <!-- ----------------------------------------
-         VIEW 1: AUTHENTICATION (LOGIN / REGISTER)
-    ----------------------------------------- -->
-    <section id="view-auth" class="view-section">
-      <div class="auth-card-container">
-        
-        <!-- Form Đăng Nhập -->
-        <div id="form-login-box" class="auth-box">
-          <div class="auth-header">
-            <h2>Đăng Nhập</h2>
-            <p>Chào mừng bạn quay trở lại với Hệ thống Kiểm tra Thích ứng</p>
-          </div>
-          <form id="form-login" class="auth-form">
-            <div class="form-group">
-              <label for="login-username">Tên đăng nhập</label>
-              <div class="input-icon-wrapper">
-                <i data-lucide="user" class="input-icon"></i>
-                <input type="text" id="login-username" placeholder="Nhập username" required>
-              </div>
-            </div>
-            <div class="form-group">
-              <label for="login-password">Mật khẩu</label>
-              <div class="input-icon-wrapper">
-                <i data-lucide="lock" class="input-icon"></i>
-                <input type="password" id="login-password" placeholder="Nhập mật khẩu" required>
-              </div>
-            </div>
-            <button type="submit" class="btn btn-primary btn-block">Đăng Nhập</button>
-          </form>
-          <div class="auth-footer">
-            <p>Chưa có tài khoản? <a href="#" id="link-to-register">Đăng ký ngay</a></p>
-          </div>
-        </div>
-
-        <!-- Form Đăng Ký -->
-        <div id="form-register-box" class="auth-box hidden">
-          <div class="auth-header">
-            <h2>Tạo Tài Khoản</h2>
-            <p>Bắt đầu hành trình củng cố kiến thức cùng AI</p>
-          </div>
-          <form id="form-register" class="auth-form">
-            <div class="form-group">
-              <label for="reg-fullname">Họ và tên</label>
-              <div class="input-icon-wrapper">
-                <i data-lucide="smile" class="input-icon"></i>
-                <input type="text" id="reg-fullname" placeholder="Nhập họ và tên" required>
-              </div>
-            </div>
-            <div class="form-group">
-              <label for="reg-username">Tên đăng nhập</label>
-              <div class="input-icon-wrapper">
-                <i data-lucide="user" class="input-icon"></i>
-                <input type="text" id="reg-username" placeholder="Tạo username" required>
-              </div>
-            </div>
-            <div class="form-group">
-              <label for="reg-password">Mật khẩu</label>
-              <div class="input-icon-wrapper">
-                <i data-lucide="lock" class="input-icon"></i>
-                <input type="password" id="reg-password" placeholder="Tạo mật khẩu" required>
-              </div>
-            </div>
-            <button type="submit" class="btn btn-primary btn-block">Tạo Tài Khoản</button>
-          </form>
-          <div class="auth-footer">
-            <p>Đã có tài khoản? <a href="#" id="link-to-login">Đăng nhập</a></p>
-          </div>
-        </div>
-
-      </div>
-    </section>
-
-    <!-- ----------------------------------------
-         VIEW 2: TEST CATALOG / LIST VIEW
-    ----------------------------------------- -->
-    <section id="view-list" class="view-section hidden">
-      <div class="container">
-        
-        <!-- Filter Control Bar -->
-        <div class="filter-bar">
-          <div class="search-box">
-            <i data-lucide="search" class="search-icon"></i>
-            <input type="text" id="input-search-quiz" placeholder="Tìm kiếm bài kiểm tra...">
-          </div>
-          <div class="filter-controls">
-            <select id="filter-topic" class="select-control">
-              <option value="ALL">Tất cả Chủ đề</option>
-              <option value="HTML5">HTML5</option>
-              <option value="CSS3">CSS3</option>
-              <option value="JavaScript">JavaScript</option>
-            </select>
-            <select id="filter-difficulty" class="select-control">
-              <option value="ALL">Tất cả Độ khó</option>
-              <option value="Easy">Dễ (Easy)</option>
-              <option value="Medium">Trung bình (Medium)</option>
-              <option value="Hard">Khó (Hard)</option>
-            </select>
-          </div>
-        </div>
-
-        <!-- Catalog Grid -->
-        <div class="catalog-header">
-          <h3><i data-lucide="book-open"></i> Danh Sách Bài Kiểm Tra</h3>
-          <span id="quiz-count-badge" class="count-badge">0 đề thi</span>
-        </div>
-
-        <div id="quiz-grid-container" class="quiz-grid">
-          <!-- Dynamic Quiz Cards rendering from JS -->
-        </div>
-
-      </div>
-    </section>
-
-    <!-- ----------------------------------------
-         VIEW 3: QUIZ EXECUTION (LÀM BÀI)
-    ----------------------------------------- -->
-    <section id="view-quiz" class="view-section hidden">
-      <div class="quiz-execution-container">
-        
-        <!-- Sticky Header Bar: Progress & Timer -->
-        <div class="quiz-status-bar">
-          <div class="quiz-info-mini">
-            <span id="current-quiz-title" class="quiz-title-text">Đề Thi Trắc Nghiệm</span>
-            <span id="question-tracker" class="tracker-text">Câu 1 / 10</span>
-          </div>
-
-          <!-- Progress Bar -->
-          <div class="progress-container">
-            <div id="quiz-progress-bar" class="progress-bar-fill" style="width: 0%;"></div>
-          </div>
-
-          <!-- Countdown Timer -->
-          <div class="timer-badge">
-            <i data-lucide="clock" class="timer-icon"></i>
-            <span id="countdown-timer">15:00</span>
-          </div>
-        </div>
-
-        <!-- Dynamic Question Card -->
-        <div class="question-card">
-          <div class="question-header">
-            <span id="question-topic-tag" class="tag tag-topic">JavaScript</span>
-            <span id="question-type-tag" class="tag tag-type">Radio (Chọn 1)</span>
-          </div>
-          
-          <h3 id="question-text" class="question-title">
-            Nội dung câu hỏi đang tải...
-          </h3>
-
-          <!-- Options Container -->
-          <div id="options-container" class="options-group">
-            <!-- Dynamic inputs generated by JS -->
-          </div>
-        </div>
-
-        <!-- Bottom Action Bar -->
-        <div class="quiz-action-bar">
-          <button id="btn-prev-question" class="btn btn-outline" disabled>
-            <i data-lucide="arrow-left"></i> Câu Trước
-          </button>
-          <div class="action-right">
-            <button id="btn-next-question" class="btn btn-secondary">
-              Câu Tiếp <i data-lucide="arrow-right"></i>
-            </button>
-            <button id="btn-submit-quiz" class="btn btn-success">
-              <i data-lucide="check-circle"></i> Nộp Bài
-            </button>
-          </div>
-        </div>
-
-      </div>
-    </section>
-
-    <!-- ----------------------------------------
-         VIEW 4: RESULTS & AI REMEDIATION
-    ----------------------------------------- -->
-    <section id="view-result" class="view-section hidden">
-      <div class="container">
-        
-        <!-- Score Summary Header -->
-        <div class="result-summary-card">
-          <div class="summary-left">
-            <h2 class="result-title">Kết Quả Bài Kiểm Tra</h2>
-            <p id="result-quiz-name">Chủ đề: JavaScript Cơ Bản</p>
-            <div class="score-display">
-              <span id="result-score-number" class="score-huge">8.0</span>
-              <span class="score-total">/ 10</span>
-            </div>
-            <p id="result-feedback-msg" class="feedback-text">Thật tuyệt vời! Bạn đã nắm chắc kiến thức cơ bản.</p>
-          </div>
-
-          <!-- Analytics Chart Canvas -->
-          <div class="summary-right">
-            <h4><i data-lucide="pie-chart"></i> Phân Tích Kỹ Năng</h4>
-            <div class="chart-wrapper">
-              <canvas id="skills-chart"></canvas>
-            </div>
-          </div>
-        </div>
-
-        <!-- AI Remediation Action Banner -->
-        <div class="ai-banner">
-          <div class="ai-banner-content">
-            <h3><i data-lucide="sparkles" class="ai-sparkle-icon"></i> Củng Cố Lỗ Hổng Kiến Thức Với AI</h3>
-            <p>Hệ thống tự động phân tích câu sai và tạo riêng cho bạn bài luyện tập mới nhờ Google Gemini AI.</p>
-          </div>
-          <button id="btn-trigger-ai" class="btn btn-ai-action">
-            ✨ Luyện tập câu sai với AI
-          </button>
-        </div>
-
-        <!-- Detailed Wrong Questions Review List -->
-        <div class="review-section">
-          <h3><i data-lucide="file-text"></i> Xem Lai Chi Tiết Các Câu Sai</h3>
-          <div id="wrong-questions-container" class="review-list">
-            <!-- Dynamic Review Cards rendered from JS -->
-          </div>
-        </div>
-
-        <!-- Return Home Button -->
-        <div class="result-footer-actions">
-          <button id="btn-return-catalog" class="btn btn-outline">
-            <i data-lucide="home"></i> Quay Lại Danh Sách Đề Thi
-          </button>
-        </div>
-
-      </div>
-    </section>
-
+  <!-- KHUNG CHỨA CÁC MÀN HÌNH VIEW CHÍNH -->
+  <main id="app-main" class="app-main">
+    <section id="view-auth" class="view-section" aria-label="Đăng nhập demo" aria-hidden="false" tabindex="-1"></section>
+    <section id="view-list" class="view-section hidden" aria-label="Khu vực học viên" aria-hidden="true" tabindex="-1"></section>
+    <section id="view-quiz" class="view-section hidden" aria-label="Làm bài kiểm tra" aria-hidden="true" tabindex="-1"></section>
+    <section id="view-result" class="view-section hidden" aria-label="Kết quả bài kiểm tra" aria-hidden="true" tabindex="-1"></section>
+    <section id="view-admin" class="view-section hidden" aria-label="Khu vực quản trị" aria-hidden="true" tabindex="-1"></section>
   </main>
 
-  <!-- ==========================================
-       AI LOADING MODAL OVERLAY
-  =========================================== -->
-  <div id="ai-loading-modal" class="modal-overlay hidden">
-    <div class="modal-card">
-      <div class="spinner-pulse"></div>
-      <h3>Gemini AI Đang Xử Lý...</h3>
-      <p>Hệ thống đang phân tích các câu làm sai và khởi tạo bài kiểm tra bổ trợ thích ứng cho bạn.</p>
-    </div>
-  </div>
+  <!-- KHUNG CHỨA CÁC MODAL / POPUP NỔI -->
+  <div id="modals-holder"></div>
 
-  <!-- ==========================================
-       CDN CLIENT-SIDE LIBRARIES
-  =========================================== -->
-  <!-- Lucide Icons -->
+  <!-- CDN THƯ VIỆN BÊN NGOÀI -->
   <script src="https://unpkg.com/lucide@latest"></script>
-  <!-- Chart.js -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <!-- SweetAlert2 -->
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  <!-- Canvas-Confetti -->
-  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
-  <!-- Prism.js Syntax Highlighting -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
 
-  <!-- ==========================================
-       CUSTOM JS APPLICATION LOGIC
-  =========================================== -->
-  <script src="js/auth.js"></script>
-  <script src="js/quiz-engine.js"></script>
-  <script src="js/ai-service.js"></script>
-  <script src="js/app.js"></script>
-
-  <!-- Initialize Lucide Icons -->
-  <script>
-    lucide.createIcons();
-  </script>
+  <!-- MODULES JAVASCRIPT HỆ THỐNG -->
+  <script src="js/core/utils.js"></script>
+  <script src="js/services/local-storage-db.js"></script>
+  <script src="js/core/state.js"></script>
+  <script src="js/core/mobile-menu.js"></script>
+  <script src="js/core/router.js"></script>
+  <script src="js/core/auth.js"></script>
+  <script src="js/core/quiz-engine.js"></script>
+  <script src="js/features/student/mascot.js"></script>
+  <script src="js/features/student/gamification.js"></script>
+  <script src="js/features/student/student-dashboard.js"></script>
+  <script src="js/features/student/student-history.js"></script>
+  <script src="js/features/student/student-view.js"></script>
+  <script src="js/features/admin/admin-core.js"></script>
+  <script src="js/features/admin/admin-catalogs.js"></script>
+  <script src="js/features/admin/admin-quizzes.js"></script>
+  <script src="js/features/admin/admin-bank.js"></script>
+  <script src="js/features/admin/admin-users.js"></script>
+  <script src="js/features/admin/admin-reports.js"></script>
+  <script src="js/features/admin/admin-tools.js"></script>
+  <script src="js/services/ai-service.js"></script>
+  <script src="js/core/theme.js"></script>
+  <script src="js/core/main.js"></script>
 </body>
 </html>

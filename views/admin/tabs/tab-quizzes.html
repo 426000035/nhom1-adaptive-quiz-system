@@ -1,0 +1,78 @@
+<!-- ==========================================================================
+   Adaptive Quiz System - Admin Tab 1: Quizzes Management (views/admin/tabs/tab-quizzes.html)
+   Chứa cài đặt Chủ đề (Topics), Độ khó (Difficulties) và Bảng danh sách bài thi.
+   ========================================================================== -->
+
+<div id="tab-quizzes" class="admin-tab-content" role="tabpanel" aria-labelledby="admin-tab-quizzes" aria-hidden="false" tabindex="0">
+  <!-- Bảng Danh sách Bài thi (Admin) -->
+  <div class="question-card">
+    <div class="admin-card-heading-row">
+      <h3 class="admin-card-heading">
+        <i data-lucide="book-open"></i> Danh Sách Bài Thi
+      </h3>
+      <button id="btn-admin-create-quiz" class="btn btn-primary">
+        <i data-lucide="plus-circle"></i> Tạo Đề Thi Mới
+      </button>
+    </div>
+
+    <!-- Control Bar lọc bài thi -->
+    <div class="admin-filter-bar">
+      <!-- Ô tìm kiếm -->
+      <input type="text" id="search-admin-quizzes" class="select-control" placeholder="Tìm tên bài thi..." aria-label="Tìm tên bài thi">
+      
+      <!-- Lọc theo Chủ đề -->
+      <select id="filter-topic-admin-quizzes" class="select-control" aria-label="Lọc bài thi theo chủ đề">
+        <option value="ALL">Tất cả Chủ đề</option>
+        <option value="Lập trình Web">Lập trình Web</option>
+        <option value="Cơ sở dữ liệu">Cơ sở dữ liệu</option>
+        <option value="Mạng máy tính">Mạng máy tính</option>
+        <option value="Toán rời rạc">Toán rời rạc</option>
+      </select>
+
+      <!-- Lọc theo Độ khó (Mới bổ sung) -->
+      <select id="filter-difficulty-admin-quizzes" class="select-control" aria-label="Lọc bài thi theo độ khó">
+        <option value="ALL">Tất cả Độ khó</option>
+        <option value="Easy">Dễ (Easy)</option>
+        <option value="Medium">Trung bình (Medium)</option>
+        <option value="Hard">Khó (Hard)</option>
+      </select>
+
+      <!-- Sắp xếp -->
+      <select id="sort-admin-quizzes" class="select-control" aria-label="Sắp xếp danh sách bài thi">
+        <option value="DATE_DESC" selected>Mới nhất trước</option>
+        <option value="DATE_ASC">Cũ nhất trước</option>
+        <option value="TITLE_ASC">Tên đề (A - Z)</option>
+        <option value="TITLE_DESC">Tên đề (Z - A)</option>
+      </select>
+
+      <!-- Phân trang -->
+      <select id="pagesize-admin-quizzes" class="select-control" aria-label="Số bài thi mỗi trang">
+        <option value="10">10 / trang</option>
+        <option value="20">20 / trang</option>
+        <option value="50">50 / trang</option>
+        <option value="ALL">Hiện tất cả</option>
+      </select>
+    </div>
+
+    <!-- Bảng hiển thị dữ liệu bài thi -->
+    <p class="admin-table-scroll-hint">Vuốt ngang để xem thêm cột trong bảng.</p>
+    <div class="admin-table-wrap" role="region" aria-label="Bảng danh sách bài thi" tabindex="0">
+      <table class="admin-quizzes-table">
+        <thead>
+          <tr class="admin-table-header-row">
+            <th scope="col" class="quiz-title-column">Tên Bài Thi</th>
+            <th scope="col">Chủ Đề</th>
+            <th scope="col">Độ Khó</th>
+            <th scope="col">Thời Gian</th>
+            <th scope="col">Số Câu</th>
+            <th scope="col">Thao Tác</th>
+          </tr>
+        </thead>
+        <tbody id="admin-quizzes-tbody"></tbody>
+      </table>
+    </div>
+
+    <!-- Phân trang danh sách bài thi -->
+    <nav id="pagination-admin-quizzes" class="pagination-wrapper admin-table-pagination" aria-label="Phân trang danh sách bài thi"></nav>
+  </div>
+</div>

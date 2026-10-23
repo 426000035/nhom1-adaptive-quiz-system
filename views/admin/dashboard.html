@@ -1,0 +1,56 @@
+<!-- ==========================================================================
+   Adaptive Quiz System - View 5: Admin Dashboard Layout (views/admin/dashboard.html)
+   Khung chứa giao diện Quản trị chính của Giáo viên, nhúng 5 Tab thành phần
+   từ thư mục views/admin/tabs/
+   ========================================================================== -->
+
+<div class="container admin-dashboard">
+  <div class="admin-workspace">
+    <!-- Thanh điều hướng quản trị; đặt bên trái nội dung trên màn hình lớn. -->
+    <nav id="admin-tabs" class="admin-tabs" aria-label="Điều hướng quản trị">
+      <div id="admin-tab-list" class="admin-tab-list" role="tablist" aria-label="Các mục quản trị" aria-orientation="horizontal">
+        <button id="admin-tab-quizzes" class="btn btn-primary admin-tab-btn active" type="button" role="tab" aria-label="Quản Lý Bài Thi" aria-selected="true" aria-controls="tab-quizzes" tabindex="0" data-tab="tab-quizzes" title="Quản Lý Bài Thi">
+          <i data-lucide="book-open" aria-hidden="true"></i><span class="admin-tab-label">Quản Lý Bài Thi</span>
+        </button>
+        <button id="admin-tab-catalogs" class="btn btn-outline admin-tab-btn" type="button" role="tab" aria-label="Môn Học & Kỹ Năng" aria-selected="false" aria-controls="tab-catalogs" tabindex="-1" data-tab="tab-catalogs" title="Môn Học & Kỹ Năng">
+          <i data-lucide="library" aria-hidden="true"></i><span class="admin-tab-label">Môn Học & Kỹ Năng</span>
+        </button>
+        <button id="admin-tab-question-bank" class="btn btn-outline admin-tab-btn" type="button" role="tab" aria-label="Ngân Hàng Câu Hỏi" aria-selected="false" aria-controls="tab-question-bank" tabindex="-1" data-tab="tab-question-bank" title="Ngân Hàng Câu Hỏi">
+          <i data-lucide="database" aria-hidden="true"></i><span class="admin-tab-label">Ngân Hàng Câu Hỏi</span>
+        </button>
+        <button id="admin-tab-users" class="btn btn-outline admin-tab-btn" type="button" role="tab" aria-label="Quản Lý Học Viên" aria-selected="false" aria-controls="tab-users" tabindex="-1" data-tab="tab-users" title="Quản Lý Học Viên">
+          <i data-lucide="users" aria-hidden="true"></i><span class="admin-tab-label">Quản Lý Học Viên</span>
+        </button>
+        <button id="admin-tab-reports" class="btn btn-outline admin-tab-btn" type="button" role="tab" aria-label="Báo Cáo & Thống Kê" aria-selected="false" aria-controls="tab-reports" tabindex="-1" data-tab="tab-reports" title="Báo Cáo & Thống Kê">
+          <i data-lucide="bar-chart-3" aria-hidden="true"></i><span class="admin-tab-label">Báo Cáo & Thống Kê</span>
+        </button>
+        <button id="admin-tab-tools" class="btn btn-outline admin-tab-btn" type="button" role="tab" aria-label="Nhập / Xuất & Trộn Đề" aria-selected="false" aria-controls="tab-tools" tabindex="-1" data-tab="tab-tools" title="Nhập / Xuất & Trộn Đề">
+          <i data-lucide="folder-output" aria-hidden="true"></i><span class="admin-tab-label">Nhập / Xuất & Trộn Đề</span>
+        </button>
+      </div>
+    </nav>
+
+    <!-- Container for the admin tab panels -->
+    <div id="admin-tab-container">
+      <!-- Tab 1: Quản lý bài thi & Cài đặt (Nạp từ views/admin/tabs/tab-quizzes.html) -->
+      <div id="holder-tab-quizzes"></div>
+
+      <!-- Tab danh mục môn học, kỹ năng và độ khó trong database demo -->
+      <div id="holder-tab-catalogs"></div>
+
+      <!-- Tab 2: Ngân hàng câu hỏi (Nạp từ views/admin/tabs/tab-bank.html) -->
+      <div id="holder-tab-bank"></div>
+
+      <!-- Tab 3: Quản lý học viên (Nạp từ views/admin/tabs/tab-users.html) -->
+      <div id="holder-tab-users"></div>
+
+      <!-- Tab 4: Báo cáo & Thống kê (Nạp từ views/admin/tabs/tab-reports.html) -->
+      <div id="holder-tab-reports"></div>
+
+      <!-- Tab 5: Nhập / Xuất & Trộn đề (Nạp từ views/admin/tabs/tab-tools.html) -->
+      <div id="holder-tab-tools"></div>
+
+      <div id="admin-student-profile-content" class="admin-student-profile-content" hidden></div>
+    </div>
+  </div>
+</div>
