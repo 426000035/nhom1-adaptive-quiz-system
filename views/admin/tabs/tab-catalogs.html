@@ -1,0 +1,118 @@
+<div id="tab-catalogs" class="admin-tab-content hidden" role="tabpanel" aria-labelledby="admin-tab-catalogs" aria-hidden="true" tabindex="0">
+  <div class="question-card">
+    <div class="admin-card-intro">
+      <h3 class="admin-card-heading"><i data-lucide="library" aria-hidden="true"></i> Môn học và kỹ năng</h3>
+      <p class="admin-card-description">Danh mục được lưu trong database demo trên trình duyệt. Tạm ẩn để giữ nguyên các liên kết dữ liệu.</p>
+    </div>
+    <div id="admin-catalog-tabs" class="admin-catalog-tabs" role="tablist" aria-label="Danh mục quản lý" aria-orientation="horizontal">
+      <button id="admin-catalog-tab-subjects" class="admin-catalog-tab active" type="button" role="tab" aria-selected="true" aria-controls="admin-catalog-panel-subjects" tabindex="0">
+        Môn học
+      </button>
+      <button id="admin-catalog-tab-skills" class="admin-catalog-tab" type="button" role="tab" aria-selected="false" aria-controls="admin-catalog-panel-skills" tabindex="-1">
+        Kỹ năng
+      </button>
+      <button id="admin-catalog-tab-difficulties" class="admin-catalog-tab" type="button" role="tab" aria-selected="false" aria-controls="admin-catalog-panel-difficulties" tabindex="-1">
+        Độ khó
+      </button>
+    </div>
+    <p id="admin-catalogs-status" class="admin-operation-status" role="status" aria-live="polite"></p>
+
+    <section id="admin-catalog-panel-subjects" class="admin-catalog-panel" role="tabpanel" aria-labelledby="admin-catalog-tab-subjects" tabindex="0">
+      <div class="admin-subsection-heading-row">
+        <div>
+          <h4 class="admin-subsection-heading">Danh sách môn học</h4>
+        </div>
+        <button id="btn-admin-add-subject" class="btn btn-primary" type="button">Thêm môn học</button>
+      </div>
+      <div class="admin-filter-bar admin-catalog-filter-bar">
+        <input id="search-admin-subjects" class="select-control" type="search" placeholder="Tìm tên môn học..." aria-label="Tìm môn học theo tên">
+        <select id="sort-admin-subjects" class="select-control" aria-label="Sắp xếp danh sách môn học">
+          <option value="DATE_DESC" selected>Mới nhất trước</option>
+          <option value="TITLE_ASC">Tên môn (A - Z)</option>
+          <option value="TITLE_DESC">Tên môn (Z - A)</option>
+          <option value="DATE_ASC">Cũ nhất trước</option>
+        </select>
+        <select id="pagesize-admin-subjects" class="select-control" aria-label="Số môn học mỗi trang">
+          <option value="10">10 / trang</option>
+          <option value="20">20 / trang</option>
+          <option value="50">50 / trang</option>
+          <option value="ALL">Hiện tất cả</option>
+        </select>
+      </div>
+      <p id="count-admin-subjects" class="admin-catalog-count" aria-live="polite"></p>
+      <p class="admin-table-scroll-hint">Vuốt ngang để xem thêm cột trong bảng.</p>
+      <div class="admin-table-wrap admin-table-wrap--compact" role="region" aria-label="Bảng môn học" tabindex="0">
+        <table class="admin-catalog-table">
+          <thead><tr class="admin-table-header-row"><th scope="col">Tên môn</th><th scope="col">Trạng thái</th><th scope="col">Thao tác</th></tr></thead>
+          <tbody id="admin-subjects-tbody"></tbody>
+        </table>
+      </div>
+      <nav id="pagination-admin-subjects" class="pagination-wrapper admin-table-pagination" aria-label="Phân trang danh sách môn học"></nav>
+    </section>
+
+    <section id="admin-catalog-panel-skills" class="admin-catalog-panel" role="tabpanel" aria-labelledby="admin-catalog-tab-skills" tabindex="0" hidden>
+      <div class="admin-subsection-heading-row">
+        <div>
+          <h4 class="admin-subsection-heading">Danh sách kỹ năng</h4>
+        </div>
+        <button id="btn-admin-add-skill" class="btn btn-primary" type="button">Thêm kỹ năng</button>
+      </div>
+      <div class="admin-filter-bar admin-catalog-filter-bar">
+        <input id="search-admin-skills" class="select-control" type="search" placeholder="Tìm tên kỹ năng hoặc môn học..." aria-label="Tìm kỹ năng theo tên hoặc môn học">
+        <select id="sort-admin-skills" class="select-control" aria-label="Sắp xếp danh sách kỹ năng">
+          <option value="DATE_DESC" selected>Mới nhất trước</option>
+          <option value="TITLE_ASC">Tên kỹ năng (A - Z)</option>
+          <option value="TITLE_DESC">Tên kỹ năng (Z - A)</option>
+          <option value="DATE_ASC">Cũ nhất trước</option>
+        </select>
+        <select id="pagesize-admin-skills" class="select-control" aria-label="Số kỹ năng mỗi trang">
+          <option value="10">10 / trang</option>
+          <option value="20">20 / trang</option>
+          <option value="50">50 / trang</option>
+          <option value="ALL">Hiện tất cả</option>
+        </select>
+      </div>
+      <p id="count-admin-skills" class="admin-catalog-count" aria-live="polite"></p>
+      <p class="admin-table-scroll-hint">Vuốt ngang để xem thêm cột trong bảng.</p>
+      <div class="admin-table-wrap admin-table-wrap--compact" role="region" aria-label="Bảng kỹ năng" tabindex="0">
+        <table class="admin-catalog-table">
+          <thead><tr class="admin-table-header-row"><th scope="col">Kỹ năng</th><th scope="col">Môn học</th><th scope="col">Trạng thái</th><th scope="col">Thao tác</th></tr></thead>
+          <tbody id="admin-skills-tbody"></tbody>
+        </table>
+      </div>
+      <nav id="pagination-admin-skills" class="pagination-wrapper admin-table-pagination" aria-label="Phân trang danh sách kỹ năng"></nav>
+    </section>
+
+    <section id="admin-catalog-panel-difficulties" class="admin-catalog-panel" role="tabpanel" aria-labelledby="admin-catalog-tab-difficulties" tabindex="0" hidden>
+      <div class="admin-subsection-heading-row">
+        <div>
+          <h4 class="admin-subsection-heading">Mức độ khó</h4>
+        </div>
+        <button id="btn-admin-add-difficulty" class="btn btn-primary" type="button">Thêm độ khó</button>
+      </div>
+      <div class="admin-filter-bar admin-catalog-filter-bar">
+        <input id="search-admin-difficulties" class="select-control" type="search" placeholder="Tìm mức độ khó..." aria-label="Tìm theo nhãn độ khó">
+        <select id="sort-admin-difficulties" class="select-control" aria-label="Sắp xếp mức độ khó">
+          <option value="RANK_ASC" selected>Thứ hạng tăng dần</option>
+          <option value="RANK_DESC">Thứ hạng giảm dần</option>
+          <option value="TITLE_ASC">Nhãn (A - Z)</option>
+          <option value="TITLE_DESC">Nhãn (Z - A)</option>
+        </select>
+        <select id="pagesize-admin-difficulties" class="select-control" aria-label="Số mức độ khó mỗi trang">
+          <option value="10">10 / trang</option>
+          <option value="20">20 / trang</option>
+          <option value="50">50 / trang</option>
+          <option value="ALL">Hiện tất cả</option>
+        </select>
+      </div>
+      <p class="admin-table-scroll-hint">Vuốt ngang để xem thêm cột trong bảng.</p>
+      <div class="admin-table-wrap admin-table-wrap--compact" role="region" aria-label="Bảng độ khó" tabindex="0">
+        <table class="admin-catalog-table">
+          <thead><tr class="admin-table-header-row"><th scope="col">Nhãn</th><th scope="col">Rank</th><th scope="col">Trạng thái</th><th scope="col">Thao tác</th></tr></thead>
+          <tbody id="admin-difficulties-tbody"></tbody>
+        </table>
+      </div>
+      <nav id="pagination-admin-difficulties" class="pagination-wrapper admin-table-pagination" aria-label="Phân trang mức độ khó"></nav>
+    </section>
+  </div>
+</div>

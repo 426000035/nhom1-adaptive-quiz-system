@@ -1,13 +1,13 @@
 <!-- ==========================================================================
-   Adaptive Quiz System - Admin Tab 2: Question Bank Component (views/admin/tab-bank.html)
+   Adaptive Quiz System - Admin Tab 2: Question Bank Component (views/admin/tabs/tab-bank.html)
    Giao diện hiển thị và quản lý toàn bộ Ngân hàng câu hỏi của hệ thống.
    ========================================================================== -->
 
-<div id="tab-question-bank" class="admin-tab-content hidden">
+<div id="tab-question-bank" class="admin-tab-content hidden" role="tabpanel" aria-labelledby="admin-tab-question-bank" aria-hidden="true" tabindex="0">
   <div class="question-card">
     <!-- Tiêu đề phần Ngân hàng câu hỏi & Nút Thêm Mới -->
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; flex-wrap: wrap; gap: 1rem;">
-      <h3 style="display: flex; align-items: center; gap: 0.5rem; font-size: 1.15rem; color: var(--primary);">
+    <div class="admin-card-heading-row">
+      <h3 class="admin-card-heading">
         <i data-lucide="database"></i> Ngân Hàng Toàn Bộ Câu Hỏi
       </h3>
 
@@ -17,12 +17,12 @@
     </div>
 
     <!-- Thanh công cụ tìm kiếm, lọc và sắp xếp (Control Bar) -->
-    <div style="display: flex; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 1rem;">
+    <div class="admin-filter-bar">
       <!-- Ô tìm kiếm theo nội dung câu hỏi -->
-      <input type="text" id="search-global-bank" class="select-control" style="flex: 2; min-width: 200px;" placeholder="Tìm nội dung câu hỏi...">
+      <input type="text" id="search-global-bank" class="select-control" placeholder="Tìm nội dung câu hỏi..." aria-label="Tìm nội dung câu hỏi">
       
       <!-- Lọc theo Chủ đề -->
-      <select id="filter-topic-global-bank" class="select-control" style="flex: 1; min-width: 130px;">
+      <select id="filter-topic-global-bank" class="select-control" aria-label="Lọc câu hỏi theo chủ đề">
         <option value="ALL">Tất cả Chủ đề</option>
         <option value="Lập trình Web">Lập trình Web</option>
         <option value="Cơ sở dữ liệu">Cơ sở dữ liệu</option>
@@ -31,7 +31,7 @@
       </select>
 
       <!-- Lọc theo Độ khó -->
-      <select id="filter-difficulty-global-bank" class="select-control" style="flex: 1; min-width: 130px;">
+      <select id="filter-difficulty-global-bank" class="select-control" aria-label="Lọc câu hỏi theo độ khó">
         <option value="ALL">Tất cả Độ khó</option>
         <option value="Easy">Dễ (Easy)</option>
         <option value="Medium">Trung bình (Medium)</option>
@@ -39,13 +39,15 @@
       </select>
 
       <!-- Sắp xếp danh sách câu hỏi -->
-      <select id="sort-global-bank" class="select-control" style="flex: 1; min-width: 140px;">
+      <select id="sort-global-bank" class="select-control" aria-label="Sắp xếp ngân hàng câu hỏi">
+        <option value="DATE_DESC" selected>Mới nhất trước</option>
+        <option value="DATE_ASC">Cũ nhất trước</option>
         <option value="TITLE_ASC">Câu hỏi (A - Z)</option>
         <option value="TITLE_DESC">Câu hỏi (Z - A)</option>
       </select>
 
       <!-- Kích thước trang hiển thị -->
-      <select id="pagesize-global-bank" class="select-control" style="width: 110px;">
+      <select id="pagesize-global-bank" class="select-control" aria-label="Số câu hỏi mỗi trang">
         <option value="10">10 / trang</option>
         <option value="20">20 / trang</option>
         <option value="50">50 / trang</option>
@@ -54,16 +56,16 @@
     </div>
 
     <!-- Bảng danh sách toàn bộ câu hỏi trong hệ thống -->
-    <div style="overflow-x: auto;">
-      <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.875rem;">
+    <p class="admin-table-scroll-hint">Vuốt ngang để xem thêm cột trong bảng.</p>
+    <div class="admin-table-wrap" role="region" aria-label="Bảng ngân hàng câu hỏi" tabindex="0">
+      <table>
         <thead>
-          <tr style="border-bottom: 2px solid var(--border-color); color: var(--primary);">
-            <th style="padding: 0.75rem;">Mã Câu</th>
-            <th style="padding: 0.75rem;">Chủ Đề</th>
-            <th style="padding: 0.75rem;">Độ Khó</th>
-            <th style="padding: 0.75rem;">Nội Dung Câu Hỏi</th>
-            <th style="padding: 0.75rem;">Đáp Án Đúng</th>
-            <th style="padding: 0.75rem; text-align: center;">Thao Tác</th>
+          <tr class="admin-table-header-row">
+            <th scope="col">Chủ Đề</th>
+            <th scope="col">Độ Khó</th>
+            <th scope="col">Nội Dung Câu Hỏi</th>
+            <th scope="col">Đáp Án Đúng</th>
+            <th scope="col" class="admin-table-cell--center">Thao Tác</th>
           </tr>
         </thead>
         <tbody id="admin-global-questions-tbody"></tbody>
@@ -71,6 +73,6 @@
     </div>
 
     <!-- Thanh phân trang cho Ngân hàng câu hỏi -->
-    <div id="pagination-global-bank" class="pagination-wrapper" style="display: flex; justify-content: center; gap: 0.5rem; margin-top: 1rem;"></div>
+    <nav id="pagination-global-bank" class="pagination-wrapper admin-table-pagination" aria-label="Phân trang ngân hàng câu hỏi"></nav>
   </div>
 </div>

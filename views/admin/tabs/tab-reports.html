@@ -1,0 +1,78 @@
+<!-- ==========================================================================
+   Adaptive Quiz System - Admin Tab 4: Reports & Statistics Component (views/admin/tabs/tab-reports.html)
+   Giao diện hiển thị chỉ số tổng quan hệ thống và lịch sử nộp bài của học viên.
+   ========================================================================== -->
+
+<div id="tab-reports" class="admin-tab-content hidden" role="tabpanel" aria-labelledby="admin-tab-reports" aria-hidden="true" tabindex="0">
+  <!-- Các thẻ chỉ số thống kê tổng quan -->
+  <div class="admin-stat-grid">
+    <!-- Thẻ Tổng số lượt thi -->
+    <div class="question-card admin-stat-card">
+      <h4 class="admin-stat-label">Tổng Số Lượt Thi</h4>
+      <p id="stat-total-attempts" class="score-huge admin-stat-value admin-stat-value--primary">0</p>
+    </div>
+
+    <!-- Thẻ Điểm trung bình hệ thống -->
+    <div class="question-card admin-stat-card">
+      <h4 class="admin-stat-label">Điểm Tổng Hợp Trung Bình</h4>
+      <p id="stat-avg-score" class="score-huge admin-stat-value admin-stat-value--success">0.0</p>
+    </div>
+  </div>
+
+  <!-- Bảng Lịch sử Nộp bài của Học viên -->
+  <div class="question-card">
+    <!-- Tiêu đề phần Lịch sử -->
+    <h3 class="admin-card-heading">
+      <i data-lucide="history"></i> Lịch Sử Nộp Bài Của Học Viên
+    </h3>
+    <p id="admin-reports-status" role="status" aria-live="polite"></p>
+
+    <!-- Thanh công cụ tìm kiếm, lọc và phân trang (Control Bar) -->
+    <div class="admin-filter-bar admin-filter-bar--reports">
+      <!-- Ô tìm kiếm tên học viên hoặc tên bài thi -->
+      <input type="text" id="search-admin-reports" class="select-control" placeholder="Tìm tên học viên hoặc tên bài thi..." aria-label="Tìm báo cáo theo học viên hoặc bài thi">
+      
+      <!-- Sắp xếp danh sách -->
+      <select id="sort-admin-reports" class="select-control" aria-label="Sắp xếp báo cáo">
+        <option value="DATE_DESC">Thời gian mới nhất</option>
+        <option value="DATE_ASC">Thời gian cũ nhất</option>
+        <option value="SCORE_DESC">Điểm cao nhất</option>
+        <option value="SCORE_ASC">Điểm thấp nhất</option>
+        <option value="CORRECT_DESC">Số câu đúng nhiều nhất</option>
+        <option value="CORRECT_ASC">Số câu đúng ít nhất</option>
+        <option value="TITLE_ASC">Học viên (A - Z)</option>
+        <option value="TITLE_DESC">Học viên (Z - A)</option>
+      </select>
+
+      <!-- Kích thước trang hiển thị -->
+      <select id="pagesize-admin-reports" class="select-control" aria-label="Số lượt thi mỗi trang">
+        <option value="10">10 / trang</option>
+        <option value="20">20 / trang</option>
+        <option value="50">50 / trang</option>
+        <option value="ALL">Hiện tất cả</option>
+      </select>
+    </div>
+
+    <!-- Bảng hiển thị lịch sử nộp bài -->
+    <p class="admin-table-scroll-hint">Vuốt ngang để xem thêm cột trong bảng.</p>
+    <div class="admin-table-wrap" role="region" aria-label="Bảng lịch sử nộp bài" tabindex="0">
+      <table>
+        <thead>
+          <tr class="admin-table-header-row">
+            <th scope="col">Thời Gian</th>
+            <th scope="col">Học Viên</th>
+            <th scope="col">Tên Bài Thi</th>
+            <th scope="col">Điểm Lượt Thi</th>
+            <th scope="col">Điểm Tổng Hợp</th>
+            <th scope="col">Số Câu Đúng</th>
+            <th scope="col">Thao Tác</th>
+          </tr>
+        </thead>
+        <tbody id="admin-history-tbody"></tbody>
+      </table>
+    </div>
+
+    <!-- Thanh phân trang cho báo cáo lịch sử -->
+    <nav id="pagination-admin-reports" class="pagination-wrapper admin-table-pagination" aria-label="Phân trang báo cáo lượt thi"></nav>
+  </div>
+</div>

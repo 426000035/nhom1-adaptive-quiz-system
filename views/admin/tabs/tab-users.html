@@ -1,0 +1,128 @@
+<!-- ==========================================================================
+   Adaptive Quiz System - Admin Tab 3: Student and class management
+   ========================================================================== -->
+
+<div id="tab-users" class="admin-tab-content hidden" role="tabpanel" aria-labelledby="admin-tab-users" aria-hidden="true" tabindex="0">
+  <div id="admin-user-tabs" class="admin-catalog-tabs admin-user-tabs" role="tablist" aria-label="Quản lý học viên và lớp học" aria-orientation="horizontal">
+    <button id="admin-user-tab-students" class="admin-catalog-tab active" type="button" role="tab" aria-selected="true" aria-controls="admin-user-panel-students" tabindex="0">
+      <i data-lucide="users" aria-hidden="true"></i> Học viên
+    </button>
+    <button id="admin-user-tab-classes" class="admin-catalog-tab" type="button" role="tab" aria-selected="false" aria-controls="admin-user-panel-classes" tabindex="-1">
+      <i data-lucide="school" aria-hidden="true"></i> Lớp học
+    </button>
+  </div>
+
+  <section id="admin-user-panel-students" class="admin-catalog-panel" role="tabpanel" aria-labelledby="admin-user-tab-students" tabindex="0">
+    <div class="question-card">
+      <div class="admin-card-heading-row admin-users-heading-row">
+        <div>
+          <h3 class="admin-card-heading"><i data-lucide="users" aria-hidden="true"></i> Danh sách học viên</h3>
+          <p class="admin-card-description">Tìm kiếm, phân lớp và quản lý trạng thái tài khoản học viên.</p>
+        </div>
+        <button id="btn-open-admin-create-student" class="btn btn-primary" type="button">
+          <i data-lucide="user-round-plus" aria-hidden="true"></i> Thêm học viên
+        </button>
+      </div>
+
+      <div class="admin-filter-bar admin-filter-bar--users" role="group" aria-label="Tìm kiếm và lọc tài khoản">
+        <input type="search" id="search-admin-users" class="select-control" placeholder="Tìm username, mã, biệt danh hoặc họ tên..." aria-label="Tìm tài khoản theo username, mã, biệt danh hoặc họ tên">
+        <select id="filter-role-admin-users" class="select-control" aria-label="Lọc tài khoản theo vai trò">
+          <option value="student" selected>Học viên</option>
+          <option value="ALL">Tất cả Role</option>
+          <option value="admin">Admin</option>
+        </select>
+        <select id="filter-class-admin-users" class="select-control" aria-label="Lọc theo lớp học">
+          <option value="ALL">Tất cả lớp</option>
+        </select>
+        <select id="filter-status-admin-users" class="select-control" aria-label="Lọc tài khoản theo trạng thái">
+          <option value="ALL">Tất cả trạng thái</option>
+          <option value="active">Hoạt động</option>
+          <option value="inactive">Tạm ngưng</option>
+          <option value="locked">Đã khóa</option>
+        </select>
+        <select id="sort-admin-users" class="select-control" aria-label="Sắp xếp tài khoản theo họ tên">
+          <option value="DATE_DESC" selected>Mới nhất trước</option>
+          <option value="DATE_ASC">Cũ nhất trước</option>
+          <option value="TITLE_ASC">Họ tên (A - Z)</option>
+          <option value="TITLE_DESC">Họ tên (Z - A)</option>
+        </select>
+        <select id="pagesize-admin-users" class="select-control" aria-label="Số tài khoản mỗi trang">
+          <option value="10">10 / trang</option>
+          <option value="20">20 / trang</option>
+          <option value="50">50 / trang</option>
+          <option value="ALL">Hiện tất cả</option>
+        </select>
+      </div>
+
+      <p class="admin-table-scroll-hint">Vuốt ngang để xem thêm cột trong bảng.</p>
+      <div class="admin-table-wrap" role="region" aria-label="Bảng tài khoản học viên" tabindex="0">
+        <table>
+          <thead>
+            <tr class="admin-table-header-row">
+              <th scope="col">Username</th>
+              <th scope="col">Biệt danh (Họ tên)</th>
+              <th scope="col">Vai Trò (Role)</th>
+              <th scope="col">Lớp</th>
+              <th scope="col">Trạng Thái</th>
+              <th scope="col" class="admin-table-cell--center">Thao Tác</th>
+            </tr>
+          </thead>
+          <tbody id="admin-users-tbody"></tbody>
+        </table>
+      </div>
+      <nav id="pagination-admin-users" class="pagination-wrapper admin-table-pagination admin-users-pagination" aria-label="Phân trang danh sách tài khoản"></nav>
+    </div>
+  </section>
+
+  <section id="admin-user-panel-classes" class="admin-catalog-panel" role="tabpanel" aria-labelledby="admin-user-tab-classes" tabindex="0" hidden>
+    <div class="question-card admin-class-management-card">
+      <div class="admin-card-intro">
+        <h3 class="admin-card-heading"><i data-lucide="school" aria-hidden="true"></i> Quản lý lớp học</h3>
+        <p class="admin-card-description">Tạo lớp, theo dõi sĩ số và quản lý trạng thái lớp. Lớp đã có dữ liệu nên được ẩn thay vì xóa.</p>
+      </div>
+      <form id="form-admin-add-class" class="admin-add-class-form admin-add-class-form--vertical">
+        <div class="form-group">
+          <label for="admin-new-class-name">Tên lớp mới</label>
+          <input type="text" id="admin-new-class-name" class="select-control admin-add-class-input" placeholder="Ví dụ: Toán 5 - D" maxlength="80" autocomplete="off" required>
+        </div>
+        <button type="submit" class="btn btn-primary"><i data-lucide="plus" aria-hidden="true"></i> Tạo lớp</button>
+        <p id="admin-create-class-status" class="admin-form-status" role="status" aria-live="polite"></p>
+      </form>
+      <div class="admin-filter-bar admin-class-filter-bar">
+        <input type="search" id="search-admin-classes" class="select-control" placeholder="Tìm tên lớp..." aria-label="Tìm lớp theo tên">
+        <select id="filter-status-admin-classes" class="select-control" aria-label="Lọc lớp theo trạng thái">
+          <option value="ALL">Tất cả trạng thái</option>
+          <option value="active">Đang hoạt động</option>
+          <option value="inactive">Đã ẩn</option>
+        </select>
+        <select id="sort-admin-classes" class="select-control" aria-label="Sắp xếp danh sách lớp học">
+          <option value="DATE_DESC" selected>Mới nhất trước</option>
+          <option value="DATE_ASC">Cũ nhất trước</option>
+          <option value="TITLE_ASC">Tên lớp (A - Z)</option>
+          <option value="TITLE_DESC">Tên lớp (Z - A)</option>
+        </select>
+        <select id="pagesize-admin-classes" class="select-control" aria-label="Số lớp mỗi trang">
+          <option value="10">10 / trang</option>
+          <option value="20">20 / trang</option>
+          <option value="50">50 / trang</option>
+          <option value="ALL">Hiện tất cả</option>
+        </select>
+      </div>
+      <p class="admin-table-scroll-hint">Vuốt ngang để xem thêm cột trong bảng.</p>
+      <div class="admin-table-wrap admin-table-wrap--compact" role="region" aria-label="Bảng lớp học" tabindex="0">
+        <table>
+          <thead>
+            <tr class="admin-table-header-row">
+              <th scope="col">Tên lớp</th>
+              <th scope="col">Số học viên</th>
+              <th scope="col">Trạng thái</th>
+              <th scope="col" class="admin-table-cell--center">Thao tác</th>
+            </tr>
+          </thead>
+          <tbody id="admin-classes-tbody"></tbody>
+        </table>
+      </div>
+      <nav id="pagination-admin-classes" class="pagination-wrapper admin-table-pagination" aria-label="Phân trang danh sách lớp học"></nav>
+    </div>
+  </section>
+</div>

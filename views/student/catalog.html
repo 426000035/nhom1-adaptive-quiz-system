@@ -1,0 +1,60 @@
+<!-- ==========================================================================
+   Adaptive Quiz System - View 2: Student Catalog Component (views/student/catalog.html)
+   Giao diện danh sách bài kiểm tra dành cho Học viên, tích hợp bộ lọc, tìm kiếm,
+   sắp xếp và phân trang.
+   ========================================================================== -->
+
+<div class="container">
+  <section class="catalog-filters" aria-label="Tìm kiếm và lọc đề thi">
+    <label class="catalog-filter catalog-search">
+      <span class="catalog-filter-label">Tìm kiếm</span>
+      <span class="search-box">
+        <i data-lucide="search" class="search-icon" aria-hidden="true"></i>
+        <input type="search" id="input-search-quiz" placeholder="Tìm theo tên đề hoặc chủ đề">
+      </span>
+    </label>
+
+    <label class="catalog-filter">
+      <span class="catalog-filter-label">Chủ đề</span>
+      <select id="filter-topic" class="select-control">
+        <option value="ALL">Tất cả chủ đề</option>
+      </select>
+    </label>
+
+    <label class="catalog-filter">
+      <span class="catalog-filter-label">Độ khó</span>
+      <select id="filter-difficulty" class="select-control">
+        <option value="ALL">Tất cả độ khó</option>
+      </select>
+    </label>
+
+    <label class="catalog-filter">
+      <span class="catalog-filter-label">Sắp xếp</span>
+      <select id="sort-quiz-catalog" class="select-control">
+        <option value="DATE_DESC" selected>Mới nhất trước</option>
+        <option value="DATE_ASC">Cũ nhất trước</option>
+        <option value="TITLE_ASC">Tiêu đề (A - Z)</option>
+        <option value="TITLE_DESC">Tiêu đề (Z - A)</option>
+      </select>
+    </label>
+
+    <label class="catalog-filter catalog-page-size">
+      <span class="catalog-filter-label">Số đề mỗi trang</span>
+      <select id="pagesize-quiz-catalog" class="select-control">
+        <option value="10">10 / trang</option>
+        <option value="20">20 / trang</option>
+        <option value="50">50 / trang</option>
+        <option value="ALL">Hiện tất cả</option>
+      </select>
+    </label>
+  </section>
+
+  <header class="catalog-header">
+    <h1><i data-lucide="book-open" aria-hidden="true"></i> Danh sách bài kiểm tra</h1>
+    <span id="quiz-count-badge" class="count-badge" aria-live="polite">0 đề thi</span>
+  </header>
+
+  <div id="quiz-grid-container" class="quiz-grid"></div>
+
+  <nav id="pagination-quiz-catalog" class="pagination-wrapper" aria-label="Phân trang danh sách đề thi"></nav>
+</div>
