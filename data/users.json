@@ -1,17 +1,14 @@
 [
   {
-    "id": "usr_01",
-    "username": "student1",
-    "password": "123",
+    "userId": "usr_01",
     "fullName": "Phan Thị Ngọc Duyên",
     "role": "student",
-    "history": []
+    "status": "active"
   },
   {
-    "id": "usr_02",
-    "username": "admin",
-    "password": "adminpassword",
+    "userId": "usr_02",
     "fullName": "Giáo viên Quản trị",
-    "role": "admin"
+    "role": "admin",
+    "status": "active"
   }
 ]
