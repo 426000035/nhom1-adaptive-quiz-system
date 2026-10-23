@@ -1,3 +1,4 @@
 {
-    "chat.disableAIFeatures": false
+    "chat.disableAIFeatures": false,
+    "liveServer.settings.port": 5501
 }
