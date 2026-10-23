@@ -311,7 +311,7 @@ function initAuthModule() {
       const users = window.Auth.getUsers();
       const activeUsers = users.filter(user => user.status === 'active');
       status.textContent = activeUsers.length
-        ? 'Tài khoản demo: usr_01 (học viên) hoặc usr_02 (giáo viên); mật khẩu ban đầu: 123.'
+        ? 'Tài khoản demo: hs_math_001; hs_math_002 (học viên) hoặc usr_02 (giáo viên); mật khẩu ban đầu: 123.'
         : 'Database demo chưa có tài khoản đang hoạt động.';
     } catch (error) {
       status.textContent = `Không thể tải tài khoản demo: ${error.message}`;
