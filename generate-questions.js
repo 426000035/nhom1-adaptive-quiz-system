@@ -1,5 +1,6 @@
 // Import thư viện 'fs' để thao tác ghi file vào đĩa
 const fs = require('fs');
+const path = require('path');
 
 // Danh sách 10 chủ đề chuẩn chương trình Lập trình Web LHU
 const topics = [
@@ -77,8 +78,10 @@ topics.forEach((topicName, tIdx) => {
   }
 });
 
-// Ghi file JSON
-if (!fs.existsSync('./data')) fs.mkdirSync('./data');
-fs.writeFileSync('./data/questions.json', JSON.stringify(allQuestions, null, 2), 'utf-8');
+// Luôn ghi dữ liệu cạnh script, bất kể thư mục hiện tại khi chạy lệnh.
+const dataDirectory = path.join(__dirname, 'data');
+const outputPath = path.join(dataDirectory, 'questions.json');
+if (!fs.existsSync(dataDirectory)) fs.mkdirSync(dataDirectory);
+fs.writeFileSync(outputPath, JSON.stringify(allQuestions, null, 2), 'utf-8');
 
-console.log(`✅ Đã khởi tạo thành công file data/questions.json với 1,000 câu hỏi KIẾN THỨC THẬT!`);
+console.log(`✅ Đã tạo ${allQuestions.length} câu hỏi tại ${outputPath}`);

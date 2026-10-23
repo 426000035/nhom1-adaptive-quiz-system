@@ -1,136 +1,122 @@
-# 🎯 Adaptive Quiz System (Hệ thống Luyện tập & Kiểm tra Thích ứng)
+# Adaptive Quiz System
 
-> **Tổng quan hệ thống:** Hệ thống trắc nghiệm thích ứng trực tuyến xây dựng bằng HTML5, CSS3 và JavaScript thuần (ES6+). Tích hợp tính năng làm bài thời gian thực, phân tích điểm yếu và tự động sinh câu hỏi bổ trợ thông qua Google Gemini API (`gemini-1.5-flash`).
+## 1. Tên dự án và thành viên
 
----
+- **Tên nhóm:** [CẦN BỔ SUNG]
+- **Tên dự án:** Adaptive Quiz System
+- **Môn học/lớp:** [CẦN BỔ SUNG]
+- **Giảng viên:** [CẦN BỔ SUNG]
 
-## 📐 1. Kiến trúc Hệ thống & Công nghệ
+| Thành viên | Vai trò | Nhiệm vụ |
+|---|---|---|
+| [CẦN BỔ SUNG] | Scrum Master | Theo dõi tiến độ, điều phối công việc và tổng hợp kết quả |
+| [CẦN BỔ SUNG] | Dev Team | Phát triển giao diện và chức năng [ghi rõ phần phụ trách] |
+| [CẦN BỔ SUNG] | Dev Team | Phát triển giao diện và chức năng [ghi rõ phần phụ trách] |
+| [CẦN BỔ SUNG] | Dev Team | Kiểm thử, tài liệu hoặc chức năng [ghi rõ phần phụ trách] |
 
-* **Frontend:** HTML5, CSS3 (Flexbox/Grid), JavaScript thuần (ES6+)
-* **Kiến trúc:** Single Page Application (SPA) điều hướng giao diện theo trạng thái (State-driven)
-* **API bên ngoài:** Google Gemini API (`gemini-1.5-flash`)
-* **Lưu trữ dữ liệu:** Lưu trữ phía client (`localStorage`) và các file cấu hình JSON
+> Bổ sung hoặc xóa các dòng thành viên để khớp với danh sách thực tế của nhóm.
 
-### Cấu trúc thư mục dự án
+## 2. Mô tả dự án
+
+Adaptive Quiz System là ứng dụng web hỗ trợ học viên làm các đề được giao, xem kết quả và theo dõi lịch sử, tiến độ học tập. Các đề được giao chạy ở chế độ thử thách có thời gian; học viên cũng có thể tạo bài ôn câu sai bằng AI. Giáo viên có thể quản lý đề thi, ngân hàng câu hỏi, danh mục môn/kỹ năng, tài khoản và lớp học, đồng thời xem báo cáo.
+
+Dự án hướng đến việc giải quyết các vấn đề:
+- Học viên khó tự đánh giá mức độ nắm vững kiến thức.
+- Người học cần biết câu nào sai và hiểu lý do sai để ôn tập hiệu quả.
+- Giáo viên cần một nơi quản lý đề, câu hỏi và theo dõi kết quả học tập.
+
+### Liên hệ với 5 chủ đề được giao
+
+> **[CẦN BỔ SUNG]** Tên chính xác của 5 chủ đề do giảng viên giao chưa được cung cấp. Hãy điền chủ đề và mô tả chức năng/giải pháp tương ứng; không nên tự suy đoán tên chủ đề.
+
+| Chủ đề được giao | Vấn đề cần giải quyết | Phần chức năng liên quan |
+|---|---|---|
+| 1. [CẦN BỔ SUNG] | [CẦN BỔ SUNG] | [CẦN BỔ SUNG] |
+| 2. [CẦN BỔ SUNG] | [CẦN BỔ SUNG] | [CẦN BỔ SUNG] |
+| 3. [CẦN BỔ SUNG] | [CẦN BỔ SUNG] | [CẦN BỔ SUNG] |
+| 4. [CẦN BỔ SUNG] | [CẦN BỔ SUNG] | [CẦN BỔ SUNG] |
+| 5. [CẦN BỔ SUNG] | [CẦN BỔ SUNG] | [CẦN BỔ SUNG] |
+
+## 3. Công nghệ và chức năng
+
+- HTML5, CSS3 và JavaScript thuần.
+- Ứng dụng SPA chạy phía trình duyệt, không cần backend để chạy các chức năng cơ bản.
+- `localStorage` lưu database demo gồm tài khoản, đề thi, câu hỏi, lịch sử và tiến độ trên trình duyệt hiện tại; phiên đăng nhập cục bộ lưu ID tài khoản.
+- Các thư viện giao diện được tải qua CDN: Lucide Icons, Chart.js, SweetAlert2, Canvas Confetti và Prism.js.
+- Tích hợp Gemini để hỗ trợ tạo câu hỏi ôn tập từ câu sai. Khi các request thất bại, fallback hiện sao chép câu sai với ID mới; không lấy câu thay thế từ `data/questions.json`.
+- Ứng dụng hiện chạy client-side, không có backend; API key Gemini được đặt trong JavaScript phía client và có thể bị lộ. Không dùng dữ liệu/mật khẩu thật hoặc triển khai công khai với cấu hình key hiện tại.
+
+Các chức năng chính:
+- Đăng nhập demo bằng username/mật khẩu; giáo viên có thể tạo tài khoản học viên. Không có tự đăng ký.
+- Tìm kiếm, lọc danh sách đề thi.
+- Làm đề được giao có tính giờ; xem lại bài đã làm và ôn tập câu sai với AI.
+- Chấm điểm, xem giải thích và lưu lịch sử làm bài.
+- Học viên theo dõi tiến độ; quản trị viên quản lý đề thi, ngân hàng câu hỏi, người dùng và báo cáo.
+
+## 4. Hướng dẫn chạy
+
+### Chạy trên máy cá nhân
+
+Ứng dụng dùng `fetch()` để tải HTML và JSON, vì vậy cần chạy qua static web server; không mở trực tiếp bằng `file://`. Không cần cài Node.js, bundler hay framework để chạy ứng dụng.
+
+1. Mở thư mục dự án trong VS Code.
+2. Cài và khởi chạy extension **Live Server** từ tệp `index.html`.
+3. Truy cập địa chỉ local mà Live Server cung cấp.
+
+### Live Demo
+
+- **GitHub Pages/Vercel:** [CẦN BỔ SUNG URL SAU KHI DEPLOY]
+- **Kho mã nguồn:** [CẦN BỔ SUNG URL REPOSITORY]
+
+> Ứng dụng lưu dữ liệu trong `localStorage` của trình duyệt, nên dữ liệu demo không tự đồng bộ giữa các thiết bị.
+
+## 5. Prompt nổi bật đã dùng
+
+> **Lưu ý:** Các nội dung dưới đây là prompt mẫu dựa trên chức năng của dự án, không phải lịch sử prompt đã được xác nhận. Hãy thay bằng 3–5 prompt nguyên văn hoặc gần nguyên văn mà nhóm thực sự đã dùng để điều khiển AI.
+
+1. **Thiết kế luồng làm bài**
+   > “Hãy xây dựng luồng làm bài trắc nghiệm bằng JavaScript thuần: hỗ trợ câu hỏi chọn một/chọn nhiều, lưu đáp án vào AppState, cập nhật thanh tiến độ và tự động nộp bài khi hết giờ. Kiểm tra các trường hợp chưa chọn đáp án và đề thi không có câu hỏi.”
+
+2. **Chấm điểm và giải thích kết quả**
+   > “Hãy triển khai logic chấm điểm từ danh sách câu trả lời và `correctAnswer`. Sau khi nộp, hiển thị điểm, câu đúng/sai, đáp án đã chọn và lời giải thích. Không thay đổi cấu trúc dữ liệu câu hỏi hiện có.”
+
+3. **Lưu và khôi phục lịch sử**
+   > “Hãy lưu mỗi lượt làm bài vào `localStorage` kèm snapshot câu hỏi và câu trả lời để học viên có thể mở lại kết quả sau này. Đảm bảo lịch sử của học viên được lọc theo tài khoản đang đăng nhập và không làm hỏng dữ liệu cũ.”
+
+4. **Tạo câu hỏi ôn tập bằng AI**
+   > “Hãy tạo service gọi Gemini dựa trên danh sách câu trả lời sai. Yêu cầu kết quả là mảng JSON đúng schema câu hỏi của ứng dụng; xử lý lỗi mạng, phản hồi sai định dạng và cơ chế fallback rõ ràng.”
+
+5. **Rà soát đường dẫn sau khi sắp xếp thư mục**
+   > “Hãy rà tất cả đường dẫn script, CSS, JSON và HTML được tải bằng `fetch()` sau khi thay đổi cấu trúc thư mục. Cập nhật tham chiếu, giữ đúng thứ tự nạp JavaScript và kiểm tra không còn đường dẫn cũ.”
+
+## 6. Cấu trúc dự án
 
 ```text
 adaptive-quiz-system/
-├── index.html              # Trang SPA chính (Chứa các giao diện Auth, List, Quiz, Result)
-├── README.md               # Tài liệu hướng dẫn dự án
-├── data/
-│   ├── users.json          # Dữ liệu tài khoản mẫu & phân quyền
-│   └── questions.json      # Ngân hàng câu hỏi tĩnh kèm metadata giải thích
+├── .ai/
+│   └── skills.md
+├── agents.md
+├── docs/
+│   ├── architecture.md
+│   ├── data-contracts.md
+│   └── user_stories.md
+├── README.md
+├── generate-questions.js
+├── index.html
 ├── css/
-│   ├── main.css            # Biến CSS, reset style và khung layout chính
-│   ├── components.css      # Style các thành phần (Card, Timer, Progress Bar, Modal)
-│   └── responsive.css      # Tương thích màn hình Mobile/Tablet
-└── js/
-    ├── app.js              # SPA Router & Quản lý trạng thái ứng dụng
-    ├── auth.js             # Đăng nhập, quản lý phiên & Phân quyền (RBAC)
-    ├── quiz-engine.js      # Logic làm bài, đếm ngược, tính điểm & phân tích
-    └── ai-service.js       # Gọi Gemini API để tự động sinh câu hỏi bổ trợ
+├── data/
+│   ├── demo-sample-pack.json
+│   ├── questions.json
+│   └── users.json
+├── js/
+│   ├── core/
+│   ├── features/
+│   │   ├── student/
+│   │   └── admin/
+│   └── services/
+└── views/
+    ├── auth/
+    ├── shared/
+    ├── student/
+    └── admin/
 ```
-
----
-
-## ✨ 2. Các Phân hệ Chức năng Chính
-
-### 🔐 Xác thực & Phân quyền (`js/auth.js`)
-* **Xác thực người dùng:** Đăng nhập, đăng ký và duy trì phiên đăng nhập qua `localStorage`.
-* **Phân quyền người dùng (RBAC):**
-  * **Student:** Làm bài kiểm tra, xem lịch sử làm bài, kích hoạt tính năng AI ôn tập câu sai.
-  * **Admin:** Quản lý thông tin ngân hàng câu hỏi, xem thống kê tổng quan của học viên.
-
-### 📋 Danh sách Đề thi & Bộ lọc (`js/app.js`)
-* Phân loại đề thi theo **Chủ đề** (`HTML`, `CSS`, `JS`) và **Độ khó** (`Easy`, `Medium`, `Hard`).
-* Tìm kiếm và lọc bài thi theo từ khóa thời gian thực.
-
-### ⏱️ Trình làm bài Kiểm tra (`js/quiz-engine.js`)
-* **Dạng câu hỏi:** Chọn 1 đáp án (`radio`) và chọn nhiều đáp án (`checkbox`).
-* **Thành phần thời gian thực:** Đồng hồ đếm ngược tự động nộp bài khi hết giờ; Thanh tiến độ (Progress bar) cập nhật theo số câu đã làm.
-* **Chấm điểm & Phân tích:** Tự động tính điểm, phần trăm chính xác, thời gian hoàn thành và thống kê kỹ năng yếu dựa trên các câu làm sai.
-
-### 🤖 Engine AI Bổ trợ Kiến thức (`js/ai-service.js`)
-* **Kích hoạt:** Bấm nút *"✨ Luyện tập lại câu sai với AI"* tại Trang Kết quả.
-* **Luồng xử lý:** Trích xuất danh sách câu sai $\rightarrow$ Gửi Prompt tới Gemini API (`gemini-1.5-flash`) $\rightarrow$ Nhận kết quả định dạng JSON $\rightarrow$ Render bộ câu hỏi mới cho học viên làm lại.
-* **Cơ chế Fallback:** Tự động chuyển về lấy câu hỏi từ kho lưu trữ nội bộ nếu mất mạng hoặc lỗi API Key.
-
----
-
-## 📊 3. Cấu trúc Dữ liệu (Data Schemas)
-
-### Cấu trúc Câu hỏi (`data/questions.json`)
-```json
-[
-  {
-    "id": "q_js_01",
-    "topic": "JavaScript",
-    "subTopic": "DOM Manipulation",
-    "difficulty": "Medium",
-    "type": "single",
-    "question": "Thẻ nào được dùng để nhúng file JavaScript bên ngoài vào HTML?",
-    "options": [
-      "<script src='app.js'>",
-      "<link rel='app.js'>",
-      "<js file='app.js'>",
-      "<import src='app.js'>"
-    ],
-    "correctAnswer": [0],
-    "explanation": "Thẻ <script> với thuộc tính 'src' được dùng để nhúng file script.",
-    "remediation": {
-      "concept": "Cách nhúng JavaScript vào HTML",
-      "suggestedRead": "Tham khảo tài liệu MDN về thẻ <script>"
-    }
-  }
-]
-```
-
-### Cấu trúc Tài khoản (`data/users.json`)
-```json
-[
-  {
-    "id": "usr_01",
-    "username": "student1",
-    "password": "123",
-    "fullName": "Phan Thị Ngọc Duyên",
-    "role": "student",
-    "history": []
-  },
-  {
-    "id": "usr_02",
-    "username": "admin",
-    "password": "adminpassword",
-    "fullName": "Administrator",
-    "role": "admin"
-  }
-]
-```
-
----
-
-## 🚀 4. Hướng dẫn Cài đặt & Khởi chạy
-
-1. **Clone repository về máy:**
-   ```bash
-   git clone https://github.com/your-username/adaptive-quiz-system.git
-   cd adaptive-quiz-system
-   ```
-
-2. **Cấu hình Gemini API Key:**
-   Mở file `js/ai-service.js` và điền API Key lấy từ Google AI Studio:
-   ```javascript
-   const GEMINI_API_KEY = "YOUR_GEMINI_API_KEY";
-   ```
-
-3. **Chạy ứng dụng:**
-   Mở trực tiếp file `index.html` trên trình duyệt hoặc chạy bằng extension **Live Server** trong VS Code.
-
----
-
-## 🗺️ 5. Lộ trình Phát triển
-
-- [x] **Giai đoạn 1:** Dựng layout SPA và hệ thống CSS
-- [x] **Giai đoạn 2:** Lập trình Quiz Engine, đồng hồ đếm ngược & logic chấm điểm
-- [x] **Giai đoạn 3:** Phân hệ Đăng nhập & Điều hướng phân quyền
-- [x] **Giai đoạn 4:** Tích hợp Gemini API sinh câu hỏi AI
-- [ ] **Giai đoạn 5:** Chuyển đổi sang Backend API (Node.js/Express + Database)
