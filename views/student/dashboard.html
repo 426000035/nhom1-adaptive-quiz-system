@@ -1,0 +1,267 @@
+<section class="student-dashboard" aria-label="Khu vực học viên">
+
+  <!-- THANH SUB-TABS DÀNH CHO STUDENT -->
+  <nav id="student-tabs-nav" class="student-tabs-nav" aria-label="Điều hướng học viên">
+    <div id="student-tab-list" class="student-tab-list" role="tablist" aria-label="Các mục học viên" aria-orientation="horizontal">
+      <button id="tab-profile" class="student-tab-btn" type="button" role="tab" aria-label="Hồ Sơ & Tiến Độ" aria-selected="false" aria-controls="subtab-profile" tabindex="-1" data-tab-target="subtab-profile" title="Hồ Sơ & Tiến Độ">
+        <i data-lucide="user-round" aria-hidden="true"></i><span class="student-tab-label">Hồ Sơ & Tiến Độ</span>
+      </button>
+      <button id="tab-catalog" class="student-tab-btn active" type="button" role="tab" aria-label="Danh Sách Đề Thi" aria-selected="true" aria-controls="subtab-catalog" tabindex="0" data-tab-target="subtab-catalog" title="Danh Sách Đề Thi">
+        <i data-lucide="book-open" aria-hidden="true"></i><span class="student-tab-label">Danh Sách Đề Thi</span>
+      </button>
+      <button id="tab-history" class="student-tab-btn" type="button" role="tab" aria-label="Lịch Sử Làm Bài" aria-selected="false" aria-controls="subtab-history" tabindex="-1" data-tab-target="subtab-history" title="Lịch Sử Làm Bài">
+        <i data-lucide="history" aria-hidden="true"></i><span class="student-tab-label">Lịch Sử Làm Bài</span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- NỘI DUNG NẰM TRONG CÁC SUB-TAB -->
+  <div id="student-subtab-contents" class="student-subtab-contents">
+    
+    <!-- SUB-TAB 1: CATALOG BÀI THI -->
+    <section id="subtab-catalog" class="student-subtab-content" role="tabpanel" aria-labelledby="tab-catalog" tabindex="0">
+      <div id="student-catalog-mount-point"></div>
+    </section>
+
+    <!-- SUB-TAB 2: LỊCH SỬ LÀM BÀI -->
+    <section id="subtab-history" class="student-subtab-content" role="tabpanel" aria-labelledby="tab-history" tabindex="0" hidden>
+      <div id="student-history-mount-point"></div>
+    </section>
+
+    <!-- SUB-TAB 3: HỒ SƠ VÀ TIẾN ĐỘ -->
+    <section id="subtab-profile" class="student-subtab-content student-profile-dashboard" role="tabpanel" aria-labelledby="tab-profile" tabindex="0" hidden>
+      <div class="student-profile-admin-toolbar" hidden>
+        <button id="btn-return-admin-profile" class="btn btn-outline" type="button" aria-label="Quay lại" title="Quay lại">
+          <i data-lucide="arrow-left" aria-hidden="true"></i>
+        </button>
+      </div>
+      <article class="question-card student-profile-card">
+        <div class="student-profile-aside">
+          <header class="student-profile-heading">
+            <div class="student-profile-avatar-wrap">
+              <button id="student-profile-avatar" class="student-profile-avatar" type="button" aria-label="Chọn avatar" aria-expanded="false" aria-controls="student-avatar-picker">🌱</button>
+              <span class="student-profile-avatar-hint">Bấm để đổi avatar</span>
+            </div>
+            <div class="student-profile-identity">
+              <p class="student-profile-eyebrow">HỒ SƠ HỌC VIÊN</p>
+              <h2 id="student-profile-nickname-display" class="student-profile-name"></h2>
+              <p class="student-profile-real-name">Họ tên thật: <strong id="student-profile-name"></strong></p>
+            </div>
+          </header>
+
+          <fieldset id="student-avatar-picker" class="student-avatar-picker" aria-label="Chọn avatar" hidden>
+            <legend>Chọn avatar</legend>
+            <div class="student-avatar-options">
+              <button type="button" class="student-avatar-option" data-avatar="seedling" aria-label="Chọn avatar hạt mầm">🌱</button>
+              <button type="button" class="student-avatar-option" data-avatar="sunflower" aria-label="Chọn avatar hướng dương">🌻</button>
+              <button type="button" class="student-avatar-option" data-avatar="book" aria-label="Chọn avatar sách">📚</button>
+              <button type="button" class="student-avatar-option" data-avatar="star" aria-label="Chọn avatar ngôi sao">⭐</button>
+              <button type="button" class="student-avatar-option" data-avatar="fox" aria-label="Chọn avatar cáo">🦊</button>
+            </div>
+            <p id="student-avatar-status" class="admin-form-status" role="status" aria-live="polite"></p>
+          </fieldset>
+        </div>
+
+        <section class="student-profile-details" aria-labelledby="student-profile-details-heading">
+          <div class="student-profile-section-heading">
+            <h3 id="student-profile-details-heading">Thông tin cá nhân</h3>
+            <div class="student-profile-toolbar">
+              <button id="btn-edit-student-profile" class="btn btn-outline" type="button">
+                <i data-lucide="pencil" aria-hidden="true"></i> Sửa thông tin cá nhân
+              </button>
+              <button id="btn-open-student-password" class="btn btn-outline" type="button">
+                <i data-lucide="key-round" aria-hidden="true"></i> Đổi mật khẩu
+              </button>
+            </div>
+          </div>
+          <dl class="student-profile-info">
+            <div class="student-profile-info-row">
+              <dt>Lớp</dt>
+              <dd id="student-profile-classes"></dd>
+            </div>
+            <div class="student-profile-info-row">
+              <dt>Ngày tháng năm sinh</dt>
+              <dd id="student-profile-birth-date"></dd>
+            </div>
+            <div class="student-profile-info-row">
+              <dt>Số điện thoại</dt>
+              <dd id="student-profile-phone"></dd>
+            </div>
+            <div class="student-profile-info-row">
+              <dt>Username</dt>
+              <dd id="student-profile-username"></dd>
+            </div>
+          </dl>
+          <p id="student-profile-status" class="student-profile-status admin-form-status" role="status" aria-live="polite"></p>
+        </section>
+      </article>
+
+      <dialog id="student-profile-edit-dialog" class="student-profile-dialog" aria-labelledby="student-profile-edit-title">
+        <div class="student-profile-dialog-header">
+          <h3 id="student-profile-edit-title">Sửa thông tin cá nhân</h3>
+          <button class="btn btn-outline student-profile-dialog-close" type="button" data-close-dialog="student-profile-edit-dialog" aria-label="Đóng">×</button>
+        </div>
+        <form id="form-student-profile" class="student-profile-form">
+          <div class="form-group">
+            <label for="student-profile-nickname">Biệt danh</label>
+            <input id="student-profile-nickname" class="select-control" type="text" maxlength="40" autocomplete="nickname" aria-describedby="student-profile-nickname-help">
+            <span id="student-profile-nickname-help" class="admin-form-help">Tối đa 40 ký tự; có thể để trống.</span>
+          </div>
+          <div class="form-group">
+            <label for="student-profile-birth-date-input">Ngày sinh</label>
+            <input id="student-profile-birth-date-input" class="select-control" type="date" autocomplete="bday">
+          </div>
+          <div class="form-group">
+            <label for="student-profile-phone-input">Số điện thoại</label>
+            <input id="student-profile-phone-input" class="select-control" type="tel" maxlength="20" autocomplete="tel" placeholder="Ví dụ: 0912345678">
+          </div>
+          <div class="student-profile-actions">
+            <button id="btn-save-student-profile" class="btn btn-primary" type="submit"><i data-lucide="save" aria-hidden="true"></i> Lưu thông tin</button>
+            <button class="btn btn-outline" type="button" data-close-dialog="student-profile-edit-dialog">Hủy</button>
+          </div>
+        </form>
+      </dialog>
+
+      <dialog id="student-password-dialog" class="student-profile-dialog" aria-labelledby="student-password-heading">
+        <div class="student-profile-dialog-header">
+          <h3 id="student-password-heading">Đổi mật khẩu</h3>
+          <button class="btn btn-outline student-profile-dialog-close" type="button" data-close-dialog="student-password-dialog" aria-label="Đóng">×</button>
+        </div>
+        <p class="admin-card-description">Mật khẩu mới: 8–128 ký tự. Chỉ dùng mật khẩu demo.</p>
+        <form id="form-student-password" class="student-password-form">
+          <div class="form-group">
+            <label for="student-current-password">Mật khẩu hiện tại</label>
+            <input id="student-current-password" class="select-control" type="password" autocomplete="current-password" required>
+          </div>
+          <div class="form-group">
+            <label for="student-new-password">Mật khẩu mới</label>
+            <input id="student-new-password" class="select-control" type="password" autocomplete="new-password" minlength="8" maxlength="128" required>
+          </div>
+          <div class="form-group">
+            <label for="student-confirm-password">Xác nhận mật khẩu mới</label>
+            <input id="student-confirm-password" class="select-control" type="password" autocomplete="new-password" minlength="8" maxlength="128" required>
+          </div>
+          <div class="student-profile-actions">
+            <button id="btn-save-student-password" class="btn btn-primary" type="submit"><i data-lucide="save" aria-hidden="true"></i> Xác nhận</button>
+            <button class="btn btn-outline" type="button" data-close-dialog="student-password-dialog">Hủy</button>
+          </div>
+        </form>
+      </dialog>
+      <p id="student-password-status" class="student-password-status admin-form-status" role="status" aria-live="polite"></p>
+      
+      <section class="student-progress-section" aria-labelledby="student-stats-title">
+        <h2 id="student-stats-title" class="student-progress-title">Thống kê học tập</h2>
+      <div class="dashboard-stats-grid">
+        <article class="stat-card">
+          <span class="stat-card-icon" aria-hidden="true">🔥</span>
+          <div>
+            <h3 class="stat-card-label">Chuỗi học tập</h3>
+            <p id="dash-streak-count" class="stat-card-value stat-card-value-streak">1 Ngày Liên Tiếp</p>
+          </div>
+        </article>
+
+        <article class="stat-card">
+          <span class="stat-card-icon" aria-hidden="true">📝</span>
+          <div>
+            <h3 class="stat-card-label">Bài thi đã hoàn thành</h3>
+            <p id="dash-completed-count" class="stat-card-value stat-card-value-completed">0 Bài</p>
+          </div>
+        </article>
+
+        <article class="stat-card">
+          <span class="stat-card-icon" aria-hidden="true">⭐</span>
+          <div>
+            <h3 class="stat-card-label">Điểm tổng hợp trung bình</h3>
+            <p id="dash-avg-score" class="stat-card-value stat-card-value-score">0.0 / 10</p>
+          </div>
+        </article>
+      </div>
+      </section>
+
+      <section class="learning-progress-section" aria-labelledby="learning-progress-title">
+        <div class="learning-progress-heading">
+          <div>
+            <h3 id="learning-progress-title">Năng lực theo môn học & kỹ năng</h3>
+            <p>Tổng hợp các lượt đã làm · dưới 60%: cần củng cố.</p>
+          </div>
+        </div>
+        <div id="student-learning-progress" class="learning-progress-list" aria-live="polite"></div>
+      </section>
+
+      <!-- KHU VƯỜN HOẠT HÌNH -->
+      <section id="tree-garden-scene" class="tree-garden-scene" aria-labelledby="dash-tree-title">
+        <div class="garden-sky" aria-hidden="true">
+          <span class="garden-sun">☀️</span>
+          <span class="garden-cloud cloud-one">☁️</span>
+          <span class="garden-cloud cloud-two">☁️</span>
+          <span class="garden-butterfly">🦋</span>
+          <span class="garden-bird bird-one">🐦</span>
+          <span class="garden-bird bird-two">🐦</span>
+          <div class="garden-rain" aria-hidden="true">
+            <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+          </div>
+        </div>
+
+        <div class="garden-heading">
+          <div>
+            <span class="garden-eyebrow">KHU VƯỜN TRI THỨC</span>
+            <h3 id="dash-tree-title">Hạt Mầm (Cấp 1)</h3>
+            <p id="dash-tree-desc">Cây vừa mới nhú mầm, hãy tưới nước đều đặn nhé!</p>
+          </div>
+          <span id="dash-tree-exp-badge" class="garden-exp-badge">EXP: 0/100</span>
+        </div>
+
+        <div class="garden-landscape" aria-hidden="true">
+          <span class="garden-flower flower-left">🌼</span>
+          <span class="garden-flower flower-right">🌸</span>
+          <span class="garden-rock rock-left">🪨</span>
+          <span class="garden-rock rock-right">🪨</span>
+          <div class="garden-hill"></div>
+          <div class="garden-plant-wrap">
+            <span class="garden-plant-sparkle sparkle-left">✨</span>
+            <span class="garden-plant-sparkle sparkle-right">✨</span>
+            <span id="dash-tree-icon" class="garden-plant" role="img" aria-label="Cây đang lớn lên">🌱</span>
+            <span class="garden-growth-rays">✨</span>
+          </div>
+          <div class="garden-ground">
+            <span class="garden-root root-left"></span>
+            <span class="garden-root root-right"></span>
+            <span class="garden-seed" title="Hạt giống đang bén rễ">🌰</span>
+            <span class="garden-earthworm">🪱</span>
+            <span class="garden-ground-stone">🪨</span>
+            <span class="garden-ground-label">MẦM TRI THỨC ĐANG LỚN LÊN</span>
+          </div>
+          <div class="garden-puddle"></div>
+          <div class="garden-water-stream"></div>
+          <span class="garden-water-drop drop-one">💧</span>
+          <span class="garden-water-drop drop-two">💧</span>
+          <span class="garden-water-drop drop-three">💦</span>
+          <span class="garden-bucket" aria-hidden="true">🪣</span>
+        </div>
+
+        <div class="garden-footer">
+          <div class="garden-progress">
+            <div class="garden-progress-copy">
+              <span>Tiến độ trưởng thành</span>
+              <strong id="dash-tree-exp-label">0 / 100 EXP</strong>
+            </div>
+            <div class="garden-progress-track">
+              <progress id="dash-tree-exp-bar" class="garden-progress-fill" max="100" value="0" aria-label="Tiến độ phát triển của cây"></progress>
+            </div>
+          </div>
+          <div class="garden-actions">
+            <span class="garden-water-stock">Xô nước <strong id="dash-water-count">0 🪣</strong></span>
+            <button id="btn-water-tree" class="garden-water-button">
+              <span aria-hidden="true">💧</span> Tưới cây <small>+50 EXP</small>
+            </button>
+          </div>
+        </div>
+      </section>
+      <footer class="student-profile-footer">
+        <button id="btn-profile-logout" class="btn btn-outline student-profile-logout" type="button">
+          <i data-lucide="log-out" aria-hidden="true"></i> Đăng xuất
+        </button>
+      </footer>
+    </section>
+  </div>
+</section>

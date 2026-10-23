@@ -1,0 +1,402 @@
+<!-- ==========================================================================
+   Adaptive Quiz System - Modals & Overlays Component (views/shared/modals.html)
+   ========================================================================== -->
+
+<!-- DANH SÁCH 6: CÂU HỎI TRONG BÀI THI (MODAL 1) -->
+<div id="modal-manage-questions" class="modal-overlay admin-modal hidden" aria-hidden="true">
+  <div class="modal-card admin-modal-dialog admin-modal-dialog--manage-questions" role="dialog" aria-modal="true" aria-labelledby="modal-manage-questions-title" tabindex="-1">
+    <!-- Modal Header -->
+    <div class="admin-modal-header">
+      <div>
+        <h3 id="modal-manage-questions-title" class="admin-modal-title">
+          <i data-lucide="list-checks"></i> Quản Lý Câu Hỏi: <span id="selected-quiz-title-display" class="admin-modal-title-value">...</span>
+        </h3>
+        <p class="admin-modal-subtitle">Mã bài thi: <code id="selected-quiz-id-display">---</code></p>
+      </div>
+      <button id="btn-close-questions-modal" class="btn btn-outline admin-modal-close-button">
+        <i data-lucide="x"></i> Đóng
+      </button>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="admin-modal-actions">
+      <button id="btn-admin-import-from-bank" class="btn btn-outline admin-modal-ai-action">
+        <i data-lucide="database"></i> Chọn Từ Ngân Hàng
+      </button>
+      <button id="btn-admin-add-q-to-quiz" class="btn btn-secondary">
+        <i data-lucide="plus"></i> Thêm Câu Hỏi Mới
+      </button>
+    </div>
+
+    <!-- Control Bar lọc câu hỏi trong bài thi -->
+    <div class="admin-filter-bar">
+      <input type="text" id="search-quiz-questions" class="select-control" placeholder="Tìm nội dung câu hỏi..." aria-label="Tìm câu hỏi trong đề">
+      <select id="sort-quiz-questions" class="select-control" aria-label="Sắp xếp câu hỏi trong đề">
+        <option value="DATE_DESC" selected>Mới nhất trước</option>
+        <option value="DATE_ASC">Cũ nhất trước</option>
+        <option value="TITLE_ASC">Câu hỏi (A - Z)</option>
+        <option value="TITLE_DESC">Câu hỏi (Z - A)</option>
+      </select>
+      <select id="pagesize-quiz-questions" class="select-control" aria-label="Số câu hỏi trong đề mỗi trang">
+        <option value="10">10 / trang</option>
+        <option value="20">20 / trang</option>
+        <option value="50">50 / trang</option>
+        <option value="ALL">Hiện tất cả</option>
+      </select>
+    </div>
+
+    <!-- Bảng danh sách câu hỏi trong bài thi -->
+    <div class="admin-table-wrap admin-modal-table-wrap" role="region" aria-label="Bảng câu hỏi trong đề" tabindex="0">
+      <table>
+        <thead>
+          <tr class="admin-table-header-row admin-table-header-row--sticky">
+            <th scope="col">STT</th>
+            <th scope="col">Mã Câu</th>
+            <th scope="col">Nội Dung Câu Hỏi</th>
+            <th scope="col">Đáp Án Đúng</th>
+            <th scope="col" class="admin-table-cell--center">Thao Tác</th>
+          </tr>
+        </thead>
+        <tbody id="admin-quiz-questions-tbody"></tbody>
+      </table>
+    </div>
+
+    <!-- Phân trang -->
+    <nav id="pagination-quiz-questions" class="pagination-wrapper admin-table-pagination" aria-label="Phân trang câu hỏi trong đề"></nav>
+  </div>
+</div>
+
+<!-- DANH SÁCH 7: CHỌN CÂU HỎI TỪ NGÂN HÀNG (MODAL 2) -->
+<div id="modal-select-from-bank" class="modal-overlay admin-modal admin-modal--select-bank hidden" aria-hidden="true">
+  <div class="modal-card admin-modal-dialog admin-modal-dialog--select-bank" role="dialog" aria-modal="true" aria-labelledby="modal-select-from-bank-title" tabindex="-1">
+    <h3 id="modal-select-from-bank-title" class="admin-modal-heading admin-modal-heading--select-bank">
+      <i data-lucide="database"></i> Chọn Câu Hỏi Từ Ngân Hàng Có Sẵn
+    </h3>
+
+    <!-- Control Bar -->
+    <div class="admin-filter-bar">
+      <input type="text" id="search-modal-bank" class="select-control" placeholder="Tìm câu hỏi..." aria-label="Tìm câu hỏi trong ngân hàng">
+      <select id="sort-modal-bank" class="select-control" aria-label="Sắp xếp câu hỏi trong ngân hàng">
+        <option value="DATE_DESC" selected>Mới nhất trước</option>
+        <option value="DATE_ASC">Cũ nhất trước</option>
+        <option value="TITLE_ASC">Câu hỏi (A - Z)</option>
+        <option value="TITLE_DESC">Câu hỏi (Z - A)</option>
+      </select>
+      <select id="pagesize-modal-bank" class="select-control" aria-label="Số câu hỏi ngân hàng mỗi trang">
+        <option value="10">10 / trang</option>
+        <option value="20">20 / trang</option>
+        <option value="50">50 / trang</option>
+        <option value="ALL">Hiện tất cả</option>
+      </select>
+    </div>
+
+    <div class="admin-modal-selection-toolbar">
+      <label class="admin-filtered-select-control" for="chk-select-filtered-bank">
+        <input type="checkbox" id="chk-select-filtered-bank" aria-label="Chọn tất cả câu hỏi theo bộ lọc">
+        <span>Tất cả</span>
+      </label>
+      <p id="bank-question-selection-count" class="admin-modal-subtitle" aria-live="polite">Đã chọn 0 câu hỏi</p>
+    </div>
+
+    <!-- Bảng chọn câu hỏi -->
+    <div class="admin-table-wrap admin-modal-table-wrap" role="region" aria-label="Bảng câu hỏi ngân hàng" tabindex="0">
+      <table>
+        <thead>
+          <tr class="admin-table-header-row">
+            <th scope="col" class="admin-table-cell--center">Chọn</th>
+            <th scope="col">Mã Câu</th>
+            <th scope="col">Nội Dung Câu Hỏi</th>
+            <th scope="col">Chủ Đề</th>
+          </tr>
+        </thead>
+        <tbody id="bank-questions-select-tbody"></tbody>
+      </table>
+    </div>
+
+    <nav id="pagination-modal-bank" class="pagination-wrapper admin-table-pagination admin-table-pagination--bottom-space" aria-label="Phân trang câu hỏi ngân hàng"></nav>
+
+    <div class="admin-modal-footer">
+      <button type="button" id="btn-cancel-bank-select" class="btn btn-outline">Hủy</button>
+      <button type="button" id="btn-confirm-bank-select" class="btn btn-primary">Thêm Các Câu Đã Chọn</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL TẠO / SỬA BÀI THI -->
+<div id="modal-quiz-form" class="modal-overlay admin-modal hidden" aria-hidden="true">
+  <div class="modal-card admin-modal-dialog admin-modal-dialog--quiz-form admin-editor-card" role="dialog" aria-modal="true" aria-labelledby="modal-quiz-title" tabindex="-1">
+    <div class="admin-modal-header admin-editor-header">
+      <div>
+        <h3 id="modal-quiz-title" class="admin-modal-heading admin-modal-heading--quiz-form">Tạo Bài Thi Mới</h3>
+      </div>
+    </div>
+    <form id="form-manage-quiz" class="admin-editor-form">
+      <input type="hidden" id="quiz-form-id" value="">
+      <div class="admin-editor-body">
+        <div class="form-group">
+          <label for="quiz-form-title-input">Tên Bài Thi / Đề Thi</label>
+          <input type="text" id="quiz-form-title-input" class="select-control admin-form-control--full" placeholder="Nhập tên bài thi..." required>
+        </div>
+        <div class="admin-form-grid">
+          <div class="form-group">
+            <label for="quiz-form-topic-select">Môn Học</label>
+            <select id="quiz-form-topic-select" class="select-control admin-form-control--full" required></select>
+          </div>
+          <div class="form-group">
+            <label for="quiz-form-time-input">Thời Gian Làm Bài (Phút)</label>
+            <input type="number" id="quiz-form-time-input" class="select-control admin-form-control--full" value="10" min="1" max="180" required>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Giao đề cho học sinh</label>
+          <div class="admin-inline-control-row">
+            <button type="button" id="btn-open-quiz-assignment" class="btn btn-outline">
+              <i data-lucide="users" aria-hidden="true"></i> Chọn học sinh
+            </button>
+            <span id="quiz-assignment-selection-summary" aria-live="polite">Chưa chọn học sinh</span>
+          </div>
+          <small id="quiz-form-students-hint">Chỉ học sinh được chọn mới thấy đề. Để trống sẽ lưu đề nhưng chưa giao cho học sinh nào.</small>
+        </div>
+        <div class="admin-form-grid">
+          <div class="form-group">
+            <label for="quiz-form-max-attempts-input">Số lượt làm EXAM</label>
+            <div class="admin-attempt-control-row">
+              <input type="number" id="quiz-form-max-attempts-input" class="select-control admin-form-control--narrow" min="1" step="1" value="1" disabled>
+              <label class="admin-inline-checkbox-label">
+                <input type="checkbox" id="quiz-form-unlimited-attempts" checked>
+                Không giới hạn
+              </label>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="quiz-form-score-policy">Cách tính điểm tổng hợp</label>
+            <select id="quiz-form-score-policy" class="select-control admin-form-control--full">
+              <option value="highest">Điểm cao nhất</option>
+              <option value="average">Điểm trung bình</option>
+              <option value="latest">Điểm lần cuối</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group admin-quiz-deadline">
+          <label for="quiz-form-has-deadline" class="admin-deadline-label">
+            <input type="checkbox" id="quiz-form-has-deadline">
+            Có hạn chót
+          </label>
+          <label for="quiz-form-due-at">Hạn chót</label>
+          <input type="datetime-local" id="quiz-form-due-at" class="select-control admin-form-control--full" disabled>
+        </div>
+      </div>
+      <div class="admin-editor-footer">
+        <button type="button" id="btn-cancel-quiz-form" class="btn btn-outline">Hủy</button>
+        <button type="submit" class="btn btn-primary">Lưu Bài Thi</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- MODAL CHỌN HỌC SINH NHẬN ĐỀ -->
+<div id="modal-quiz-assignment" class="modal-overlay admin-modal admin-modal--quiz-assignment hidden" aria-hidden="true">
+  <div class="modal-card admin-modal-dialog admin-modal-dialog--stacked admin-modal-dialog--quiz-assignment" role="dialog" aria-modal="true" aria-labelledby="quiz-assignment-title" tabindex="-1">
+    <div class="admin-modal-heading-row">
+      <div>
+        <h3 id="quiz-assignment-title" class="admin-modal-heading">Chọn học sinh nhận đề</h3>
+        <p id="quiz-assignment-selected-count" class="admin-modal-subtitle" aria-live="polite">Đang chọn 0 học sinh</p>
+      </div>
+      <button type="button" id="btn-close-quiz-assignment" class="btn btn-outline" aria-label="Đóng cửa sổ chọn học sinh">Đóng</button>
+    </div>
+
+    <div class="admin-filter-bar admin-assignment-filter-bar">
+      <input type="search" id="search-quiz-assignment-students" class="select-control" placeholder="Tìm họ tên học sinh..." aria-label="Tìm theo họ tên học sinh">
+      <select id="filter-quiz-assignment-status" class="select-control" aria-label="Lọc theo trạng thái học sinh">
+        <option value="ALL">Tất cả trạng thái</option>
+        <option value="active">Đang hoạt động</option>
+        <option value="inactive">Tạm ngưng</option>
+        <option value="locked">Đã khóa</option>
+      </select>
+      <select id="filter-quiz-assignment-class" class="select-control" aria-label="Lọc theo lớp">
+        <option value="ALL">Tất cả lớp</option>
+      </select>
+      <select id="sort-quiz-assignment-students" class="select-control" aria-label="Sắp xếp học sinh nhận đề">
+        <option value="DATE_DESC" selected>Mới nhất trước</option>
+        <option value="DATE_ASC">Cũ nhất trước</option>
+        <option value="TITLE_ASC">Họ tên (A - Z)</option>
+        <option value="TITLE_DESC">Họ tên (Z - A)</option>
+      </select>
+      <select id="pagesize-quiz-assignment-students" class="select-control" aria-label="Số học sinh mỗi trang">
+        <option value="10">10 / trang</option>
+        <option value="20">20 / trang</option>
+        <option value="50">50 / trang</option>
+        <option value="ALL">Hiện tất cả</option>
+      </select>
+    </div>
+
+    <label class="admin-filtered-select-control admin-assignment-select-all" for="chk-select-filtered-assignment-students">
+      <input type="checkbox" id="chk-select-filtered-assignment-students" aria-label="Chọn tất cả học sinh theo bộ lọc">
+      <span>Tất cả</span>
+    </label>
+
+    <div class="admin-table-wrap admin-modal-table-wrap" role="region" aria-label="Bảng học sinh nhận đề" tabindex="0">
+      <table>
+        <thead>
+          <tr class="admin-table-header-row">
+            <th scope="col">Chọn</th>
+            <th scope="col">Họ và tên</th>
+            <th scope="col">Lớp</th>
+            <th scope="col">Trạng thái</th>
+          </tr>
+        </thead>
+        <tbody id="quiz-assignment-students-tbody"></tbody>
+      </table>
+    </div>
+
+    <nav id="pagination-quiz-assignment-students" class="pagination-wrapper admin-table-pagination" aria-label="Phân trang học sinh nhận đề"></nav>
+    <div class="admin-modal-footer">
+      <button type="button" id="btn-cancel-quiz-assignment" class="btn btn-outline">Hủy</button>
+      <button type="button" id="btn-confirm-quiz-assignment" class="btn btn-primary">Xác nhận lựa chọn</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL PHÂN LỚP HỌC VIÊN -->
+<div id="modal-user-classes" class="modal-overlay admin-modal admin-modal--user-classes hidden" aria-hidden="true">
+  <div class="modal-card admin-modal-dialog admin-modal-dialog--stacked admin-modal-dialog--user-classes" role="dialog" aria-modal="true" aria-labelledby="user-classes-title" tabindex="-1">
+    <div class="admin-modal-heading-row">
+      <div>
+        <h3 id="user-classes-title" class="admin-modal-heading">Phân lớp học viên</h3>
+        <p id="user-classes-student-name" class="admin-modal-subtitle"></p>
+      </div>
+      <button type="button" id="btn-close-user-classes" class="btn btn-outline" aria-label="Đóng cửa sổ phân lớp">Đóng</button>
+    </div>
+    <p class="admin-modal-copy">Học viên có thể thuộc nhiều lớp. Lớp đã ngừng hoạt động vẫn được giữ nếu đang gán cho học viên.</p>
+    <div id="user-classes-checkbox-list" class="admin-user-class-list"></div>
+    <div class="admin-modal-footer">
+      <button type="button" id="btn-cancel-user-classes" class="btn btn-outline">Hủy</button>
+      <button type="button" id="btn-save-user-classes" class="btn btn-primary">Lưu lớp học</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL TẠO TÀI KHOẢN HỌC VIÊN -->
+<div id="modal-create-student" class="modal-overlay admin-modal admin-modal--create-student hidden" aria-hidden="true">
+  <div class="modal-card admin-modal-dialog admin-modal-dialog--stacked admin-modal-dialog--create-student" role="dialog" aria-modal="true" aria-labelledby="create-student-title" tabindex="-1">
+    <div class="admin-modal-heading-row">
+      <div>
+        <h3 id="create-student-title" class="admin-modal-heading">Thêm học viên</h3>
+        <p class="admin-modal-subtitle">Tạo tài khoản demo để học viên đăng nhập trên trình duyệt này.</p>
+      </div>
+      <button type="button" id="btn-close-create-student" class="btn btn-outline" aria-label="Đóng cửa sổ thêm học viên">×</button>
+    </div>
+    <form id="form-admin-create-student" class="admin-create-student-form admin-create-student-form--vertical">
+      <div class="form-group">
+        <label for="admin-new-student-name">Họ tên</label>
+        <input type="text" id="admin-new-student-name" class="select-control" autocomplete="name" maxlength="120" required>
+      </div>
+      <div class="form-group">
+        <label for="admin-new-student-username">Username</label>
+        <input type="text" id="admin-new-student-username" class="select-control" autocomplete="off" minlength="3" maxlength="40" pattern="[A-Za-z0-9._-]{3,40}" aria-describedby="admin-student-username-help" required>
+        <span id="admin-student-username-help" class="admin-form-help">3–40 ký tự: chữ, số, dấu chấm, gạch dưới hoặc gạch ngang.</span>
+      </div>
+      <div class="form-group">
+        <label for="admin-new-student-password">Mật khẩu ban đầu</label>
+        <input type="password" id="admin-new-student-password" class="select-control" autocomplete="new-password" required>
+      </div>
+      <p id="admin-create-student-status" class="admin-form-status" role="status" aria-live="polite"></p>
+      <div class="admin-modal-footer">
+        <button id="btn-cancel-create-student" class="btn btn-outline" type="button">Hủy</button>
+        <button id="btn-admin-create-student" class="btn btn-primary" type="submit">
+          <i data-lucide="user-round-plus" aria-hidden="true"></i> Tạo tài khoản
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- MODAL FORM THÊM / SỬA CÂU HỎI (ĐÃ CẬP NHẬT ĐỦ THUỘC TÍNH CHỦ ĐỀ & ĐỘ KHÓ) -->
+<div id="modal-question-form" class="modal-overlay admin-modal admin-modal--question-form question-form-overlay hidden" aria-hidden="true">
+  <div class="modal-card question-form-card admin-editor-card" role="dialog" aria-modal="true" aria-labelledby="modal-question-title" tabindex="-1">
+    <div class="question-form-header admin-editor-header">
+      <h3 id="modal-question-title" class="question-form-title">Thêm Câu Hỏi Mới</h3>
+      <button type="button" id="btn-close-q-modal" class="btn btn-outline" aria-label="Đóng biểu mẫu câu hỏi">✕</button>
+    </div>
+
+    <form id="form-manage-question">
+      <input type="hidden" id="q-form-id" value="">
+      <div class="question-form-body admin-editor-body">
+        <div class="question-form-catalogs">
+          <div class="form-group">
+            <label for="q-form-topic">Môn học</label>
+            <select id="q-form-topic" class="select-control" required></select>
+          </div>
+          <div class="form-group">
+            <label for="q-form-skill">Kỹ năng</label>
+            <select id="q-form-skill" class="select-control" required></select>
+          </div>
+          <div class="form-group">
+            <label for="q-form-difficulty">Độ khó</label>
+            <select id="q-form-difficulty" class="select-control" required></select>
+          </div>
+        </div>
+
+        <div class="form-group question-form-question">
+          <label for="q-form-text">Nội dung câu hỏi</label>
+          <textarea id="q-form-text" class="select-control" placeholder="Nhập nội dung câu hỏi..." required></textarea>
+        </div>
+
+        <section class="form-group question-options-section" aria-labelledby="question-options-title">
+          <div class="question-options-heading">
+            <div>
+              <h4 id="question-options-title">Phương án trả lời</h4>
+              <p>Thêm từ 2 phương án trở lên và đánh dấu đáp án đúng.</p>
+            </div>
+            <button type="button" id="q-form-add-option" class="btn btn-outline">+ Thêm phương án</button>
+          </div>
+          <div id="q-form-options" class="question-options-list"></div>
+        </section>
+
+        <div class="form-group">
+          <label for="q-form-type">Kiểu trả lời</label>
+          <select id="q-form-type" class="select-control">
+            <option value="single">Chọn một đáp án đúng</option>
+            <option value="multiple">Chọn nhiều đáp án đúng</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="q-form-explanation">Lời giải thích</label>
+          <textarea id="q-form-explanation" class="select-control question-form-explanation" placeholder="Nhập lời giải thích..."></textarea>
+        </div>
+      </div>
+
+      <div class="question-form-footer admin-editor-footer">
+        <button type="button" id="btn-cancel-q-form" class="btn btn-outline">Hủy</button>
+        <button type="submit" class="btn btn-primary">Lưu câu hỏi</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- AI LOADING MODAL -->
+<div id="ai-loading-modal" class="modal-overlay hidden" aria-hidden="true">
+  <div class="modal-card" role="status" aria-live="polite" aria-atomic="true" aria-busy="false">
+    <div class="spinner-pulse" aria-hidden="true"></div>
+    <h3>Gemini AI Đang Xử Lý...</h3>
+  </div>
+</div>
+
+<div id="water-bucket-celebration" class="water-celebration-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="water-celebration-title" aria-describedby="water-celebration-count" aria-hidden="true" hidden>
+  <section class="water-celebration-card">
+    <button id="btn-close-water-celebration" class="water-celebration-close" type="button" data-close-water-celebration aria-label="Đóng chúc mừng">×</button>
+    <div class="water-celebration-art" aria-hidden="true">
+      <span class="water-celebration-sparkle sparkle-one">✨</span>
+      <span class="water-celebration-sparkle sparkle-two">🌟</span>
+      <span class="water-celebration-drop drop-one">💧</span>
+      <span class="water-celebration-drop drop-two">💦</span>
+      <div id="water-celebration-bucket-holder" class="water-celebration-bucket-holder"></div>
+      <span class="water-celebration-overflow">🌊</span>
+    </div>
+    <p class="water-celebration-eyebrow">5/5 GIỌT NƯỚC</p>
+    <h2 id="water-celebration-title">Xô nước đầy rồi!</h2>
+    <p id="water-celebration-count" class="water-celebration-copy"></p>
+    <button class="btn btn-primary water-celebration-action" type="button" data-close-water-celebration>Tuyệt vời!</button>
+  </section>
+</div>

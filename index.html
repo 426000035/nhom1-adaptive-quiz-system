@@ -4,6 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Adaptive Quiz System - Hệ thống Luyện tập & Kiểm tra Thích ứng</title>
+  <meta name="description" content="Adaptive Quiz System giúp học viên luyện tập, kiểm tra kiến thức và theo dõi tiến độ học tập.">
+  <meta name="robots" content="noindex, nofollow">
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -18,41 +20,56 @@
 </head>
 <body class="dark-theme">
 
+  <a class="skip-link" href="#app-main">Bỏ qua điều hướng, đến nội dung chính</a>
+
   <!-- HEADER HỆ THỐNG -->
   <header class="app-header">
     <div class="header-container">
-      <div class="logo-area" id="brand-logo">
-        <i data-lucide="brain-circuit" class="logo-icon"></i>
-        <span class="logo-text">Adaptive<span class="highlight">Quiz</span></span>
+      <div class="header-brand">
+        <button id="mobile-menu-toggle" class="mobile-menu-toggle" type="button" aria-label="Mở menu module" aria-controls="admin-tabs student-tabs-nav" aria-expanded="false" hidden>
+          <i data-lucide="menu" aria-hidden="true"></i>
+        </button>
+        <a class="logo-area" id="brand-logo" href="#home" aria-label="Về trang chủ AdaptiveQuiz" title="Về trang chủ">
+          <i data-lucide="brain-circuit" class="logo-icon" aria-hidden="true"></i>
+          <span class="logo-text">Adaptive<span class="highlight">Quiz</span></span>
+        </a>
       </div>
 
-      <nav class="user-nav">
+      <nav class="user-nav" aria-label="Điều hướng tài khoản và giao diện">
+        <div class="theme-picker">
+          <button type="button" id="theme-toggle" class="btn btn-outline theme-toggle" aria-label="Bật chế độ tối" aria-pressed="false" title="Dark mode">
+            <i data-lucide="moon" class="theme-toggle-icon theme-toggle-icon--moon" aria-hidden="true"></i>
+            <i data-lucide="sun" class="theme-toggle-icon theme-toggle-icon--sun" aria-hidden="true"></i>
+            <span id="theme-toggle-label">Dark mode</span>
+          </button>
+        </div>
+
         <div id="nav-guest" class="nav-group">
           <button class="btn btn-outline" id="btn-nav-login">Đăng nhập</button>
-          <button class="btn btn-primary" id="btn-nav-register">Đăng ký</button>
         </div>
 
         <div id="nav-user" class="nav-group hidden">
           <div class="user-profile-badge">
-            <i data-lucide="user" class="avatar-icon"></i>
+            <i data-lucide="user" class="avatar-icon" aria-hidden="true"></i>
             <span id="user-fullname">Học viên</span>
             <span id="user-role-badge" class="badge badge-student">Student</span>
           </div>
-          <button class="btn btn-icon-only" id="btn-logout" title="Đăng xuất">
-            <i data-lucide="log-out"></i>
+          <button class="btn btn-icon-only" id="btn-logout" type="button" aria-label="Đăng xuất">
+            <i data-lucide="log-out" aria-hidden="true"></i>
           </button>
         </div>
       </nav>
     </div>
   </header>
+  <button id="mobile-menu-backdrop" class="mobile-menu-backdrop" type="button" aria-label="Đóng menu module" hidden></button>
 
   <!-- KHUNG CHỨA CÁC MÀN HÌNH VIEW CHÍNH -->
-  <main class="app-main">
-    <section id="view-auth" class="view-section"></section>
-    <section id="view-list" class="view-section hidden"></section>
-    <section id="view-quiz" class="view-section hidden"></section>
-    <section id="view-result" class="view-section hidden"></section>
-    <section id="view-admin" class="view-section hidden"></section>
+  <main id="app-main" class="app-main">
+    <section id="view-auth" class="view-section" aria-label="Đăng nhập demo" aria-hidden="false" tabindex="-1"></section>
+    <section id="view-list" class="view-section hidden" aria-label="Khu vực học viên" aria-hidden="true" tabindex="-1"></section>
+    <section id="view-quiz" class="view-section hidden" aria-label="Làm bài kiểm tra" aria-hidden="true" tabindex="-1"></section>
+    <section id="view-result" class="view-section hidden" aria-label="Kết quả bài kiểm tra" aria-hidden="true" tabindex="-1"></section>
+    <section id="view-admin" class="view-section hidden" aria-label="Khu vực quản trị" aria-hidden="true" tabindex="-1"></section>
   </main>
 
   <!-- KHUNG CHỨA CÁC MODAL / POPUP NỔI -->
@@ -68,16 +85,29 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
 
   <!-- MODULES JAVASCRIPT HỆ THỐNG -->
-  <script src="js/utils.js"></script>
-  <script src="js/auth.js"></script>
-  <script src="js/quiz-engine.js"></script>
-  <script src="js/student-view.js"></script>
-  <script src="js/admin/admin-core.js"></script>
-  <script src="js/admin/admin-quizzes.js"></script>
-  <script src="js/admin/admin-bank.js"></script>
-  <script src="js/admin/admin-users.js"></script>
-  <script src="js/admin/admin-reports.js"></script>
-  <script src="js/admin/admin-tools.js"></script>
-  <script src="js/main.js"></script>
+  <script src="js/core/utils.js"></script>
+  <script src="js/services/local-storage-db.js"></script>
+  <script src="js/services/local-storage-db-importer.js"></script>
+  <script src="js/core/state.js"></script>
+  <script src="js/core/mobile-menu.js"></script>
+  <script src="js/core/router.js"></script>
+  <script src="js/core/auth.js"></script>
+  <script src="js/core/quiz-engine.js"></script>
+  <script src="js/features/student/mascot.js"></script>
+  <script src="js/features/student/gamification.js"></script>
+  <script src="js/features/student/student-dashboard.js"></script>
+  <script src="js/features/student/student-history.js"></script>
+  <script src="js/features/student/student-results.js"></script>
+  <script src="js/features/student/student-view.js"></script>
+  <script src="js/features/admin/admin-core.js"></script>
+  <script src="js/features/admin/admin-catalogs.js"></script>
+  <script src="js/features/admin/admin-quizzes.js"></script>
+  <script src="js/features/admin/admin-bank.js"></script>
+  <script src="js/features/admin/admin-users.js"></script>
+  <script src="js/features/admin/admin-reports.js"></script>
+  <script src="js/features/admin/admin-tools.js"></script>
+  <script src="js/services/ai-service.js"></script>
+  <script src="js/core/theme.js"></script>
+  <script src="js/core/main.js"></script>
 </body>
 </html>
