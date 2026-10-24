@@ -2,6 +2,8 @@
    Adaptive Quiz System - Student Views & Events Module (js/features/student/student-view.js)
    ========================================================================== */
 
+const QUESTION_NAVIGATION_PAGE_SIZE = 30;
+
 function initStudentModule() {
   bindStudentEvents();
   // Tự động render danh sách ngay khi khởi tạo module
@@ -23,18 +25,117 @@ console.trace('bindStudentEvents called');
   document.getElementById('btn-prev-question')?.addEventListener('click', () => {
     if (window.AppState.currentQuestionIndex > 0) {
       window.AppState.currentQuestionIndex--;
-      renderCurrentQuestion();
+      window.AppState.questionNavigationPage = Math.floor(
+        window.AppState.currentQuestionIndex / QUESTION_NAVIGATION_PAGE_SIZE
+      );
+      renderCurrentQuestion(true);
     }
   });
 
   document.getElementById('btn-next-question')?.addEventListener('click', () => {
     if (window.AppState.currentQuestionIndex < window.AppState.currentQuestions.length - 1) {
       window.AppState.currentQuestionIndex++;
-      renderCurrentQuestion();
+      window.AppState.questionNavigationPage = Math.floor(
+        window.AppState.currentQuestionIndex / QUESTION_NAVIGATION_PAGE_SIZE
+      );
+      renderCurrentQuestion(true);
     }
   });
 
-  document.getElementById('btn-submit-quiz')?.addEventListener('click', finishAndEvaluateQuiz);
+  document.addEventListener?.('keydown', (event) => {
+    if (!['ArrowLeft', 'ArrowRight'].includes(event.key)) return;
+    if (document.getElementById('view-quiz')?.classList.contains('hidden')) return;
+    if (event.target.closest('input:not([type="radio"]):not([type="checkbox"]), textarea, select, [contenteditable="true"]')) return;
+
+    event.preventDefault();
+    const direction = event.key === 'ArrowRight' ? 1 : -1;
+    const targetIndex = window.AppState.currentQuestionIndex + direction;
+    if (targetIndex < 0 || targetIndex >= window.AppState.currentQuestions.length) return;
+
+    window.AppState.currentQuestionIndex = targetIndex;
+    window.AppState.questionNavigationPage = Math.floor(
+      targetIndex / QUESTION_NAVIGATION_PAGE_SIZE
+    );
+    renderCurrentQuestion(true);
+  });
+
+  document.getElementById('options-container')?.addEventListener('keydown', (event) => {
+    const optionsContainer = event.currentTarget;
+    const answerInputs = Array.from(optionsContainer.querySelectorAll('input:not(:disabled)'));
+    const activeIndex = answerInputs.indexOf(event.target);
+    if (activeIndex < 0) return;
+
+    if (['ArrowUp', 'ArrowDown'].includes(event.key)) {
+      event.preventDefault();
+      const direction = event.key === 'ArrowDown' ? 1 : -1;
+      const nextIndex = (activeIndex + direction + answerInputs.length) % answerInputs.length;
+      answerInputs[nextIndex].focus();
+      return;
+    }
+
+    if (event.key !== 'Enter' || event.repeat) return;
+    event.preventDefault();
+    const selectedOptionIndex = Number(answerInputs[activeIndex].value);
+    answerInputs[activeIndex].click();
+
+    const currentQuestion = window.AppState.currentQuestions[window.AppState.currentQuestionIndex];
+    const savedAnswers = window.AppState.answers?.[currentQuestion?.id];
+    if (!Array.isArray(savedAnswers) || savedAnswers.length === 0) {
+      document.querySelector(
+        `#options-container input[value="${selectedOptionIndex}"]:not(:disabled)`
+      )?.focus();
+      return;
+    }
+
+    if (window.AppState.currentQuestionIndex < window.AppState.currentQuestions.length - 1) {
+      window.AppState.currentQuestionIndex++;
+      window.AppState.questionNavigationPage = Math.floor(
+        window.AppState.currentQuestionIndex / QUESTION_NAVIGATION_PAGE_SIZE
+      );
+      renderCurrentQuestion(true);
+      document.querySelector('#options-container input:not(:disabled)')?.focus();
+    } else {
+      document.querySelector(
+        `#options-container input[value="${selectedOptionIndex}"]:not(:disabled)`
+      )?.focus();
+    }
+  });
+
+  document.getElementById('question-navigation')?.addEventListener('click', (event) => {
+    const button = event.target.closest('[data-question-index]');
+    if (!button) return;
+
+    const targetIndex = Number(button.dataset.questionIndex);
+    const questionCount = window.AppState.currentQuestions?.length || 0;
+    if (!Number.isInteger(targetIndex) || targetIndex < 0 || targetIndex >= questionCount ||
+        targetIndex === window.AppState.currentQuestionIndex) return;
+
+    window.AppState.currentQuestionIndex = targetIndex;
+    window.AppState.questionNavigationPage = Math.floor(targetIndex / QUESTION_NAVIGATION_PAGE_SIZE);
+    renderCurrentQuestion(true);
+    document.querySelector(`#question-navigation [data-question-index="${targetIndex}"]`)?.focus();
+  });
+
+  document.getElementById('question-navigation-pagination')?.addEventListener('click', (event) => {
+    const button = event.target.closest('[data-page-direction]');
+    if (!button || button.disabled) return;
+
+    const questionCount = window.AppState.currentQuestions?.length || 0;
+    const pageCount = Math.ceil(questionCount / QUESTION_NAVIGATION_PAGE_SIZE);
+    const currentPage = window.AppState.questionNavigationPage || 0;
+    const direction = Number(button.dataset.pageDirection);
+    const targetPage = currentPage + direction;
+    if (!Number.isInteger(direction) || targetPage < 0 || targetPage >= pageCount) return;
+
+    window.AppState.questionNavigationPage = targetPage;
+    renderQuestionNavigation(
+      window.AppState.currentQuestions,
+      window.AppState.currentQuestionIndex,
+      window.AppState.quizMode === 'PRACTICE'
+    );
+  });
+
+  document.getElementById('btn-submit-quiz')?.addEventListener('click', confirmQuizSubmission);
   document.getElementById('btn-exit-quiz')?.addEventListener('click', async () => {
     if (typeof Swal === 'undefined' || typeof Swal.fire !== 'function') {
       console.error('Không thể xác nhận thoát bài vì hộp thoại chưa sẵn sàng.');
@@ -54,6 +155,7 @@ console.trace('bindStudentEvents called');
     window.AppState.currentQuiz = null;
     window.AppState.currentQuestions = [];
     window.AppState.answers = {};
+    window.AppState.practiceDraftAnswers = {};
     navigateTo('view-list');
     filterAndRenderQuizzes();
   });
@@ -97,7 +199,9 @@ console.trace('bindStudentEvents called');
     if (aiQuestions && aiQuestions.length > 0) {
       window.AppState.currentQuestions = aiQuestions;
       window.AppState.currentQuestionIndex = 0;
+      window.AppState.questionNavigationPage = 0;
       window.AppState.answers = {};
+      window.AppState.practiceDraftAnswers = {};
       window.AppState.quizMode = 'EXAM';
       window.AppState.currentAttemptStartedAt = new Date().toISOString();
       navigateTo('view-quiz');
@@ -460,7 +564,9 @@ function initQuizWithMode(quiz, mode) {
   window.AppState.currentQuiz = currentQuiz;
   window.AppState.currentQuestions = currentQuiz.questions || [];
   window.AppState.currentQuestionIndex = 0;
+  window.AppState.questionNavigationPage = 0;
   window.AppState.answers = {};
+  window.AppState.practiceDraftAnswers = {};
   window.AppState.quizMode = effectiveMode;
   window.AppState.currentAttemptStartedAt = new Date().toISOString();
   window.MascotEngine?.resetAnswerStreak();
@@ -497,7 +603,7 @@ function initQuizWithMode(quiz, mode) {
   window.MascotEngine?.emit('quizStart', { quizTitle: currentQuiz.title, mode: effectiveMode });
 }
 
-function renderCurrentQuestion() {
+function renderCurrentQuestion(animateTransition = false) {
   const qList = window.AppState.currentQuestions || [];
   const idx = window.AppState.currentQuestionIndex || 0;
   const q = qList[idx];
@@ -508,10 +614,39 @@ function renderCurrentQuestion() {
   const tracker = document.getElementById('question-tracker');
   if (tracker) tracker.textContent = `Câu ${idx + 1} / ${qList.length}`;
   
+  const answeredCount = qList.reduce((count, question) => {
+    const savedAnswers = window.AppState.answers?.[question.id];
+    return count + (Array.isArray(savedAnswers) && savedAnswers.length > 0 ? 1 : 0);
+  }, 0);
+  const correctCount = qList.reduce((count, question) => {
+    const savedAnswers = window.AppState.answers?.[question.id];
+    if (!Array.isArray(savedAnswers) || savedAnswers.length === 0) return count;
+
+    const correctAnswers = Array.isArray(question.correctAnswer)
+      ? question.correctAnswer
+      : [question.correctAnswer || 0];
+    const isCorrect = savedAnswers.length === correctAnswers.length &&
+      savedAnswers.every(answer => correctAnswers.includes(answer));
+    return count + (isCorrect ? 1 : 0);
+  }, 0);
   const progressBar = document.getElementById('quiz-progress-bar');
-  const progressValue = Math.round(((idx + 1) / qList.length) * 100);
+  const progressValue = qList.length > 0
+    ? Math.round((answeredCount / qList.length) * 100)
+    : 0;
   if (progressBar) progressBar.style.setProperty('--progress', `${progressValue}%`);
   document.getElementById('quiz-progress')?.setAttribute('aria-valuenow', String(progressValue));
+  const practiceScore = document.getElementById('practice-score');
+  const practiceScoreValue = document.getElementById('practice-score-value');
+  const practiceScoreRing = document.getElementById('practice-score-ring-fill');
+  if (practiceScore) {
+    practiceScore.hidden = !isPracticeMode;
+    practiceScore.setAttribute('aria-label', `Điểm luyện tập: ${correctCount}/${qList.length} câu đúng`);
+  }
+  if (practiceScoreValue) practiceScoreValue.textContent = `${correctCount}/${qList.length}`;
+  if (practiceScoreRing) {
+    const scoreProgress = qList.length > 0 ? (correctCount / qList.length) * 100 : 0;
+    practiceScoreRing.setAttribute('stroke-dashoffset', String(100 - scoreProgress));
+  }
 
   const topicTag = document.getElementById('question-topic-tag');
   if (topicTag) topicTag.textContent = q.topic || 'Chung';
@@ -529,11 +664,18 @@ function renderCurrentQuestion() {
   const currentSavedAnswers = (window.AppState.answers && window.AppState.answers[q.id]) || [];
   const correctSel = Array.isArray(q.correctAnswer) ? q.correctAnswer : [q.correctAnswer || 0];
   const hasAnswered = currentSavedAnswers.length > 0;
+  const isPracticeMultiSelect = isPracticeMode && q.type !== 'single';
+  const draftAnswers = window.AppState.practiceDraftAnswers?.[q.id] || [];
+  const displayedAnswers = isPracticeMultiSelect && !hasAnswered
+    ? draftAnswers
+    : currentSavedAnswers;
+
+  renderQuestionNavigation(qList, idx, isPracticeMode);
 
   (q.options || []).forEach((optText, optIdx) => {
     const item = document.createElement('label');
     item.className = 'option-item';
-    const isChecked = currentSavedAnswers.includes(optIdx);
+    const isChecked = displayedAnswers.includes(optIdx);
     if (isChecked) item.classList.add('selected');
 
     // Nếu ở Practice Mode và ĐÃ CHỌN ĐÁP ÁN -> Khóa không cho bấm lại & hiển thị màu Đúng/Sai
@@ -561,6 +703,13 @@ function renderCurrentQuestion() {
         e.stopPropagation(); // Chặn sự kiện lan ra ngoài
         const inputs = container.querySelectorAll('input:checked');
         const selectedIndices = Array.from(inputs).map(inp => parseInt(inp.value));
+
+        if (isPracticeMultiSelect) {
+          if (!window.AppState.practiceDraftAnswers) window.AppState.practiceDraftAnswers = {};
+          window.AppState.practiceDraftAnswers[q.id] = selectedIndices;
+          renderCurrentQuestion();
+          return;
+        }
         
         if (window.QuizEngine && typeof window.QuizEngine.recordAnswer === 'function') {
           window.QuizEngine.recordAnswer(q.id, selectedIndices);
@@ -585,7 +734,8 @@ function renderCurrentQuestion() {
   if (!explanationBox) {
     explanationBox = document.createElement('div');
     explanationBox.id = 'practice-explanation-box';
-    container.parentNode.appendChild(explanationBox);
+    const stepNavigation = container.parentNode.querySelector('.question-step-navigation');
+    container.parentNode.insertBefore(explanationBox, stepNavigation || null);
   }
 
   if (isPracticeMode && hasAnswered) {
@@ -610,6 +760,38 @@ function renderCurrentQuestion() {
     explanationLabel.textContent = '💡 Giải thích: ';
     explanationText.append(explanationLabel, q.explanation || 'Không có giải thích chi tiết cho câu hỏi này.');
     explanationBox.append(resultMessage, explanationText);
+  } else if (isPracticeMultiSelect) {
+    explanationBox.className = 'practice-explanation practice-explanation-pending';
+    explanationBox.hidden = false;
+    explanationBox.replaceChildren();
+
+    const instruction = document.createElement('p');
+    instruction.className = 'practice-explanation-copy';
+    instruction.textContent = 'Chọn tất cả đáp án phù hợp, sau đó kiểm tra đáp án.';
+
+    const checkAnswerButton = document.createElement('button');
+    checkAnswerButton.className = 'btn btn-primary practice-check-answer';
+    checkAnswerButton.type = 'button';
+    checkAnswerButton.textContent = '✓';
+    checkAnswerButton.setAttribute('aria-label', 'Kiểm tra đáp án');
+    checkAnswerButton.title = 'Kiểm tra đáp án';
+    checkAnswerButton.disabled = draftAnswers.length === 0;
+    checkAnswerButton.addEventListener('click', () => {
+      const selectedIndices = window.AppState.practiceDraftAnswers?.[q.id] || [];
+      if (selectedIndices.length === 0) return;
+
+      if (window.QuizEngine && typeof window.QuizEngine.recordAnswer === 'function') {
+        window.QuizEngine.recordAnswer(q.id, selectedIndices);
+      }
+      delete window.AppState.practiceDraftAnswers[q.id];
+
+      const isCorrect = selectedIndices.length === correctSel.length &&
+        selectedIndices.every(value => correctSel.includes(value));
+      window.MascotEngine?.recordAnswer?.(isCorrect);
+      renderCurrentQuestion();
+    });
+
+    explanationBox.append(instruction, checkAnswerButton);
   } else {
     explanationBox.className = 'practice-explanation';
     explanationBox.hidden = true;
@@ -620,6 +802,106 @@ function renderCurrentQuestion() {
 
   const btnNext = document.getElementById('btn-next-question');
   if (btnNext) btnNext.disabled = (idx === qList.length - 1);
+
+  if (animateTransition) {
+    const questionCard = document.querySelector('.quiz-execution-container .question-card');
+    if (questionCard) {
+      questionCard.classList.remove('question-transition-in');
+      void questionCard.offsetWidth;
+      questionCard.classList.add('question-transition-in');
+    }
+  }
+}
+
+function renderQuestionNavigation(qList, currentIndex, isPracticeMode) {
+  const navigation = document.getElementById('question-navigation');
+  const navigationProgress = document.getElementById('question-navigation-progress');
+  const pageStatus = document.getElementById('question-navigation-page-status');
+  const previousPageButton = document.getElementById('btn-question-navigation-prev');
+  const nextPageButton = document.getElementById('btn-question-navigation-next');
+  if (!navigation) return;
+
+  const pageCount = Math.ceil(qList.length / QUESTION_NAVIGATION_PAGE_SIZE);
+  const page = Math.min(
+    Math.max(window.AppState.questionNavigationPage || 0, 0),
+    Math.max(pageCount - 1, 0)
+  );
+  window.AppState.questionNavigationPage = page;
+  const pageStart = page * QUESTION_NAVIGATION_PAGE_SIZE;
+  const pageEnd = Math.min(pageStart + QUESTION_NAVIGATION_PAGE_SIZE, qList.length);
+  const fragment = document.createDocumentFragment();
+  let answeredCount = 0;
+
+  qList.forEach((question, questionIndex) => {
+    const savedAnswers = window.AppState.answers?.[question.id];
+    const isAnswered = Array.isArray(savedAnswers) && savedAnswers.length > 0;
+    const correctAnswers = Array.isArray(question.correctAnswer)
+      ? question.correctAnswer
+      : [question.correctAnswer || 0];
+    const isCorrect = isAnswered &&
+      savedAnswers.length === correctAnswers.length &&
+      savedAnswers.every(answer => correctAnswers.includes(answer));
+    if (isAnswered) answeredCount++;
+    if (questionIndex < pageStart || questionIndex >= pageEnd) return;
+
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'question-number-button';
+    button.dataset.questionIndex = String(questionIndex);
+    button.textContent = String(questionIndex + 1);
+    button.setAttribute(
+      'aria-label',
+      `Câu ${questionIndex + 1}${isPracticeMode && isAnswered
+        ? (isCorrect ? ', trả lời đúng' : ', trả lời sai')
+        : (isAnswered ? ', đã trả lời' : ', chưa trả lời')}${questionIndex === currentIndex ? ', câu hiện tại' : ''}`
+    );
+
+    if (questionIndex === currentIndex) {
+      button.classList.add('is-current');
+      button.setAttribute('aria-current', 'step');
+    }
+    if (isAnswered) {
+      button.classList.add('is-answered');
+      if (isPracticeMode) button.classList.add(isCorrect ? 'is-correct' : 'is-incorrect');
+    }
+
+    fragment.appendChild(button);
+  });
+
+  navigation.replaceChildren(fragment);
+  if (navigationProgress) {
+    navigationProgress.textContent = `${answeredCount}/${qList.length} đã trả lời`;
+  }
+  if (pageStatus) pageStatus.textContent = `Trang ${page + 1} / ${pageCount || 1}`;
+  if (previousPageButton) previousPageButton.disabled = page === 0;
+  if (nextPageButton) nextPageButton.disabled = page >= pageCount - 1;
+}
+
+async function confirmQuizSubmission() {
+  if (typeof Swal === 'undefined' || typeof Swal.fire !== 'function') {
+    console.error('Không thể xác nhận nộp bài vì hộp thoại chưa sẵn sàng.');
+    return;
+  }
+
+  const questions = window.AppState.currentQuestions || [];
+  const answers = window.AppState.answers || {};
+  const unansweredCount = questions.filter(question => {
+    const selectedAnswers = answers[question.id];
+    return !Array.isArray(selectedAnswers) || selectedAnswers.length === 0;
+  }).length;
+  const hasUnansweredQuestions = unansweredCount > 0;
+  const confirmation = await Swal.fire({
+    icon: hasUnansweredQuestions ? 'warning' : 'question',
+    title: hasUnansweredQuestions ? 'Bạn còn câu chưa làm' : 'Xác nhận nộp bài?',
+    text: hasUnansweredQuestions
+      ? `Còn ${unansweredCount} câu chưa trả lời. Bạn có muốn quay lại làm tiếp không?`
+      : 'Bạn có chắc muốn nộp bài và xem kết quả?',
+    showCancelButton: true,
+    confirmButtonText: hasUnansweredQuestions ? 'Vẫn nộp bài' : 'Nộp bài',
+    cancelButtonText: hasUnansweredQuestions ? 'Làm tiếp' : 'Kiểm tra lại'
+  });
+
+  if (confirmation.isConfirmed) finishAndEvaluateQuiz();
 }
 
 function finishAndEvaluateQuiz() {

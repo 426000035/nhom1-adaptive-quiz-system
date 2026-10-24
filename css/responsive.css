@@ -139,6 +139,18 @@
     gap: 0.75rem;
   }
 
+  .quiz-question-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .question-navigation-card {
+    position: static;
+  }
+
+  .question-number-grid {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+
   .progress-container {
     width: 100%;
     flex: none;
@@ -154,6 +166,16 @@
 
   .question-title {
     font-size: 1.1rem;
+  }
+
+  .question-step-navigation {
+    gap: var(--space-2);
+  }
+
+  .question-step-navigation .btn {
+    width: auto;
+    flex: 1;
+    justify-content: center;
   }
 
   .quiz-action-bar {
@@ -177,6 +199,10 @@
 
 /* --- Small Mobile Screen Breakpoints (max-width: 480px) --- */
 @media screen and (max-width: 480px) {
+  .question-number-grid {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+
   .admin-random-quiz-form {
     grid-template-columns: minmax(0, 1fr);
   }

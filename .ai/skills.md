@@ -77,7 +77,7 @@ Các hàm này là hàm toàn cục được khai báo bằng function declarati
 
 **Không có** các API `QuizEngine.start()`, `QuizEngine.submit()` hoặc `QuizEngine.updateProgressBar()`. Việc khởi tạo bài, nộp/chấm bài và vẽ thanh tiến độ nằm trong `js/features/student/student-view.js`. Thanh tiến độ thể hiện vị trí câu đang xem, không phải phần trăm câu đã trả lời.
 
-Đề được giao không giới hạn số lượt (`maxAttempts: null`) và không có hạn chót (`dueAt: null`) cho phép học viên chọn `EXAM` hoặc `PRACTICE`. `EXAM` dùng thời lượng đề nếu có và tự nộp khi hết giờ; `PRACTICE` không giới hạn giờ, khóa đáp án sau khi chọn và hiện lời giải. Đề có giới hạn lượt hoặc hạn chót vẫn chỉ bắt đầu ở `EXAM`. Lịch sử vẫn nhận diện các record `PRACTICE` cũ.
+Đề được giao không giới hạn số lượt (`maxAttempts: null`) và không có hạn chót (`dueAt: null`) cho phép học viên chọn `EXAM` hoặc `PRACTICE`. `EXAM` dùng thời lượng đề nếu có và tự nộp khi hết giờ; `PRACTICE` không giới hạn giờ và hiện lời giải sau khi chấm. Câu một đáp án được chấm ngay khi chọn; câu nhiều đáp án cho phép chọn/bỏ chọn nhiều phương án rồi bấm “Kiểm tra đáp án”, sau đó mới chấm và khóa lựa chọn. Đề có giới hạn lượt hoặc hạn chót vẫn chỉ bắt đầu ở `EXAM`. Lịch sử vẫn nhận diện các record `PRACTICE` cũ.
 
 ### SKILL-05: Kết quả và câu sai
 

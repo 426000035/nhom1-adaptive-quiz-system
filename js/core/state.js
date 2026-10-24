@@ -23,6 +23,7 @@ window.AppState = {
   currentQuestions: [],
   currentQuestionIndex: 0,
   answers: {},
+  practiceDraftAnswers: {},
   timerInterval: null,
   timeRemaining: 0,
   quizResults: null,
