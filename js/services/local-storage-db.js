@@ -871,6 +871,32 @@ window.LocalStorageDB = (() => {
     });
   }
 
+  function applyStudentProgressUpdates(database, updates, sampleProgress, samplePackUrl) {
+    updates.forEach(progressUpdate => {
+      if (!progressUpdate || typeof progressUpdate.userId !== 'string' ||
+          !Number.isInteger(progressUpdate.waterProgress) ||
+          progressUpdate.waterProgress < 0 || progressUpdate.waterProgress > 4) {
+        throw new Error(`${samplePackUrl}.studentProgressUpdates chứa cập nhật tiến độ không hợp lệ.`);
+      }
+      if (!database.users.some(user => user.userId === progressUpdate.userId)) {
+        throw new Error(`${samplePackUrl}.studentProgressUpdates không tìm thấy học viên ${progressUpdate.userId}.`);
+      }
+      let progress = database.studentProgress.find(item => item.userId === progressUpdate.userId);
+      if (!progress) {
+        const sampleRecord = sampleProgress.find(item => item.userId === progressUpdate.userId);
+        if (!sampleRecord) {
+          throw new Error(`${samplePackUrl}.studentProgressUpdates không tìm thấy dữ liệu mẫu của ${progressUpdate.userId}.`);
+        }
+        progress = clone({
+          ...sampleRecord,
+          lastActiveDate: new Date().toISOString().slice(0, 10)
+        });
+        database.studentProgress.push(progress);
+      }
+      progress.waterProgress = progressUpdate.waterProgress;
+    });
+  }
+
   function isCorruptedDemoText(value) {
     return typeof value === 'string' &&
       (/[?\uFFFD]/.test(value) || /(?:Ã.|Â.|áº|á»|â€)/.test(value));
@@ -951,7 +977,7 @@ window.LocalStorageDB = (() => {
     const markerKey = `${storageKey}_sample_pack_version`;
     const currentVersion = Number(window.localStorage.getItem(markerKey) || 0);
     const database = read();
-    if (Number.isInteger(currentVersion) && currentVersion >= 7) {
+    if (Number.isInteger(currentVersion) && currentVersion >= 9) {
       return { imported: false, database };
     }
 
@@ -960,17 +986,64 @@ window.LocalStorageDB = (() => {
       throw new Error(`Không thể tải ${samplePackUrl} (HTTP ${response.status}).`);
     }
     const samplePack = await response.json();
-    if (!samplePack || ![1, 2, 3, 4, 5, 6, 7].includes(samplePack.version)) {
-      throw new Error(`${samplePackUrl} phải có version từ 1 đến 7.`);
+    if (!samplePack || ![1, 2, 3, 4, 5, 6, 7, 8, 9].includes(samplePack.version)) {
+      throw new Error(`${samplePackUrl} phải có version từ 1 đến 9.`);
     }
     const requiredCollections = ['subjects', 'skills', 'questions', 'quizzes', 'attemptScenarios', 'studentProgress'];
     if (samplePack.version >= 2) requiredCollections.push('classes', 'users');
+    if (samplePack.version >= 8) requiredCollections.push('studentProgressUpdates');
     requiredCollections
       .forEach(collection => {
         if (!Array.isArray(samplePack[collection])) {
           throw new Error(`${samplePackUrl}.${collection} phải là một mảng.`);
         }
       });
+    if (samplePack.version >= 9) {
+      const incrementalUpdates = samplePack.incrementalUpdates;
+      if (!incrementalUpdates ||
+          !Array.isArray(incrementalUpdates.questionIds) ||
+          !Array.isArray(incrementalUpdates.quizIds)) {
+        throw new Error(`${samplePackUrl}.incrementalUpdates phải chứa questionIds và quizIds.`);
+      }
+      incrementalUpdates.questionIds.forEach(questionId => {
+        if (!samplePack.questions.some(item => item.questionId === questionId)) {
+          throw new Error(`${samplePackUrl}.incrementalUpdates tham chiếu câu hỏi không tồn tại: ${questionId}.`);
+        }
+      });
+      incrementalUpdates.quizIds.forEach(quizId => {
+        if (!samplePack.quizzes.some(item => item.quizId === quizId)) {
+          throw new Error(`${samplePackUrl}.incrementalUpdates tham chiếu đề không tồn tại: ${quizId}.`);
+        }
+      });
+    }
+
+    if (currentVersion >= 7 && samplePack.version >= 8) {
+      const updatedDatabase = update(draft => {
+        applyStudentProgressUpdates(
+          draft,
+          samplePack.studentProgressUpdates,
+          samplePack.studentProgress,
+          samplePackUrl
+        );
+        if (samplePack.version >= 9) {
+          const incrementalUpdates = samplePack.incrementalUpdates;
+          incrementalUpdates.questionIds.forEach(questionId => {
+            const question = samplePack.questions.find(item => item.questionId === questionId);
+            mergeSampleRecords(draft, 'questions', [question], 'questionId');
+          });
+          incrementalUpdates.quizIds.forEach(quizId => {
+            const quiz = samplePack.quizzes.find(item => item.quizId === quizId);
+            mergeSampleRecords(draft, 'quizzes', [quiz], 'quizId');
+          });
+        }
+      });
+      try {
+        window.localStorage.setItem(markerKey, String(samplePack.version));
+      } catch (error) {
+        throw new Error(`Đã cập nhật tiến độ mẫu nhưng không thể lưu dấu phiên bản: ${error.message}`);
+      }
+      return { imported: true, database: updatedDatabase };
+    }
 
     const updatedDatabase = update(draft => {
       const preserveExisting = samplePack.version >= 3;
@@ -1085,6 +1158,14 @@ window.LocalStorageDB = (() => {
           }));
         }
       });
+      if (samplePack.version >= 8) {
+        applyStudentProgressUpdates(
+          draft,
+          samplePack.studentProgressUpdates,
+          samplePack.studentProgress,
+          samplePackUrl
+        );
+      }
       return draft;
     });
 

@@ -637,10 +637,13 @@ function openSelectFromBankModal() {
       topicTag.className = 'tag tag-topic';
       topicTag.textContent = String(q.topic || 'Chung');
       topicCell.appendChild(topicTag);
+      const answerCell = document.createElement('td');
+      answerCell.className = 'admin-table-cell--success';
+      appendCorrectAnswerBadges(answerCell, q);
       tr.append(
         selectCell,
-        createAdminTableCell(q.id, '', 'admin-table-cell--mono admin-table-cell--muted'),
         createAdminTableCell(q.question),
+        answerCell,
         topicCell
       );
       tbody.appendChild(tr);

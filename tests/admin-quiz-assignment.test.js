@@ -101,6 +101,30 @@ test('student lists omit account ID columns while retaining assignment controls'
   assert.match(modalsTemplate, /<span>Tất cả<\/span>/);
 });
 
+test('assignment search and filters wrap to fit the modal instead of clipping', () => {
+  const modalsTemplate = fs.readFileSync(
+    path.join(__dirname, '..', 'views', 'shared', 'modals.html'),
+    'utf8'
+  );
+  const responsiveStyles = fs.readFileSync(
+    path.join(__dirname, '..', 'css', 'responsive.css'),
+    'utf8'
+  );
+
+  assert.match(
+    modalsTemplate,
+    /class="modal-card[^"]*admin-modal-dialog--quiz-assignment"[\s\S]*?class="admin-filter-bar admin-assignment-filter-bar"/
+  );
+  assert.match(
+    responsiveStyles,
+    /\.admin-modal-dialog--quiz-assignment \.admin-assignment-filter-bar\s*\{[^}]*flex-wrap:\s*wrap;[^}]*overflow:\s*visible;/s
+  );
+  assert.match(
+    responsiveStyles,
+    /\.admin-modal-dialog--quiz-assignment \.admin-assignment-filter-bar > \*\s*\{[^}]*flex:\s*1 1 12rem;[^}]*min-width:\s*0;/s
+  );
+});
+
 test('bulk assignment selection includes all active students matching current filters', () => {
   const { getSelectableFilteredQuizAssignmentStudents } = createModule();
   const students = [

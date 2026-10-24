@@ -248,6 +248,8 @@ test('student profile and progress share one tab with separate profile and passw
   assert.match(dashboardHtml, /id="dash-avg-score"/);
   assert.match(dashboardHtml, /id="student-learning-progress"/);
   assert.match(dashboardHtml, /id="tree-garden-scene"/);
+  assert.match(dashboardHtml, /class="garden-sun">☀️<\/span>/);
+  assert.match(dashboardHtml, /class="garden-moon">🌙<\/span>/);
   const profileStart = dashboardHtml.indexOf('id="subtab-profile"');
   assert.ok(profileStart < dashboardHtml.indexOf('id="dash-streak-count"'));
   assert.ok(dashboardHtml.indexOf('id="dash-streak-count"') < dashboardHtml.indexOf('id="student-learning-progress"'));

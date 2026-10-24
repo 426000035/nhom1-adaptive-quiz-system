@@ -216,9 +216,43 @@ test('global question bank omits question IDs and keeps long question text wrapp
   assert.match(bankModule, /admin-bank-question-cell/);
 });
 
+test('manage-quiz-questions table omits question IDs and displays all correct answers', () => {
+  const modalTemplate = fs.readFileSync(path.join(root, 'views', 'shared', 'modals.html'), 'utf8');
+  const quizzesModule = fs.readFileSync(path.join(root, 'js', 'features', 'admin', 'admin-quizzes.js'), 'utf8');
+  const table = modalTemplate.match(/id="modal-manage-questions"[\s\S]*?<table>([\s\S]*?)<\/table>/)?.[1] || '';
+  const headers = Array.from(table.matchAll(/<th\b[^>]*>([\s\S]*?)<\/th>/gi))
+    .map(([, content]) => content.replace(/<[^>]*>/g, '').trim());
+
+  assert.deepEqual(headers, ['STT', 'Nội Dung Câu Hỏi', 'Đáp Án Đúng', 'Thao Tác']);
+  assert.match(quizzesModule, /renderAdminEmptyRow\(tbody, 4,/);
+  assert.match(quizzesModule, /appendCorrectAnswerBadges\(answerCell, q\)/);
+});
+
+test('bank selection modal includes correct answers and omits question IDs', () => {
+  const modalTemplate = fs.readFileSync(path.join(root, 'views', 'shared', 'modals.html'), 'utf8');
+  const bankModule = fs.readFileSync(path.join(root, 'js', 'features', 'admin', 'admin-bank.js'), 'utf8');
+  const table = modalTemplate.match(/id="modal-select-from-bank"[\s\S]*?<table>([\s\S]*?)<\/table>/)?.[1] || '';
+  const headers = Array.from(table.matchAll(/<th\b[^>]*>([\s\S]*?)<\/th>/gi))
+    .map(([, content]) => content.replace(/<[^>]*>/g, '').trim());
+
+  assert.deepEqual(headers, ['Chọn', 'Nội Dung Câu Hỏi', 'Đáp Án Đúng', 'Chủ Đề']);
+  assert.match(bankModule, /renderAdminEmptyRow\(tbody, 4,/);
+  assert.match(bankModule, /appendCorrectAnswerBadges\(answerCell, q\)/);
+  assert.doesNotMatch(bankModule, /createAdminTableCell\(q\.id/);
+});
+
 test('admin responsive styles define small-screen filter, table, and modal layouts', () => {
   const responsiveStyles = fs.readFileSync(path.join(root, 'css', 'responsive.css'), 'utf8');
   assert.match(responsiveStyles, /\.admin-filter-bar\s*\{[^}]*display:\s*grid/s);
+  assert.match(responsiveStyles, /\.admin-modal-dialog--manage-questions \.admin-filter-bar:not\(\.admin-form-grid\)\s*\{[^}]*flex-wrap:\s*wrap/s);
+  assert.match(responsiveStyles, /\.admin-modal-dialog--manage-questions \.admin-filter-bar:not\(\.admin-form-grid\)\s*\{[^}]*overflow:\s*visible/s);
+  assert.match(responsiveStyles, /\.admin-modal-dialog--manage-questions \.admin-filter-bar:not\(\.admin-form-grid\) > \*\s*\{[^}]*flex:\s*1 1 12rem/s);
+  assert.match(responsiveStyles, /\.admin-modal-dialog--select-bank \.admin-filter-bar:not\(\.admin-form-grid\)\s*\{[^}]*flex-wrap:\s*wrap/s);
+  assert.match(responsiveStyles, /\.admin-modal-dialog--select-bank \.admin-filter-bar:not\(\.admin-form-grid\)\s*\{[^}]*overflow:\s*visible/s);
+  assert.match(responsiveStyles, /\.admin-modal-dialog--select-bank \.admin-filter-bar:not\(\.admin-form-grid\) > \*\s*\{[^}]*flex:\s*1 1 12rem/s);
+  assert.match(responsiveStyles, /\.admin-modal-dialog--select-bank \.admin-modal-table-wrap\s*\{[^}]*overflow:\s*auto/s);
+  assert.match(responsiveStyles, /@media screen and \(max-width: 600px\)\s*\{[^}]*\.admin-modal-dialog--select-bank \.admin-modal-table-wrap table\s*\{[^}]*min-width:\s*0/s);
+  assert.match(responsiveStyles, /\.admin-modal-dialog--select-bank \.admin-modal-table-wrap th:nth-child\(4\),[\s\S]*?\.admin-modal-dialog--select-bank \.admin-modal-table-wrap td:nth-child\(4\)\s*\{[^}]*display:\s*none/s);
   assert.match(responsiveStyles, /\.admin-table-wrap\s*\{[^}]*overflow:\s*auto/s);
   const tableRegionStyles = responsiveStyles.match(/\.admin-table-wrap\s*\{([^}]+)\}/s)?.[1] || '';
   assert.match(tableRegionStyles, /overscroll-behavior-x:\s*contain/);

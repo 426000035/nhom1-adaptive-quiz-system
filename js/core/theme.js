@@ -4,7 +4,6 @@
 
 window.ThemeManager = {
   sessionOverrideKey: 'adaptive_quiz_theme_override',
-  defaultTheme: 'evening',
   availableThemes: ['morning', 'evening'],
   manualTheme: null,
   clockIntervalId: null,

@@ -81,15 +81,26 @@ function updateStudentStatsData() {
     ? database.studentProgress.find(item => item.userId === viewedStudent.userId)
     : null;
   const gData = viewedStudent
-    ? { treeStage: progress?.treeStage || 1, currentExp: progress?.currentExp || 0, streakCount: progress?.streakCount || 0 }
+    ? {
+        treeStage: progress?.treeStage || 1,
+        currentExp: progress?.currentExp || 0,
+        streakCount: progress?.streakCount || 0,
+        bucketsWatered: progress?.bucketsWatered || 0
+      }
     : window.GamificationEngine ? window.GamificationEngine.getData() : { treeStage: 1, currentExp: 0, streakCount: 1 };
   const streak = viewedStudent
     ? gData.streakCount
     : window.GamificationEngine ? window.GamificationEngine.checkAndUpdateStreak() : 1;
   const stageInfo = window.GamificationEngine?.STAGES[gData.treeStage] || { name: 'Hạt Mầm', icon: '🌱', maxExp: 100, desc: 'Cây vừa mới nhú mầm!' };
   const mascotData = viewedStudent
-    ? { fullBucketCount: progress?.fullBucketCount || 0 }
-    : window.MascotEngine ? window.MascotEngine.getData() : { fullBucketCount: 0 };
+    ? {
+        fullBucketCount: progress?.fullBucketCount || 0,
+        bucketsWatered: progress?.bucketsWatered || 0
+      }
+    : window.MascotEngine ? window.MascotEngine.getData() : { fullBucketCount: 0, bucketsWatered: 0 };
+  const hasWatered = Number(mascotData.bucketsWatered) > 0 ||
+    gData.currentExp > 0 ||
+    gData.treeStage > 1;
 
   // Lịch sử bài thi
   const historyAll = viewedStudent && typeof window.getQuizHistoryForUser === 'function'
@@ -107,7 +118,10 @@ function updateStudentStatsData() {
 
   const expPercent = Math.min(100, Math.round((gData.currentExp / stageInfo.maxExp) * 100));
   const gardenScene = document.getElementById('tree-garden-scene');
-  if (gardenScene) gardenScene.dataset.treeStage = String(gData.treeStage);
+  if (gardenScene) {
+    gardenScene.dataset.treeStage = String(gData.treeStage);
+    gardenScene.dataset.hasWatered = String(hasWatered);
+  }
 
   // Gắn dữ liệu an toàn vào thẻ HTML
   const setTxt = (id, val) => { 
@@ -119,11 +133,18 @@ function updateStudentStatsData() {
   setTxt('dash-completed-count', `${totalCompleted} Bài`);
   setTxt('dash-avg-score', `${avgScore} / 10`);
   setTxt('dash-tree-icon', stageInfo.icon);
-  setTxt('dash-tree-title', `${stageInfo.name} (Cấp ${gData.treeStage})`);
+  setTxt('dash-tree-title', hasWatered
+    ? `${stageInfo.name} (Cấp ${gData.treeStage})`
+    : 'Hạt Giống (Cấp 1)');
   setTxt('dash-tree-exp-badge', `EXP: ${gData.currentExp}/${stageInfo.maxExp}`);
-  setTxt('dash-tree-desc', stageInfo.desc);
+  setTxt('dash-tree-desc', hasWatered
+    ? stageInfo.desc
+    : 'Tưới cây lần đầu để hạt giống nảy mầm nhé!');
   setTxt('dash-water-count', `${mascotData.fullBucketCount} 🪣`);
   setTxt('dash-tree-exp-label', `${gData.currentExp} / ${stageInfo.maxExp} EXP`);
+  setTxt('dash-garden-ground-label', hasWatered
+    ? 'MẦM TRI THỨC ĐANG LỚN LÊN'
+    : 'HẠT GIỐNG ĐANG CHỜ TƯỚI');
 
   const expBar = document.getElementById('dash-tree-exp-bar');
   if (expBar) {

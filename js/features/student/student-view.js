@@ -35,6 +35,28 @@ console.trace('bindStudentEvents called');
   });
 
   document.getElementById('btn-submit-quiz')?.addEventListener('click', finishAndEvaluateQuiz);
+  document.getElementById('btn-exit-quiz')?.addEventListener('click', async () => {
+    if (typeof Swal === 'undefined' || typeof Swal.fire !== 'function') {
+      console.error('Không thể xác nhận thoát bài vì hộp thoại chưa sẵn sàng.');
+      return;
+    }
+    const confirmation = await Swal.fire({
+      icon: 'warning',
+      title: 'Thoát bài làm?',
+      text: 'Câu trả lời chưa nộp sẽ không được lưu vào lịch sử.',
+      showCancelButton: true,
+      confirmButtonText: 'Thoát bài',
+      cancelButtonText: 'Tiếp tục làm'
+    });
+    if (!confirmation.isConfirmed) return;
+    window.QuizEngine?.stopTimer();
+    window.MascotEngine?.emit('quizAbandoned');
+    window.AppState.currentQuiz = null;
+    window.AppState.currentQuestions = [];
+    window.AppState.answers = {};
+    navigateTo('view-list');
+    filterAndRenderQuizzes();
+  });
 
   // AI Luyện tập câu sai
   document.getElementById('btn-trigger-ai')?.addEventListener('click', async () => {
@@ -80,6 +102,7 @@ console.trace('bindStudentEvents called');
       window.AppState.currentAttemptStartedAt = new Date().toISOString();
       navigateTo('view-quiz');
       renderCurrentQuestion();
+      window.MascotEngine?.emit('quizStart', { quizTitle: 'Luyện tập câu sai', mode: 'EXAM' });
       window.QuizEngine.startTimer(aiQuestions.length * 60, (timeStr) => { 
         const timerEl = document.getElementById('countdown-timer');
         if (timerEl) timerEl.textContent = timeStr; 
@@ -156,6 +179,10 @@ function getQuizStartStatus(quizId, userId, now = Date.now(), database = window.
   }
 
   return { quiz, reason: null, completedAttempts };
+}
+
+function supportsBothQuizModes(quiz) {
+  return (quiz.maxAttempts ?? null) === null && (quiz.dueAt ?? null) === null;
 }
 
 function formatQuizAttemptUsage(quiz, userId, attempts) {
@@ -352,8 +379,7 @@ function renderQuizCatalog(quizzes, totalCount) {
   if (typeof lucide !== 'undefined') lucide.createIcons();
 }
 
-// Đề thi có thời lượng được bắt đầu trực tiếp ở chế độ EXAM.
-function startQuizExecution(quizId) {
+async function startQuizExecution(quizId) {
   const quiz = window.AppState.allQuizzes.find(q => q.id === quizId);
   if (!quiz) return;
   const studentId = getCurrentStudentUserId();
@@ -377,7 +403,26 @@ function startQuizExecution(quizId) {
     return;
   }
 
-  initQuizWithMode(quiz, 'EXAM');
+  if (!supportsBothQuizModes(startStatus.quiz)) {
+    initQuizWithMode(quiz, 'EXAM');
+    return;
+  }
+
+  if (typeof Swal === 'undefined' || typeof Swal.fire !== 'function') {
+    console.error('Không thể hiển thị lựa chọn chế độ làm bài.');
+    return;
+  }
+  const selection = await Swal.fire({
+    title: 'Chọn chế độ làm bài',
+    text: 'Ôn luyện không giới hạn thời gian; Thử thách dùng thời lượng của đề nếu có.',
+    showDenyButton: true,
+    showCancelButton: true,
+    confirmButtonText: 'Thử thách (EXAM)',
+    denyButtonText: 'Ôn luyện (PRACTICE)',
+    cancelButtonText: 'Để sau'
+  });
+  if (selection.isConfirmed) initQuizWithMode(quiz, 'EXAM');
+  else if (selection.isDenied) initQuizWithMode(quiz, 'PRACTICE');
 }
 
 // Khởi tạo bài thi với chế độ đã chọn
@@ -409,13 +454,16 @@ function initQuizWithMode(quiz, mode) {
     maxAttempts: startStatus.quiz.maxAttempts ?? null,
     dueAt: startStatus.quiz.dueAt ?? null
   };
-  const effectiveMode = Number(currentQuiz.timeLimit) > 0 ? 'EXAM' : mode;
+  const effectiveMode = supportsBothQuizModes(startStatus.quiz) && mode === 'PRACTICE'
+    ? 'PRACTICE'
+    : 'EXAM';
   window.AppState.currentQuiz = currentQuiz;
   window.AppState.currentQuestions = currentQuiz.questions || [];
   window.AppState.currentQuestionIndex = 0;
   window.AppState.answers = {};
   window.AppState.quizMode = effectiveMode;
   window.AppState.currentAttemptStartedAt = new Date().toISOString();
+  window.MascotEngine?.resetAnswerStreak();
 
   const titleEl = document.getElementById('current-quiz-title');
   if (titleEl) {
@@ -446,6 +494,7 @@ function initQuizWithMode(quiz, mode) {
     const timerEl = document.getElementById('countdown-timer');
     if (timerEl) timerEl.textContent = "∞ Ôn tập";
   }
+  window.MascotEngine?.emit('quizStart', { quizTitle: currentQuiz.title, mode: effectiveMode });
 }
 
 function renderCurrentQuestion() {
@@ -516,6 +565,12 @@ function renderCurrentQuestion() {
         if (window.QuizEngine && typeof window.QuizEngine.recordAnswer === 'function') {
           window.QuizEngine.recordAnswer(q.id, selectedIndices);
         }
+
+        if (isPracticeMode && window.MascotEngine?.recordAnswer) {
+          const isCorrect = selectedIndices.length === correctSel.length &&
+            selectedIndices.every(value => correctSel.includes(value));
+          window.MascotEngine.recordAnswer(isCorrect);
+        }
         
         // Render lại giao diện câu hiện tại mà KHÔNG đụng vào index
         renderCurrentQuestion();
@@ -537,14 +592,6 @@ function renderCurrentQuestion() {
     const isCorrect = currentSavedAnswers.length === correctSel.length &&
                       currentSavedAnswers.every(val => correctSel.includes(val));
     
-    if (window.MascotEngine && typeof window.MascotEngine.speak === 'function') {
-      if (isCorrect) {
-        window.MascotEngine.speak("Đỉnh quá! Chính xác 100%!", 'correct');
-      } else {
-        window.MascotEngine.speak("Không sao cả, xem giải thích nhé!", 'wrong');
-      }
-    }
-
     explanationBox.className = `practice-explanation ${isCorrect ? 'is-correct' : 'is-incorrect'}`;
     explanationBox.hidden = false;
     explanationBox.setAttribute('role', 'status');
@@ -586,15 +633,22 @@ function finishAndEvaluateQuiz() {
   const results = window.QuizEngine.evaluateQuiz(questions, answers);
   window.AppState.quizResults = results;
   const quizTitle = window.AppState.currentQuiz?.title || 'Luyện tập AI';
+  const currentUser = window.Auth ? window.Auth.getCurrentUser() : null;
+  const quizId = window.AppState.currentQuiz?.id || null;
+  const previousAttempts = typeof getQuizHistoryForCurrentUser === 'function'
+    ? getQuizHistoryForCurrentUser()
+    : [];
+  const latestPriorAttempt = previousAttempts
+    .filter(item => item.quizId === quizId && item.completedAt)
+    .sort((left, right) => new Date(right.completedAt) - new Date(left.completedAt))[0];
   renderQuizResultPage(results, quizTitle);
 
   // Lưu Lịch sử Bài thi
   try {
-    const currentUser = window.Auth ? window.Auth.getCurrentUser() : null;
     const completedAt = new Date();
     const historyItem = {
       attemptId: `${completedAt.getTime()}_${Math.random().toString(36).slice(2)}`,
-      quizId: window.AppState.currentQuiz?.id || null,
+      quizId,
       timestamp: completedAt.toLocaleString('vi-VN'),
       completedAt: completedAt.toISOString(),
       startedAt: window.AppState.currentAttemptStartedAt || completedAt.toISOString(),
@@ -628,10 +682,13 @@ function finishAndEvaluateQuiz() {
   // 💧 XỬ LÝ MASCOT & CỘNG NƯỚC KHI NỘP BÀI
   let fullBucketEarned = false;
   let fullBucketCount = 0;
+  let previousFullBucketCount = 0;
+  let waterProgress = 0;
   if (window.MascotEngine) {
     if (results.score === 10) {
       // Đạt điểm tối đa -> Tích nước vào xô
       const data = window.MascotEngine.getData();
+      previousFullBucketCount = Number(data.fullBucketCount) || 0;
       data.waterProgress += 1;
 
       if (data.waterProgress >= 5) {
@@ -639,16 +696,20 @@ function finishAndEvaluateQuiz() {
         data.fullBucketCount += 1;
         fullBucketEarned = true;
         fullBucketCount = data.fullBucketCount;
-        window.MascotEngine.speak(`🎉 XÔ NƯỚC ĐÃ ĐẦY 100%! Bạn có ${data.fullBucketCount} xô tưới cây rồi!`, 'excited');
-      } else {
-        window.MascotEngine.speak(`🏆 ĐỈNH CAO 10/10! +1 vạch nước! (${data.waterProgress}/5)`, 'correct');
       }
+      waterProgress = data.waterProgress;
       window.MascotEngine.saveData(data);
-    } else if (results.score >= 8.0) {
-      window.MascotEngine.speak(`Giỏi lắm! Đạt ${results.score} điểm! Thêm chút nữa là được 10 rồi! 💪`, 'happy');
-    } else {
-      window.MascotEngine.speak(`Hoàn thành bài thi! Ôn lại các câu sai bên dưới để lấy điểm 10 lượt sau nhé! 😉`, 'happy');
     }
+    window.MascotEngine.emit?.('quizComplete', {
+      score: results.score,
+      improved: Boolean(latestPriorAttempt && results.score > Number(latestPriorAttempt.score)),
+      previousScore: latestPriorAttempt?.score,
+      bucketEarned: fullBucketEarned,
+      fullBucketCount,
+      previousFullBucketCount,
+      waterProgress,
+      user: currentUser
+    });
   }
 
   if (results.score >= 8.0 && typeof confetti === 'function') {

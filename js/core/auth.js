@@ -324,12 +324,15 @@ function initAuthModule() {
       try {
         const user = window.Auth.login(usernameInput.value, passwordInput.value);
         navigateAfterLogin(user);
+        window.MascotEngine?.renderMascotUI();
+        window.MascotEngine?.onLogin(user);
         passwordInput.value = '';
         if (typeof Swal !== 'undefined') {
           Swal.fire({ icon: 'success', title: 'Đăng nhập thành công', timer: 1200, showConfirmButton: false });
         }
       } catch (error) {
         status.textContent = error.message;
+        window.MascotEngine?.emit('loginFailure');
         if (typeof Swal !== 'undefined') {
           Swal.fire({ icon: 'error', title: 'Không thể đăng nhập', text: error.message });
         }
@@ -337,16 +340,23 @@ function initAuthModule() {
         loginButton.disabled = false;
       }
     });
+
+    usernameInput.addEventListener('focus', () => window.MascotEngine?.emit('usernameFocus'));
+    passwordInput.addEventListener('focus', () => window.MascotEngine?.emit('passwordFocus'));
   }
 
   document.getElementById('btn-nav-login')?.addEventListener('click', () => {
     if (typeof navigateTo === 'function') navigateTo('view-auth');
+    window.MascotEngine?.emit('loginScreen');
   });
 
   document.getElementById('btn-logout')?.addEventListener('click', () => {
     window.Auth.logout();
+    window.MascotEngine?.resetSession();
     if (typeof updateNavUI === 'function') updateNavUI(null);
     if (typeof navigateTo === 'function') navigateTo('view-auth');
+    window.MascotEngine?.renderMascotUI();
+    window.MascotEngine?.emit('loginScreen');
   });
 }
 

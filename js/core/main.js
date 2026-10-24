@@ -95,6 +95,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     // 6. Kiểm tra trạng thái đăng nhập người dùng & Điều hướng giao diện
     const currentUser = window.Auth ? window.Auth.getCurrentUser() : null;
     window.AppState.currentUser = currentUser;
+    if (currentUser) {
+      window.MascotEngine?.renderMascotUI();
+      window.MascotEngine?.onSessionResume(currentUser);
+    }
 
     if (typeof updateNavUI === 'function') {
       updateNavUI(currentUser);
@@ -112,6 +116,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
     } else {
       navigateTo('view-auth');
+      window.MascotEngine?.emit('loginScreen');
     }
 
     console.log("✅ Hệ thống đã sẵn sàng và khởi chạy thành công!");

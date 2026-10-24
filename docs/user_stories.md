@@ -42,7 +42,8 @@ Tài liệu này mô tả các luồng người dùng và đối chiếu tiêu c
 **Tiêu chí và trạng thái hiện tại**
 
 - Câu hỏi `single` dùng radio, câu hỏi `multiple` dùng checkbox; đáp án được giữ trong `AppState` khi chuyển câu — **Đã triển khai**.
-- Đề được giao hiện luôn bắt đầu ở chế độ thử thách `EXAM`; không có lựa chọn ôn luyện trong luồng bắt đầu đề — **Đã triển khai**.
+- Đề không giới hạn số lượt và không có hạn chót cho phép chọn chế độ `EXAM` hoặc `PRACTICE`; đề có giới hạn lượt hoặc hạn chót chỉ bắt đầu ở `EXAM` — **Đã triển khai**.
+- `EXAM` dùng thời lượng đề và tự nộp khi hết giờ; `PRACTICE` không giới hạn giờ, khóa đáp án sau khi chọn và hiện lời giải — **Đã triển khai**.
 - Chế độ thử thách có đồng hồ đếm ngược; khi hết giờ hệ thống tự nộp bài — **Đã triển khai**.
 - Thanh tiến độ hiện biểu diễn vị trí câu đang xem trên tổng số câu, không phải tỷ lệ câu đã trả lời — **Đã triển khai theo vị trí**.
 - Không có yêu cầu bắt buộc trả lời hết mọi câu trước khi nộp; câu chưa chọn được chấm là sai.

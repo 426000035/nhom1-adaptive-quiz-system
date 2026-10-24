@@ -71,6 +71,75 @@ test('student dashboard averages per-quiz aggregate scores while retaining attem
   assert.equal(elements.get('dash-avg-score').textContent, '7.0 / 10');
 });
 
+test('garden shows only the seed before first watering, then keeps only the sprout', () => {
+  const elements = new Map();
+  const progress = {
+    userId: 'student_1',
+    treeStage: 1,
+    currentExp: 0,
+    streakCount: 0,
+    bucketsWatered: 0,
+    fullBucketCount: 1
+  };
+  const context = {
+    document: {
+      getElementById(id) {
+        if (!elements.has(id)) elements.set(id, createElement());
+        return elements.get(id);
+      },
+      createElement
+    },
+    getQuizHistoryForUser: () => [],
+    window: {
+      AppState: { viewingStudentId: 'student_1' },
+      Auth: { getCurrentUser: () => ({ role: 'admin' }) },
+      LocalStorageDB: {
+        read: () => ({
+          users: [{ userId: 'student_1', role: 'student' }],
+          studentProgress: [progress]
+        })
+      },
+      GamificationEngine: {
+        STAGES: {
+          1: { name: 'Hạt Mầm', icon: '🌱', maxExp: 100, desc: 'Cây vừa mới nhú mầm!' }
+        }
+      },
+      QuizEngine: {
+        aggregateQuizScores: () => [],
+        aggregateSkillStats: () => ({})
+      }
+    }
+  };
+
+  vm.createContext(context);
+  vm.runInContext(dashboardSource, context);
+
+  context.updateStudentStatsData();
+  assert.equal(elements.get('tree-garden-scene').dataset.hasWatered, 'false');
+  assert.equal(elements.get('dash-tree-title').textContent, 'Hạt Giống (Cấp 1)');
+  assert.equal(elements.get('dash-garden-ground-label').textContent, 'HẠT GIỐNG ĐANG CHỜ TƯỚI');
+
+  progress.bucketsWatered = 1;
+  progress.currentExp = 50;
+  context.updateStudentStatsData();
+  assert.equal(elements.get('tree-garden-scene').dataset.hasWatered, 'true');
+  assert.equal(elements.get('dash-tree-title').textContent, 'Hạt Mầm (Cấp 1)');
+  assert.equal(elements.get('dash-garden-ground-label').textContent, 'MẦM TRI THỨC ĐANG LỚN LÊN');
+
+  const componentStyles = fs.readFileSync(
+    path.join(__dirname, '..', 'css', 'components.css'),
+    'utf8'
+  );
+  assert.match(
+    componentStyles,
+    /\.tree-garden-scene\[data-has-watered="false"\] \.garden-plant-wrap,[\s\S]*?\.tree-garden-scene\[data-has-watered="false"\] \.garden-root\s*\{[^}]*visibility:\s*hidden;/s
+  );
+  assert.match(
+    componentStyles,
+    /\.tree-garden-scene\[data-has-watered="true"\] \.garden-seed\s*\{[^}]*display:\s*none;/s
+  );
+});
+
 test('admin report shows original attempt scores alongside per-student quiz aggregates', () => {
   const elements = new Map();
   for (const [id, value] of [

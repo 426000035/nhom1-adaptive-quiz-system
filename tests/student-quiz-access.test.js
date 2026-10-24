@@ -13,8 +13,17 @@ const utilitySource = fs.readFileSync(
   'utf8'
 );
 
-function createStudentView({ userId = 'student_1', role = 'student', quizzes = [], attempts = [], aiService = null, document = null } = {}) {
+function createStudentView({
+  userId = 'student_1',
+  role = 'student',
+  quizzes = [],
+  attempts = [],
+  aiService = null,
+  document = null,
+  selectedMode = 'EXAM'
+} = {}) {
   const alerts = [];
+  const modeDialogs = [];
   const database = {
     quizzes: quizzes.map(quiz => ({
       ...quiz,
@@ -38,8 +47,21 @@ function createStudentView({ userId = 'student_1', role = 'student', quizzes = [
       AIService: aiService
     },
     document: document || { getElementById: () => null, body: { classList: { add() {}, remove() {} } } },
-    Swal: { fire: alert => alerts.push(alert) },
+    Swal: {
+      fire: alert => {
+        if (alert.showDenyButton) {
+          modeDialogs.push(alert);
+          return Promise.resolve({
+            isConfirmed: selectedMode === 'EXAM',
+            isDenied: selectedMode === 'PRACTICE'
+          });
+        }
+        alerts.push(alert);
+        return Promise.resolve({});
+      }
+    },
     alerts,
+    modeDialogs,
     sortListByDate(records, sort) {
       const direction = sort === 'DATE_ASC' ? 1 : -1;
       return records.slice().sort((left, right) =>
@@ -308,7 +330,7 @@ test('rechecks current assignment and policies when a student confirms the mode'
   assert.equal(context.window.AppState.currentQuiz, undefined);
 });
 
-test('starts timed quizzes directly in EXAM mode without a mode-selection dialog', () => {
+test('offers EXAM and PRACTICE for quizzes without attempt or deadline limits', async () => {
   const context = createStudentView({
     quizzes: [
       {
@@ -320,22 +342,71 @@ test('starts timed quizzes directly in EXAM mode without a mode-selection dialog
     ]
   });
 
-  context.startQuizExecution('quiz_1');
+  await context.startQuizExecution('quiz_1');
 
   assert.equal(context.window.AppState.currentQuiz.id, 'quiz_1');
   assert.equal(context.window.AppState.quizMode, 'EXAM');
   assert.equal(context.timerStarts.length, 1);
   assert.equal(context.timerStarts[0][0], 12 * 60);
+  assert.equal(context.modeDialogs.length, 1);
+  assert.equal(context.modeDialogs[0].showDenyButton, true);
   assert.equal(context.alerts.length, 0);
 });
 
-test('forces timed quizzes into EXAM mode even if initialization requests PRACTICE', () => {
+test('starts unrestricted quizzes in PRACTICE mode when selected, without a timer', async () => {
   const context = createStudentView({
     quizzes: [
       {
         id: 'quiz_1',
         title: 'Đề Toán',
         timeLimit: 8,
+        assignedStudentIds: ['student_1']
+      }
+    ],
+    selectedMode: 'PRACTICE'
+  });
+
+  await context.startQuizExecution('quiz_1');
+
+  assert.equal(context.window.AppState.quizMode, 'PRACTICE');
+  assert.equal(context.timerStarts.length, 0);
+});
+
+test('keeps quizzes with attempt or deadline limits in EXAM mode', async () => {
+  const limitedPolicies = [
+    { maxAttempts: 2 },
+    { dueAt: '2099-10-22T12:00:00.000Z' }
+  ];
+
+  for (const policy of limitedPolicies) {
+    const context = createStudentView({
+      quizzes: [
+        {
+          id: 'quiz_1',
+          title: 'Đề Toán',
+          timeLimit: 8,
+          ...policy,
+          assignedStudentIds: ['student_1']
+        }
+      ]
+    });
+
+    await context.startQuizExecution('quiz_1');
+
+    assert.equal(context.window.AppState.quizMode, 'EXAM');
+    assert.equal(context.timerStarts.length, 1);
+    assert.equal(context.modeDialogs.length, 0);
+  }
+});
+
+test('does not allow PRACTICE to bypass attempt limits during initialization', () => {
+  const context = createStudentView({
+    quizzes: [
+      {
+        id: 'quiz_1',
+        title: 'Đề Toán',
+        timeLimit: 8,
+        maxAttempts: 2,
         assignedStudentIds: ['student_1']
       }
     ]
@@ -345,5 +416,4 @@ test('forces timed quizzes into EXAM mode even if initialization requests PRACTI
 
   assert.equal(context.window.AppState.quizMode, 'EXAM');
   assert.equal(context.timerStarts.length, 1);
-  assert.equal(context.timerStarts[0][0], 8 * 60);
 });

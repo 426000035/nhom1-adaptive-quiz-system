@@ -266,8 +266,8 @@ test('imports the detailed demo pack additively and only once', async () => {
   assert.equal(firstImport.imported, true);
   assert.equal(firstImport.database.subjects.length, 3);
   assert.equal(firstImport.database.skills.length, 15);
-  assert.equal(firstImport.database.questions.length, 150);
-  assert.equal(firstImport.database.quizzes.length, 20);
+  assert.equal(firstImport.database.questions.length, 151);
+  assert.equal(firstImport.database.quizzes.length, 21);
   assert.equal(firstImport.database.quizzes.find(quiz =>
     quiz.quizId === samplePack.quizzes[0].quizId
   ).title, samplePack.quizzes[0].title);
@@ -293,8 +293,10 @@ test('imports the detailed demo pack additively and only once', async () => {
     const questionsForGrade = firstImport.database.questions.filter(item => item.subjectId === subject.subjectId);
     const skillsForGrade = firstImport.database.skills.filter(item => item.subjectId === subject.subjectId);
     assert.equal(skillsForGrade.length, 5);
-    assert.equal(questionsForGrade.length, 50);
-    const quizzesForGrade = firstImport.database.quizzes.filter(item => item.subjectId === subject.subjectId);
+    assert.equal(questionsForGrade.length, grade === 3 ? 51 : 50);
+    const quizzesForGrade = firstImport.database.quizzes.filter(item =>
+      item.subjectId === subject.subjectId && item.quizId !== 'quiz_math_g3_test'
+    );
     assert.ok([6, 7].includes(quizzesForGrade.length));
     quizzesForGrade.forEach(quiz => {
       assert.equal(quiz.questionIds.length, 10);
@@ -317,6 +319,27 @@ test('imports the detailed demo pack additively and only once', async () => {
       assert.equal(question.type === 'multiple', question.correctOptionIds.length > 1);
     });
   });
+  const testQuiz = firstImport.database.quizzes.find(quiz => quiz.quizId === 'quiz_math_g3_test');
+  const testQuestion = firstImport.database.questions.find(question =>
+    question.questionId === 'question_math_g3_test_4x5'
+  );
+  assert.equal(testQuiz.title, 'Test');
+  assert.equal(testQuiz.subjectId, 'subject_math_grade_3');
+  assert.deepEqual(Array.from(testQuiz.questionIds), ['question_math_g3_test_4x5']);
+  assert.equal(testQuiz.timeLimitMinutes, 15);
+  assert.equal(testQuiz.maxAttempts, null);
+  assert.equal(testQuiz.dueAt, null);
+  assert.equal(testQuiz.assignedStudentIds.length, 51);
+  assert.deepEqual(
+    Array.from(testQuiz.assignedStudentIds).sort().join(','),
+    Array.from(
+      firstImport.database.users.filter(user => user.role === 'student'),
+      user => user.userId
+    ).sort().join(',')
+  );
+  assert.equal(testQuestion.content, '4 × 5 = ?');
+  assert.equal(testQuestion.options[0].content, '20');
+  assert.deepEqual(Array.from(testQuestion.correctOptionIds), ['option_question_math_g3_test_4x5_a']);
   const demoStudents = firstImport.database.users.filter(user => user.userId.startsWith('usr_math_demo_'));
   assert.equal(demoStudents.every(user => user.classIds.length === 1), true);
   assert.equal(new Set(demoStudents.map(user => user.username)).size, 50);
@@ -339,12 +362,12 @@ test('imports the detailed demo pack additively and only once', async () => {
     item.userId === 'usr_math_demo_001'
   );
   assert.equal(perfectStudentProgress.fullBucketCount, 50);
-  assert.equal(perfectStudentProgress.waterProgress, 0);
+  assert.equal(perfectStudentProgress.waterProgress, 4);
   assert.equal(firstImport.database.attempts.some(attempt =>
     attempt.correctCount > 0 && attempt.correctCount < attempt.totalQuestions
   ), true);
   assert.equal(firstImport.database.quizzes.filter(quiz => quiz.dueAt).length, 10);
-  assert.equal(firstImport.database.quizzes.filter(quiz => !quiz.dueAt).length, 10);
+  assert.equal(firstImport.database.quizzes.filter(quiz => !quiz.dueAt).length, 11);
   assert.deepEqual(
     [...new Set(firstImport.database.quizzes.map(quiz => quiz.timeLimitMinutes))].sort((a, b) => a - b),
     [15, 20, 30, 45, 60]
@@ -360,7 +383,7 @@ test('imports the detailed demo pack additively and only once', async () => {
     assert.ok(members.length >= 5 && members.length <= 6);
   });
   assert.ok(storage.getItem(`${api.storageKey}_sample_pack_version`));
-  assert.equal(storage.getItem(`${api.storageKey}_sample_pack_version`), '7');
+  assert.equal(storage.getItem(`${api.storageKey}_sample_pack_version`), '9');
 
   storage.setItem(`${api.storageKey}_sample_pack_version`, '6');
   api.update(database => {
@@ -378,7 +401,7 @@ test('imports the detailed demo pack additively and only once', async () => {
     attempt.quizId === samplePack.quizzes[0].quizId
   ).quizTitle, samplePack.quizzes[0].title);
   assert.equal(secondImport.database.attempts.length, 500);
-  assert.equal(secondImport.database.questions.length, 150);
+  assert.equal(secondImport.database.questions.length, 151);
   assert.equal(secondImport.database.users.filter(user => user.userId.startsWith('usr_math_demo_')).length, 50);
   const thirdImport = await api.importDemoSamplePack();
   assert.equal(thirdImport.imported, false);
@@ -419,11 +442,66 @@ test('seeds sample progress when the student has no saved progress', async () =>
       treeStage: 1,
       streakCount: 0,
       lastActiveDate: new Date().toISOString().slice(0, 10),
-      waterProgress: 0,
+      waterProgress: 4,
       fullBucketCount: 50,
       bucketsWatered: 0
     }
   ]);
+});
+
+test('adds the Test quiz to an existing sample database without replacing its custom data', async () => {
+  const users = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'data', 'users.json'), 'utf8'));
+  const questions = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'data', 'questions.json'), 'utf8'));
+  const samplePack = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'data', 'demo-sample-pack.json'), 'utf8'));
+  const fetchImpl = async url => ({
+    ok: true,
+    status: 200,
+    async json() {
+      if (url === './data/users.json') return users;
+      if (url === './data/questions.json') return questions;
+      if (url === './data/demo-sample-pack.json') return samplePack;
+      throw new Error(`Unexpected seed URL: ${url}`);
+    }
+  });
+  const { api, storage } = createDatabaseApi(createStorage(), fetchImpl);
+  await api.initializeFromJson();
+  api.update(database => {
+    samplePack.users.forEach(sampleStudent => {
+      database.users.push({ ...sampleStudent, classIds: [] });
+    });
+    samplePack.subjects.forEach(subject => database.subjects.push(subject));
+    samplePack.skills.forEach(skill => database.skills.push(skill));
+    database.subjects.push({
+      subjectId: 'subject_custom',
+      name: 'Môn học tùy chỉnh',
+      status: 'active'
+    });
+    database.studentProgress.push({
+      userId: 'usr_math_demo_001',
+      currentExp: 123,
+      treeStage: 3,
+      streakCount: 7,
+      lastActiveDate: '2026-10-23',
+      waterProgress: 0,
+      fullBucketCount: 12,
+      bucketsWatered: 4
+    });
+  });
+  storage.setItem(`${api.storageKey}_sample_pack_version`, '8');
+
+  const result = await api.importDemoSamplePack();
+  const progress = result.database.studentProgress.find(item => item.userId === 'usr_math_demo_001');
+  assert.equal(progress.waterProgress, 4);
+  assert.equal(result.database.subjects.some(item => item.subjectId === 'subject_custom'), true);
+  assert.equal(result.database.quizzes.length, 1);
+  assert.equal(result.database.quizzes[0].quizId, 'quiz_math_g3_test');
+  assert.equal(result.database.questions.some(item => item.questionId === 'question_math_g3_test_4x5'), true);
+  assert.equal(progress.currentExp, 123);
+  assert.equal(progress.treeStage, 3);
+  assert.equal(progress.streakCount, 7);
+  assert.equal(progress.fullBucketCount, 12);
+  assert.equal(progress.bucketsWatered, 4);
+  assert.equal(storage.getItem(`${api.storageKey}_sample_pack_version`), '9');
 });
 
 test('does not commit a detailed sample pack that fails database validation', async () => {
