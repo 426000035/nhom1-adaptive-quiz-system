@@ -1,122 +1,88 @@
-# Adaptive Quiz System
+# AdaptiveQuiz — Hệ thống Trắc nghiệm Thích ứng
 
-## 1. Tên dự án và thành viên
+## Nhóm dự án
 
-- **Tên nhóm:** [CẦN BỔ SUNG]
-- **Tên dự án:** Adaptive Quiz System
-- **Môn học/lớp:** [CẦN BỔ SUNG]
-- **Giảng viên:** [CẦN BỔ SUNG]
+- **Tên nhóm:** Nhóm 1 – AdaptiveQuiz
+- **Học phần:** Thiết kế Web – Trường Đại học Lạc Hồng (LHU)
+- **Leader / Scrum Master:** Phan Thị Ngọc Duyên
+- **Member / Dev Team:** Tống Ngọc Minh Châu
 
-| Thành viên | Vai trò | Nhiệm vụ |
-|---|---|---|
-| [CẦN BỔ SUNG] | Scrum Master | Theo dõi tiến độ, điều phối công việc và tổng hợp kết quả |
-| [CẦN BỔ SUNG] | Dev Team | Phát triển giao diện và chức năng [ghi rõ phần phụ trách] |
-| [CẦN BỔ SUNG] | Dev Team | Phát triển giao diện và chức năng [ghi rõ phần phụ trách] |
-| [CẦN BỔ SUNG] | Dev Team | Kiểm thử, tài liệu hoặc chức năng [ghi rõ phần phụ trách] |
+## Mô tả dự án
 
-> Bổ sung hoặc xóa các dòng thành viên để khớp với danh sách thực tế của nhóm.
+AdaptiveQuiz là ứng dụng web hỗ trợ học viên làm đề được giao, kiểm tra kiến thức và theo dõi kết quả học tập. Giáo viên có thể quản lý đề thi, ngân hàng câu hỏi, danh mục, tài khoản học viên và lớp học; đồng thời theo dõi báo cáo kết quả.
 
-## 2. Mô tả dự án
+Hệ thống giúp giải quyết các nhu cầu chính:
 
-Adaptive Quiz System là ứng dụng web hỗ trợ học viên làm các đề được giao, xem kết quả và theo dõi lịch sử, tiến độ học tập. Các đề được giao chạy ở chế độ thử thách có thời gian; học viên cũng có thể tạo bài ôn câu sai bằng AI. Giáo viên có thể quản lý đề thi, ngân hàng câu hỏi, danh mục môn/kỹ năng, tài khoản và lớp học, đồng thời xem báo cáo.
+- Học viên cần luyện tập và đánh giá mức độ nắm kiến thức theo đề được giao.
+- Người học cần biết câu trả lời đúng/sai, xem giải thích và nhận diện nội dung cần ôn thêm.
+- Học viên cần xem lại lịch sử, tiến độ học tập và kết quả theo môn/kỹ năng.
+- Giáo viên cần công cụ quản lý câu hỏi, đề thi, phân công học viên và theo dõi kết quả.
+- Người học cần bài luyện tập bổ sung từ các câu đã trả lời sai; hệ thống có tích hợp AI cho mục đích này.
 
-Dự án hướng đến việc giải quyết các vấn đề:
-- Học viên khó tự đánh giá mức độ nắm vững kiến thức.
-- Người học cần biết câu nào sai và hiểu lý do sai để ôn tập hiệu quả.
-- Giáo viên cần một nơi quản lý đề, câu hỏi và theo dõi kết quả học tập.
+### Chức năng nổi bật
 
-### Liên hệ với 5 chủ đề được giao
+- Tìm kiếm, lọc và sắp xếp danh sách đề được giao.
+- Làm bài ở chế độ EXAM có giới hạn thời gian hoặc PRACTICE không giới hạn thời gian khi chính sách đề cho phép.
+- Chấm điểm, xem lại đáp án và giải thích; lưu lịch sử các lượt đã nộp.
+- Tạo bài luyện tập từ câu sai bằng dịch vụ AI.
+- Theo dõi tiến độ học tập và chăm sóc cây bằng phần thưởng nước.
+- Quản lý đề, ngân hàng câu hỏi, tài khoản, lớp học và báo cáo dành cho giáo viên.
 
-> **[CẦN BỔ SUNG]** Tên chính xác của 5 chủ đề do giảng viên giao chưa được cung cấp. Hãy điền chủ đề và mô tả chức năng/giải pháp tương ứng; không nên tự suy đoán tên chủ đề.
+## Công nghệ và giới hạn hiện tại
 
-| Chủ đề được giao | Vấn đề cần giải quyết | Phần chức năng liên quan |
-|---|---|---|
-| 1. [CẦN BỔ SUNG] | [CẦN BỔ SUNG] | [CẦN BỔ SUNG] |
-| 2. [CẦN BỔ SUNG] | [CẦN BỔ SUNG] | [CẦN BỔ SUNG] |
-| 3. [CẦN BỔ SUNG] | [CẦN BỔ SUNG] | [CẦN BỔ SUNG] |
-| 4. [CẦN BỔ SUNG] | [CẦN BỔ SUNG] | [CẦN BỔ SUNG] |
-| 5. [CẦN BỔ SUNG] | [CẦN BỔ SUNG] | [CẦN BỔ SUNG] |
+- HTML5, CSS3 và JavaScript thuần; ứng dụng SPA chạy phía trình duyệt.
+- Dữ liệu demo, tài khoản, lịch sử và tiến độ được lưu trong `localStorage` của trình duyệt; không đồng bộ giữa thiết bị.
+- Sử dụng các thư viện giao diện qua CDN như Lucide, Chart.js, SweetAlert2 và Canvas Confetti.
+- Tích hợp Gemini để hỗ trợ tạo câu hỏi ôn tập. Ứng dụng hiện không có backend; không dùng dữ liệu nhạy cảm hoặc xem cơ chế đăng nhập/lưu trữ phía client là bảo mật production.
 
-## 3. Công nghệ và chức năng
-
-- HTML5, CSS3 và JavaScript thuần.
-- Ứng dụng SPA chạy phía trình duyệt, không cần backend để chạy các chức năng cơ bản.
-- `localStorage` lưu database demo gồm tài khoản, đề thi, câu hỏi, lịch sử và tiến độ trên trình duyệt hiện tại; phiên đăng nhập cục bộ lưu ID tài khoản.
-- Các thư viện giao diện được tải qua CDN: Lucide Icons, Chart.js, SweetAlert2, Canvas Confetti và Prism.js.
-- Tích hợp Gemini để hỗ trợ tạo câu hỏi ôn tập từ câu sai. Khi các request thất bại, fallback hiện sao chép câu sai với ID mới; không lấy câu thay thế từ `data/questions.json`.
-- Ứng dụng hiện chạy client-side, không có backend; API key Gemini được đặt trong JavaScript phía client và có thể bị lộ. Không dùng dữ liệu/mật khẩu thật hoặc triển khai công khai với cấu hình key hiện tại.
-
-Các chức năng chính:
-- Đăng nhập demo bằng username/mật khẩu; giáo viên có thể tạo tài khoản học viên. Không có tự đăng ký.
-- Tìm kiếm, lọc danh sách đề thi.
-- Làm đề được giao có tính giờ; xem lại bài đã làm và ôn tập câu sai với AI.
-- Chấm điểm, xem giải thích và lưu lịch sử làm bài.
-- Học viên theo dõi tiến độ; quản trị viên quản lý đề thi, ngân hàng câu hỏi, người dùng và báo cáo.
-
-## 4. Hướng dẫn chạy
-
-### Chạy trên máy cá nhân
-
-Ứng dụng dùng `fetch()` để tải HTML và JSON, vì vậy cần chạy qua static web server; không mở trực tiếp bằng `file://`. Không cần cài Node.js, bundler hay framework để chạy ứng dụng.
-
-1. Mở thư mục dự án trong VS Code.
-2. Cài và khởi chạy extension **Live Server** từ tệp `index.html`.
-3. Truy cập địa chỉ local mà Live Server cung cấp.
+## Hướng dẫn chạy
 
 ### Live Demo
 
-- **GitHub Pages/Vercel:** [CẦN BỔ SUNG URL SAU KHI DEPLOY]
-- **Kho mã nguồn:** [CẦN BỔ SUNG URL REPOSITORY]
+- **Truy cập ứng dụng:** [AdaptiveQuiz trên GitHub Pages](https://426000035.github.io/nhom1-adaptive-quiz-system/)
+- **Kho mã nguồn:** [426000035/nhom1-adaptive-quiz-system](https://github.com/426000035/nhom1-adaptive-quiz-system)
 
-> Ứng dụng lưu dữ liệu trong `localStorage` của trình duyệt, nên dữ liệu demo không tự đồng bộ giữa các thiết bị.
+### Chạy trên máy cá nhân
 
-## 5. Prompt nổi bật đã dùng
+Ứng dụng tải template HTML và dữ liệu JSON bằng `fetch()`, vì vậy cần chạy qua HTTP(S), không mở trực tiếp bằng `file://`.
 
-> **Lưu ý:** Các nội dung dưới đây là prompt mẫu dựa trên chức năng của dự án, không phải lịch sử prompt đã được xác nhận. Hãy thay bằng 3–5 prompt nguyên văn hoặc gần nguyên văn mà nhóm thực sự đã dùng để điều khiển AI.
+1. Clone hoặc tải repository về máy.
+2. Mở thư mục dự án trong VS Code.
+3. Dùng extension **Live Server** để mở `index.html`.
+4. Truy cập địa chỉ local do Live Server cung cấp.
 
-1. **Thiết kế luồng làm bài**
-   > “Hãy xây dựng luồng làm bài trắc nghiệm bằng JavaScript thuần: hỗ trợ câu hỏi chọn một/chọn nhiều, lưu đáp án vào AppState, cập nhật thanh tiến độ và tự động nộp bài khi hết giờ. Kiểm tra các trường hợp chưa chọn đáp án và đề thi không có câu hỏi.”
+Không cần cài Node.js, bundler hoặc framework để chạy ứng dụng.
 
-2. **Chấm điểm và giải thích kết quả**
-   > “Hãy triển khai logic chấm điểm từ danh sách câu trả lời và `correctAnswer`. Sau khi nộp, hiển thị điểm, câu đúng/sai, đáp án đã chọn và lời giải thích. Không thay đổi cấu trúc dữ liệu câu hỏi hiện có.”
+## Prompt nhóm đã sử dụng
 
-3. **Lưu và khôi phục lịch sử**
-   > “Hãy lưu mỗi lượt làm bài vào `localStorage` kèm snapshot câu hỏi và câu trả lời để học viên có thể mở lại kết quả sau này. Đảm bảo lịch sử của học viên được lọc theo tài khoản đang đăng nhập và không làm hỏng dữ liệu cũ.”
+Các prompt dưới đây được trích nguyên văn theo nhật ký tại [`prompt_log`](./prompt_log).
 
-4. **Tạo câu hỏi ôn tập bằng AI**
-   > “Hãy tạo service gọi Gemini dựa trên danh sách câu trả lời sai. Yêu cầu kết quả là mảng JSON đúng schema câu hỏi của ứng dụng; xử lý lỗi mạng, phản hồi sai định dạng và cơ chế fallback rõ ràng.”
+1. **Khởi tạo dự án (Setup)**
+   > “Một dự án thiết kế web sử dụng Vibe-code thì nên có những file markdown nào?”
 
-5. **Rà soát đường dẫn sau khi sắp xếp thư mục**
-   > “Hãy rà tất cả đường dẫn script, CSS, JSON và HTML được tải bằng `fetch()` sau khi thay đổi cấu trúc thư mục. Cập nhật tham chiếu, giữ đúng thứ tự nạp JavaScript và kiểm tra không còn đường dẫn cũ.”
+2. **Đồng bộ ngữ cảnh (Context Setup)**
+   > “Bạn đang đồng hành cùng dự án AdaptiveQuiz. Yêu cầu đọc agents.md, .ai/SKILLS.md, architecture.md, data-contract.md, user-stories.md, README.md. Ghi nhớ và tuân thủ các quy tắc được đề cập trong các file đó”
 
-## 6. Cấu trúc dự án
+3. **Thiết kế dữ liệu (Data Design)**
+   > “Liệt kê các quan hệ cần được chuẩn hóa dữ liệu đang có trong dự án, ví dụ như học sinh, đề thi, câu hỏi, môn...”
 
-```text
-adaptive-quiz-system/
-├── .ai/
-│   └── skills.md
-├── agents.md
-├── docs/
-│   ├── architecture.md
-│   ├── data-contracts.md
-│   └── user_stories.md
-├── README.md
-├── generate-questions.js
-├── index.html
-├── css/
-├── data/
-│   ├── demo-sample-pack.json
-│   ├── questions.json
-│   └── users.json
-├── js/
-│   ├── core/
-│   ├── features/
-│   │   ├── student/
-│   │   └── admin/
-│   └── services/
-└── views/
-    ├── auth/
-    ├── shared/
-    ├── student/
-    └── admin/
-```
+4. **Lập kế hoạch giao diện (UI Planning)**
+   > “PROMPT — CHUẨN HÓA GIAO DIỆN MÀN HÌNH CON VÀ POPUP/MODAL ADAPTIVEQUIZ / Lập kế hoạch từng bước, thực hiện từng bước nhỏ, chỉ thực hiện khi nhận được lệnh”
+
+5. **Chỉnh sửa các chi tiết**
+   > “Role: Admin; Màn hình danh sách bài thi; button [Quản lý câu hỏi]; tại danh sách câu hỏi này, XÓA cột mã câu hỏi, cột Đáp án đúng yêu cầu hiển thị đầy đủ tất cả các lựa chọn đúng ví dụ [A:3][B:312]”
+
+6. **Thực thi chi tiết (Task Breakdown)**
+   > “liệt kê các bước cần thực hiện và sẽ làm theo từng bước nhỏ”
+
+7. **Thực thi & Tinh chỉnh (Refactoring)**
+   > “Bạn là Senior Frontend Engineer. Hãy trực tiếp audit và chuẩn hóa CSS toàn bộ dự án AdaptiveQuiz theo yêu cầu dưới đây: Loại bỏ inline style tĩnh, không làm hỏng tính năng, dữ liệu, theme, responsive...”
+
+## Tổng hợp tài liệu dự án
+
+- [Hướng dẫn AI Coding Agent](./agents.md) — ràng buộc công nghệ, kiến trúc và dữ liệu hiện tại, quy tắc thay đổi mã, cùng hướng dẫn làm việc theo từng loại tác vụ.
+- [Kỹ năng và API hiện có](./.ai/skills.md) — ghi chú tra cứu API, module và quy ước triển khai đang được dùng trong mã nguồn.
+- [Kiến trúc hệ thống](./docs/architecture.md) — cấu trúc mã nguồn, thứ tự khởi tạo/phụ thuộc module, vòng đời trạng thái, luồng giao diện và giới hạn bảo mật.
+- [Hợp đồng dữ liệu](./docs/data-contracts.md) — hợp đồng DOM giữa HTML và JavaScript; cấu trúc, khóa lưu trữ và dữ liệu của câu hỏi, tài khoản, lịch sử, tiến độ, danh mục và tích hợp Gemini.
+- [User stories](./docs/user_stories.md) — nhu cầu và tiêu chí hành vi của học viên, quản trị viên/giáo viên và hệ thống, kèm ghi chú phạm vi hiện tại.
+- [Nhật ký prompt](./prompt_log) — công cụ AI, các prompt theo tiến trình thực hiện dự án, kết quả/tùy chỉnh và bài học kinh nghiệm của nhóm.
