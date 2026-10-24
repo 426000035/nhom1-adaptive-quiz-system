@@ -1,0 +1,55 @@
+# PHỤ LỤC 2: NHẬT KÝ ĐỒNG HÀNH CÙNG AI (PROMPT LOG)
+
+**Học phần:** Thiết kế Web – Trường Đại học Lạc Hồng (LHU)  
+**Tên nhóm:** Nhóm 1 – AdaptiveQuiz  
+**Lớp:** THIẾT KẾ WEB
+**Tên dự án:** Hệ thống Trắc nghiệm Thích ứng (AdaptiveQuiz)
+
+---
+
+## 1. Thông tin công cụ AI sử dụng
+
+* **Công cụ chính:** GitHub Copilot (mô hình Claude/GPT-6-luna tích hợp trong workspace), ChatGPT-4o.
+* **Công cụ hỗ trợ code (Extension):** GitHub Copilot Chat, VS Code Extension Workspace.
+* **Công cụ tạo hình ảnh/nội dung:** Tự sinh dữ liệu mẫu cấu trúc JSON/Semantic data thông qua AI.
+
+---
+
+## 2. Nhật ký quá trình thực hiện (Sắp xếp theo tiến trình phát triển dự án)
+
+| STT | Giai đoạn PBL / Agile | Mục tiêu (Bạn muốn AI làm gì?) | Nội dung Prompt (Câu lệnh bạn đã dùng) | Kết quả & Tùy chỉnh (AI có làm đúng không? Bạn có sửa lại gì không?) |
+| :--- | :--- | :--- | :--- | :--- |
+| **1** | Khởi tạo dự án (Setup) | Xác định các file tài liệu Markdown cốt lõi cần có cho một dự án web theo mô hình Vibe Coding. | *"Một dự án thiết kế web sử dụng Vibe-code thì nên có những file markdown nào?"* | **Đúng:** AI tư vấn và phân nhóm các file `.md` quan trọng (`README.md`, `requirements.md`, `data-contract.md`, `agents.md`, `skills.md`) giúp định hướng xuyên suốt. |
+| **2** | Đồng bộ ngữ cảnh (Context Setup) | Yêu cầu AI đọc và tuân thủ các quy tắc kỹ thuật, kiến trúc đã định nghĩa sẵn trong workspace. | *"Bạn đang đồng hành cùng dự án AdaptiveQuiz. Yêu cầu đọc agents.md, .ai/SKILLS.md, architecture.md, data-contract.md, user-stories.md, README.md. Ghi nhớ và tuân thủ các quy tắc được đề cập trong các file đó"* | **Đúng:** AI xác nhận đã đọc, nắm rõ quy tắc, đồng thời lưu ý điều chỉnh tên file thực tế (`data-contracts.md`, `user_stories.md`) để làm việc chính xác hơn. |
+| **3** | Thiết kế dữ liệu (Data Design) | Rà soát và chuẩn hóa các mối quan hệ dữ liệu cốt lõi trong dự án (học viên, đề thi, câu hỏi, môn học...). | *"Liệt kê các quan hệ cần được chuẩn hóa dữ liệu đang có trong dự án, ví dụ như học sinh, đề thi, câu hỏi, môn..."* | **Đúng:** AI phân tích chi tiết các quan hệ 1-nhiều và nhiều-nhiều, đề xuất bảng thực thể thống nhất (`users`, `subjects`) làm nền tảng phát triển. |
+| **4** | Lập kế hoạch giao diện (UI Planning) | Lập kế hoạch chi tiết từng bước để rà soát và chuẩn hóa giao diện màn hình con, popup/modal. | *"PROMPT — CHUẨN HÓA GIAO DIỆN MÀN HÌNH CON VÀ POPUP/MODAL ADAPTIVEQUIZ / Lập kế hoạch từng bước, thực hiện từng bước nhỏ, chỉ thực hiện khi nhận được lệnh"* | **Đúng:** AI lên kế hoạch cụ thể từ modal foundation, form câu hỏi, form đề thi đến gắn học sinh với đầy đủ quy tắc focus trap, escape. Quan trọng là AI chỉ làm từng bước nhỏ, kiểm thử, báo cáo giúp giảm áp lực công việc, công việc được thực hiện chính xác hơn |
+| **5** | Chỉnh sửa các chi tiết | Luyện tập nêu rõ đầy đủ vị trí, đặc điểm, logic, gọi tên đúng.. các chi tiết cần được chỉnh sửa để AI tìm đến và chỉnh sửa đúng yêu cầu hơn. | *Role: Admin; Màn hình danh sách bài thi; button [Quản lý câu hỏi]; tại danh sách câu hỏi này, XÓA cột mã câu hỏi, cột Đáp án đúng yêu cầu hiển thị đầy đủ tất cả các lựa chọn đúng ví dụ [A:3][B:312]* | **Đúng:** AI hiểu rõ, tìm đến đúng vị trí, tinh chỉnh nhanh, đúng, chính xác |
+| **6** | Thực thi chi tiết (Task Breakdown) | Lập danh sách các bước thực hiện tuần tự và yêu cầu AI xử lý theo từng bước nhỏ để kiểm soát chất lượng code. | *"liệt kê các bước cần thực hiện và sẽ làm theo từng bước nhỏ"* | **Đúng:** AI lập bảng kế hoạch gồm 9 bước rõ ràng: từ chốt quy ước nền, chuẩn hóa CSS, Dashboard, Catalog, màn hình làm bài, kết quả, lịch sử cho đến Accessibility và Responsive. |
+| **7** | Thực thi & Tinh chỉnh (Refactoring) | Đóng vai Senior Frontend Engineer để audit, dọn dẹp và chuẩn hóa toàn bộ mã nguồn CSS/HTML của dự án. | *"Bạn là Senior Frontend Engineer. Hãy trực tiếp audit và chuẩn hóa CSS toàn bộ dự án AdaptiveQuiz theo yêu cầu dưới đây: Loại bỏ inline style tĩnh, không làm hỏng tính năng, dữ liệu, theme, responsive..."* | **Đúng:** AI tiến hành kiểm kê mã nguồn hiện tại (118 dòng HTML có style và 59 dòng JS) rồi tiến hành dọn dẹp, loại bỏ inline style theo đúng các ràng buộc khắt khe. |
+
+---
+
+## 3. Những bài học kinh nghiệm khi dùng AI
+
+* **Bài học từ user-stories:**Chưa có nhiều kinh nghiệm về xây dựng ứng dụng, phân tích user stories không đủ sâu sắc, không khảo sát thực tế ứng dụng tương tự sẽ để lại nhiều lỗ hỏng logic, tư duy sản phẩm không thể hoàn thiện.
+* **Bài học từ data design:**Không phân tích đủ về cơ sở dữ liệu, dẫn đến việc thiết kế không tối ưu. Nhiều biến số chưa được chuẩn hóa, dẫn đến việc AI tạo ra code không chính xác, gây lỗi khi triển khai.
+* **Cung cấp ngữ cảnh đầy đủ từ đầu:** Yêu cầu AI đọc các file tài liệu nền tảng (`agents.md`, `data-contracts.md`) giúp AI nắm bắt chính xác kiến trúc hệ thống và dữ liệu, tránh tình trạng tự bịa đặt code.
+* **Tuân thủ quy trình Agile (Chia nhỏ tác vụ):** Việc yêu cầu AI lập kế hoạch thực hiện theo từng bước nhỏ (từng màn hình, từng modal, từng quy chuẩn CSS) giúp nhóm dễ dàng kiểm soát lỗi, viết commit sạch và giữ tính ổn định cho ứng dụng.
+* **Quản lý Clean Code:** Chủ động yêu cầu AI loại bỏ các style tĩnh trong HTML/JS để đưa vào các file CSS tập trung, giúp hệ thống hỗ trợ đa theme mượt mà và dễ bảo trì hơn, nên ràng buộc ở skills.md ngay từ đầu. Ghi chú: “3 themes” trong mô tả ban đầu là bối cảnh lịch sử; phiên bản hiện tại có hai theme là `morning` và `evening`.
+
+---
+
+## 4. Cam kết của nhóm
+
+- [x] Nhóm đã đọc và hiểu rõ ít nhất 80% mã nguồn do AI tạo ra.
+- [x] Nhóm đã tự tay chỉnh sửa lại giao diện (màu sắc, hình ảnh, nội dung) để phù hợp với thực tế.
+- [x] Nhóm chịu trách nhiệm hoàn toàn về tính chính xác, an toàn dữ liệu và logic hệ thống, không phụ thuộc hoàn toàn vào mã do AI sinh ra
+- [x] Tất cả các thành viên đều đóng góp commit, tuân thủ quy trình phân nhánh (feature branch) và kiểm duyệt PR trước khi merge vào nhánh chính.
+- [x] Nhóm hiểu rõ lý do thiết kế từng câu lệnh (prompt) và sẵn sàng giải trình tư duy phân rã bài toán trước giảng viên khi bảo vệ đồ án.
+
+---
+
+## 5. Lưu ý
+
+* Nhóm đã lưu trữ toàn bộ lịch sử Commit trên GitHub và các ảnh chụp màn hình (Screenshot) đối thoại với Copilot vào thư mục tài liệu của dự án.
+* Sẵn sàng trả lời các câu hỏi phản biện từ giảng viên: *"Tại sao em lại đặt câu hỏi theo tiến trình này mà không hỏi khác đi?"* trong buổi bảo vệ đồ án.

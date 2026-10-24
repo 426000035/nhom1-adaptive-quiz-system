@@ -20,7 +20,7 @@
 - JavaScript được nạp tuần tự trong `index.html`, không có bundler. Khi thêm module, cập nhật đúng thứ tự nạp và kiểm tra phụ thuộc.
 - Trạng thái runtime tập trung ở `window.AppState` trong `js/core/state.js`. Dùng API và tên trường thực tế; tham khảo [`.ai/skills.md`](./.ai/skills.md), không giả định API cũ còn tồn tại.
 - Logic được tổ chức theo `js/core/`, `js/features/student/`, `js/features/admin/` và `js/services/`; template giao diện ở `views/auth/`, `views/shared/`, `views/student/`, `views/admin/`.
-- Dữ liệu câu hỏi khởi tạo nằm trong `data/questions.json`. Không hardcode ngân hàng câu hỏi trong mã ứng dụng.
+- `data/questions.json` là nguồn tương thích/legacy để bootstrap câu hỏi và hiện đang rỗng; dữ liệu demo hiện được bổ sung từ `data/demo-sample-pack.json`. Không hardcode ngân hàng câu hỏi trong mã ứng dụng.
 - Đề, ngân hàng câu hỏi, cài đặt, tài khoản, phiên, lịch sử và tiến độ người học lưu trong `localStorage` theo các khóa hiện hành. `data/users.json` là dữ liệu mẫu/tài liệu, không phải nguồn đăng nhập.
 - Dữ liệu và phân quyền đều ở client, không đồng bộ giữa thiết bị và không phải cơ chế xác thực an toàn. Không mô tả chúng như backend hoặc RBAC bảo mật.
 
@@ -54,7 +54,7 @@
 ### Khi sửa JavaScript
 
 - Kiểm tra API hiện có trước khi gọi; ví dụ `QuizEngine` hiện có `startTimer`, `stopTimer`, `recordAnswer`, `evaluateQuiz`, `renderChart`, không có `submit()` hay `updateProgressBar()`.
-- Giữ luồng đề được giao ở chế độ `EXAM` (đếm ngược và tự nộp khi hết giờ). Renderer vẫn hỗ trợ hành vi `PRACTICE` (không giới hạn giờ, khóa đáp án sau chọn và hiện giải thích), nhưng giao diện hiện không có luồng chọn chế độ này; không tự thêm lựa chọn nếu yêu cầu không nêu rõ.
+- Đề được giao không giới hạn lượt và không có hạn chót cho phép người học chọn `EXAM` hoặc `PRACTICE`; đề có giới hạn lượt hoặc hạn chót chỉ chạy `EXAM`. `EXAM` đếm ngược và tự nộp khi hết giờ; `PRACTICE` không giới hạn giờ và hiện lời giải sau khi trả lời. Giữ nguyên điều kiện chọn chế độ này, không tự thay đổi chính sách nếu yêu cầu không nêu rõ.
 - Dùng `localStorage` theo đúng khóa hiện hành và không coi dữ liệu lưu phía client là an toàn.
 
 ### Khi cập nhật tài liệu
