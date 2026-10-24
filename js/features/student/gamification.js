@@ -64,9 +64,7 @@ window.GamificationEngine = {
 
     // Kiểm tra xem có xô nước đầy nào không
     if (mascotData.fullBucketCount <= 0) {
-      if (window.MascotEngine.speak) {
-        window.MascotEngine.speak("Bạn chưa có xô nước đầy nào! Hãy đạt điểm 10 ở bài thi để tích xô nước nhé!", 'wrong');
-      }
+      window.MascotEngine.emit?.('waterFailure');
       return { success: false, message: 'Không đủ xô nước!' };
     }
 
@@ -92,15 +90,12 @@ window.GamificationEngine = {
 
     this.saveData(gData);
 
-    // Phản ứng của Mascot
-    if (window.MascotEngine.speak) {
-      if (levelUp) {
-        const newStage = this.STAGES[gData.treeStage];
-        window.MascotEngine.speak(`🎉 XUẤT SẮC! Cây đã tiến hóa thành ${newStage.icon} ${newStage.name}!`, 'excited');
-      } else {
-        window.MascotEngine.speak(`💧 Đã tưới cây! +${expGained} EXP! Cây lớn thêm một chút rồi!`, 'correct');
-      }
-    }
+    const newStage = this.STAGES[gData.treeStage];
+    window.MascotEngine.emit?.(levelUp ? 'treeGrew' : 'treeWatered', {
+      exp: expGained,
+      stage: gData.treeStage,
+      stageName: newStage.name
+    });
 
     return { success: true, levelUp, data: gData };
   }

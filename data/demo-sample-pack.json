@@ -1,5 +1,5 @@
 {
-  "version": 7,
+  "version": 9,
   "subjects": [
     {
       "subjectId": "subject_math_grade_3",
@@ -4516,6 +4516,37 @@
       ],
       "explanation": "Tính theo phép toán trong đề: kết quả là 115.",
       "status": "active"
+    },
+    {
+      "questionId": "question_math_g3_test_4x5",
+      "subjectId": "subject_math_grade_3",
+      "skillId": "skill_math_g3_2",
+      "difficultyId": "difficulty_easy",
+      "type": "single",
+      "content": "4 × 5 = ?",
+      "options": [
+        {
+          "optionId": "option_question_math_g3_test_4x5_a",
+          "content": "20"
+        },
+        {
+          "optionId": "option_question_math_g3_test_4x5_b",
+          "content": "15"
+        },
+        {
+          "optionId": "option_question_math_g3_test_4x5_c",
+          "content": "25"
+        },
+        {
+          "optionId": "option_question_math_g3_test_4x5_d",
+          "content": "10"
+        }
+      ],
+      "correctOptionIds": [
+        "option_question_math_g3_test_4x5_a"
+      ],
+      "explanation": "4 × 5 = 20.",
+      "status": "active"
     }
   ],
   "quizzes": [
@@ -5388,8 +5419,85 @@
       "maxAttempts": 3,
       "scorePolicy": "highest",
       "dueAt": "2027-08-06T23:59:00+07:00"
+    },
+    {
+      "quizId": "quiz_math_g3_test",
+      "subjectId": "subject_math_grade_3",
+      "title": "Test",
+      "timeLimitMinutes": 15,
+      "status": "active",
+      "questionIds": [
+        "question_math_g3_test_4x5"
+      ],
+      "generationSpec": {
+        "skill_math_g3_2": 1
+      },
+      "assignedStudentIds": [
+        "usr_01",
+        "usr_math_demo_001",
+        "usr_math_demo_002",
+        "usr_math_demo_003",
+        "usr_math_demo_004",
+        "usr_math_demo_005",
+        "usr_math_demo_006",
+        "usr_math_demo_007",
+        "usr_math_demo_008",
+        "usr_math_demo_009",
+        "usr_math_demo_010",
+        "usr_math_demo_011",
+        "usr_math_demo_012",
+        "usr_math_demo_013",
+        "usr_math_demo_014",
+        "usr_math_demo_015",
+        "usr_math_demo_016",
+        "usr_math_demo_017",
+        "usr_math_demo_018",
+        "usr_math_demo_019",
+        "usr_math_demo_020",
+        "usr_math_demo_021",
+        "usr_math_demo_022",
+        "usr_math_demo_023",
+        "usr_math_demo_024",
+        "usr_math_demo_025",
+        "usr_math_demo_026",
+        "usr_math_demo_027",
+        "usr_math_demo_028",
+        "usr_math_demo_029",
+        "usr_math_demo_030",
+        "usr_math_demo_031",
+        "usr_math_demo_032",
+        "usr_math_demo_033",
+        "usr_math_demo_034",
+        "usr_math_demo_035",
+        "usr_math_demo_036",
+        "usr_math_demo_037",
+        "usr_math_demo_038",
+        "usr_math_demo_039",
+        "usr_math_demo_040",
+        "usr_math_demo_041",
+        "usr_math_demo_042",
+        "usr_math_demo_043",
+        "usr_math_demo_044",
+        "usr_math_demo_045",
+        "usr_math_demo_046",
+        "usr_math_demo_047",
+        "usr_math_demo_048",
+        "usr_math_demo_049",
+        "usr_math_demo_050"
+      ],
+      "maxAttempts": null,
+      "scorePolicy": "highest",
+      "dueAt": null
     }
   ],
+  "incrementalUpdates": {
+    "questionIds": [
+      "question_math_g3_test_4x5"
+    ],
+    "quizIds": [
+      "quiz_math_g3_test"
+    ]
+  },
   "attemptScenarios": [
     {
       "attemptId": "attempt_demo_usr_math_demo_005_g3_e01",
@@ -11776,9 +11884,15 @@
       "currentExp": 0,
       "treeStage": 1,
       "streakCount": 0,
-      "waterProgress": 0,
+      "waterProgress": 4,
       "fullBucketCount": 50,
       "bucketsWatered": 0
+    }
+  ],
+  "studentProgressUpdates": [
+    {
+      "userId": "usr_math_demo_001",
+      "waterProgress": 4
     }
   ],
   "perfectAttemptDemo": {

@@ -740,21 +740,21 @@ function renderSelectedQuizQuestions(quizId) {
   const pagedData = listView.records;
 
   if (pagedData.length === 0) {
-    renderAdminEmptyRow(tbody, 5, 'Bài thi này chưa có câu hỏi nào khớp bộ lọc.');
+    renderAdminEmptyRow(tbody, 4, 'Bài thi này chưa có câu hỏi nào khớp bộ lọc.');
   } else {
     pagedData.forEach((q, idx) => {
       const tr = document.createElement('tr');
       const pageSize = Number.parseInt(st.pageSize, 10) || 10;
       const rowNumber = st.pageSize === 'ALL' ? idx + 1 : (st.currentPage - 1) * pageSize + idx + 1;
-      const correctAnswer = Array.isArray(q.correctAnswer) && Array.isArray(q.options)
-        ? q.options[q.correctAnswer[0]] || 'N/A'
-        : 'N/A';
       tr.append(
         createAdminTableCell(rowNumber),
-        createAdminTableCell(q.id, '', 'admin-table-cell--mono admin-table-cell--muted'),
-        createAdminTableCell(q.question),
-        createAdminTableCell(correctAnswer, '', 'admin-table-cell--strong admin-table-cell--success')
+        createAdminTableCell(q.question, '', 'admin-bank-question-cell')
       );
+
+      const answerCell = document.createElement('td');
+      answerCell.className = 'admin-table-cell--success';
+      appendCorrectAnswerBadges(answerCell, q);
+      tr.appendChild(answerCell);
 
       const actionsCell = document.createElement('td');
       actionsCell.className = 'admin-table-actions';

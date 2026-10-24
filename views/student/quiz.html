@@ -17,6 +17,20 @@
       <div id="quiz-progress-bar" class="progress-bar-fill"></div>
     </div>
 
+    <div id="practice-score" class="practice-score" role="img" aria-label="Điểm luyện tập: 0/0 câu đúng" hidden>
+      <span class="practice-score-meter">
+        <svg class="practice-score-ring" viewBox="0 0 40 40" aria-hidden="true">
+          <circle class="practice-score-ring-track" cx="20" cy="20" r="16"></circle>
+          <circle id="practice-score-ring-fill" class="practice-score-ring-fill" cx="20" cy="20" r="16" stroke-dasharray="100 100" stroke-dashoffset="100"></circle>
+        </svg>
+        <span id="practice-score-value" class="practice-score-value">0/0</span>
+      </span>
+      <span class="practice-score-copy">
+        <strong>Điểm luyện tập</strong>
+        <span>Mỗi câu đúng +1 điểm</span>
+      </span>
+    </div>
+
     <!-- Đồng hồ đếm ngược thời gian làm bài -->
     <div class="timer-badge" aria-label="Thời gian còn lại">
       <i data-lucide="clock" class="timer-icon" aria-hidden="true"></i>
@@ -24,32 +38,50 @@
     </div>
   </header>
 
-  <!-- Thẻ hiển thị nội dung câu hỏi và các phương án lựa chọn -->
-  <section class="question-card" aria-labelledby="question-text">
-    <div class="question-header">
-      <span id="question-topic-tag" class="tag tag-topic">JavaScript</span>
-      <span id="question-type-tag" class="tag tag-type">Radio (Chọn 1)</span>
-    </div>
-    
-    <!-- Tiêu đề câu hỏi -->
-    <h1 id="question-text" class="question-title" aria-live="polite">Nội dung câu hỏi đang tải...</h1>
+  <div class="quiz-question-layout">
+    <!-- Thẻ hiển thị nội dung câu hỏi và các phương án lựa chọn -->
+    <section class="question-card" aria-labelledby="question-text">
+      <div class="question-header">
+        <span id="question-topic-tag" class="tag tag-topic">JavaScript</span>
+        <span id="question-type-tag" class="tag tag-type">Radio (Chọn 1)</span>
+      </div>
+      <!-- Tiêu đề câu hỏi -->
+      <h1 id="question-text" class="question-title" aria-live="polite">Nội dung câu hỏi đang tải...</h1>
 
-    <!-- Container chứa danh sách đáp án -->
-    <div id="options-container" class="options-group" role="group" aria-labelledby="question-text"></div>
-  </section>
+      <!-- Container chứa danh sách đáp án -->
+      <div id="options-container" class="options-group" role="group" aria-labelledby="question-text"></div>
 
-  <!-- Thanh thao tác điều hướng (Câu trước, Câu tiếp, Nộp bài) -->
-  <nav class="quiz-action-bar" aria-label="Điều hướng câu hỏi">
-    <button id="btn-prev-question" class="btn btn-outline" type="button" disabled>
-      <i data-lucide="arrow-left" aria-hidden="true"></i> Câu Trước
-    </button>
+      <nav class="question-step-navigation" aria-label="Điều hướng câu hỏi">
+        <button id="btn-prev-question" class="btn btn-outline" type="button" disabled>
+          <i data-lucide="arrow-left" aria-hidden="true"></i> Câu Trước
+        </button>
+        <button id="btn-next-question" class="btn btn-secondary" type="button">
+          Câu Tiếp <i data-lucide="arrow-right" aria-hidden="true"></i>
+        </button>
+      </nav>
+    </section>
+
+    <aside class="question-navigation-card" aria-labelledby="question-navigation-title">
+      <div class="question-navigation-header">
+        <h2 id="question-navigation-title">Điều hướng câu hỏi</h2>
+        <span id="question-navigation-progress" class="question-navigation-progress" aria-live="polite">0/0 đã trả lời</span>
+      </div>
+      <nav id="question-navigation" class="question-number-grid" aria-label="Chọn câu hỏi"></nav>
+      <div id="question-navigation-pagination" class="question-navigation-pagination" aria-label="Phân trang câu hỏi">
+        <button id="btn-question-navigation-prev" class="question-navigation-page-button" type="button" data-page-direction="-1" aria-label="Trang câu hỏi trước" disabled>←</button>
+        <span id="question-navigation-page-status" aria-live="polite">Trang 1 / 1</span>
+        <button id="btn-question-navigation-next" class="question-navigation-page-button" type="button" data-page-direction="1" aria-label="Trang câu hỏi tiếp theo" disabled>→</button>
+      </div>
+    </aside>
+  </div>
+
+  <!-- Thanh thao tác bài thi -->
+  <div class="quiz-action-bar">
+    <button id="btn-exit-quiz" class="btn btn-outline" type="button">Thoát bài</button>
     <div class="action-right">
-      <button id="btn-next-question" class="btn btn-secondary" type="button">
-        Câu Tiếp <i data-lucide="arrow-right" aria-hidden="true"></i>
-      </button>
       <button id="btn-submit-quiz" class="btn btn-success" type="button">
         <i data-lucide="check-circle" aria-hidden="true"></i> Nộp Bài
       </button>
     </div>
-  </nav>
+  </div>
 </section>

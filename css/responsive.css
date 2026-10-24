@@ -139,6 +139,18 @@
     gap: 0.75rem;
   }
 
+  .quiz-question-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .question-navigation-card {
+    position: static;
+  }
+
+  .question-number-grid {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+
   .progress-container {
     width: 100%;
     flex: none;
@@ -154,6 +166,16 @@
 
   .question-title {
     font-size: 1.1rem;
+  }
+
+  .question-step-navigation {
+    gap: var(--space-2);
+  }
+
+  .question-step-navigation .btn {
+    width: auto;
+    flex: 1;
+    justify-content: center;
   }
 
   .quiz-action-bar {
@@ -177,6 +199,10 @@
 
 /* --- Small Mobile Screen Breakpoints (max-width: 480px) --- */
 @media screen and (max-width: 480px) {
+  .question-number-grid {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+
   .admin-random-quiz-form {
     grid-template-columns: minmax(0, 1fr);
   }
@@ -844,6 +870,70 @@
 
 .pagination-wrapper .pagination-ellipsis {
   padding-inline: clamp(0.1rem, 0.4vw, var(--space-2));
+}
+
+.admin-modal-dialog--manage-questions .admin-filter-bar:not(.admin-form-grid) {
+  display: flex;
+  flex-wrap: wrap;
+  min-width: 0;
+  overflow: visible;
+}
+
+.admin-modal-dialog--manage-questions .admin-filter-bar:not(.admin-form-grid) > * {
+  flex: 1 1 12rem;
+  min-width: 0;
+}
+
+.admin-modal-dialog--select-bank .admin-filter-bar:not(.admin-form-grid) {
+  display: flex;
+  flex-wrap: wrap;
+  min-width: 0;
+  overflow: visible;
+}
+
+.admin-modal-dialog--select-bank .admin-filter-bar:not(.admin-form-grid) > * {
+  flex: 1 1 12rem;
+  min-width: 0;
+}
+
+.admin-modal-dialog--quiz-assignment .admin-assignment-filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  min-width: 0;
+  overflow: visible;
+}
+
+.admin-modal-dialog--quiz-assignment .admin-assignment-filter-bar > * {
+  flex: 1 1 12rem;
+  min-width: 0;
+}
+
+.admin-modal-dialog--select-bank .admin-modal-table-wrap {
+  width: 100%;
+  min-width: 0;
+  overflow: auto;
+}
+
+@media screen and (max-width: 600px) {
+  .admin-modal-dialog--select-bank .admin-modal-table-wrap table {
+    width: 100%;
+    min-width: 0;
+    table-layout: fixed;
+  }
+
+  .admin-modal-dialog--select-bank .admin-modal-table-wrap th:nth-child(4),
+  .admin-modal-dialog--select-bank .admin-modal-table-wrap td:nth-child(4) {
+    display: none;
+  }
+
+  .admin-modal-dialog--select-bank .admin-modal-table-wrap th:first-child,
+  .admin-modal-dialog--select-bank .admin-modal-table-wrap td:first-child {
+    width: 3.5rem;
+  }
+
+  .admin-modal-dialog--select-bank .admin-modal-table-wrap td:nth-child(2) {
+    overflow-wrap: anywhere;
+  }
 }
 
 @media screen and (max-width: 768px) {

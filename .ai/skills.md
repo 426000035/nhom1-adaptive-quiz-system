@@ -58,6 +58,8 @@ Các hàm này là hàm toàn cục được khai báo bằng function declarati
 
 `window.AppStorageKeys` giữ tên tương thích `quizzes`, `questions`, `settings`. Khóa đề/câu hỏi legacy chỉ được đọc khi import dữ liệu cũ và bị xóa sau khi ghi thành công vào `LocalStorageDB`; database là nguồn chuẩn hiện tại. `adaptive_quiz_settings` là cache tương thích, được đồng bộ từ danh mục trong database. `window.StudentDataStorage.read(dataType, legacyKey, defaultValue)` và `.write(dataType, data)` đọc/ghi `studentProgress` theo `userId`, đồng thời nhập cache gamification/mascot cũ an toàn. `window.QuizHistoryStorage.readAll()` và `.save(historyItem)` đọc/ghi lịch sử qua collection `attempts`; bản ghi legacy không thể chuyển an toàn được giữ lại.
 
+`window.MascotEngine.emit(eventName, context)` phát lời thoại sự kiện; các tích hợp hiện có dùng `onLogin(user)`, `onSessionResume(user)`, `recordAnswer(isCorrect)`, `resetAnswerStreak()`, `speakWaterStatus()` và `resetSession()`. Event dispatcher cá nhân hóa sau đăng nhập, chọn lời thoại theo ưu tiên và áp dụng cooldown; không tự phát thoại ngẫu nhiên lúc chờ.
+
 ### SKILL-04: Quiz Engine và chấm điểm
 
 **Module:** `js/core/quiz-engine.js`
@@ -75,7 +77,7 @@ Các hàm này là hàm toàn cục được khai báo bằng function declarati
 
 **Không có** các API `QuizEngine.start()`, `QuizEngine.submit()` hoặc `QuizEngine.updateProgressBar()`. Việc khởi tạo bài, nộp/chấm bài và vẽ thanh tiến độ nằm trong `js/features/student/student-view.js`. Thanh tiến độ thể hiện vị trí câu đang xem, không phải phần trăm câu đã trả lời.
 
-Đề được giao hiện khởi chạy ở chế độ `EXAM`; đồng hồ dùng thời lượng đề và tự nộp khi hết giờ. Renderer còn hỗ trợ hành vi `PRACTICE` (không giới hạn giờ, khóa đáp án sau khi chọn và hiện lời giải), nhưng giao diện hiện không có luồng chọn chế độ này cho đề được giao. Lịch sử vẫn nhận diện các record `PRACTICE` cũ.
+Đề được giao không giới hạn số lượt (`maxAttempts: null`) và không có hạn chót (`dueAt: null`) cho phép học viên chọn `EXAM` hoặc `PRACTICE`. `EXAM` dùng thời lượng đề nếu có và tự nộp khi hết giờ; `PRACTICE` không giới hạn giờ và hiện lời giải sau khi chấm. Câu một đáp án được chấm ngay khi chọn; câu nhiều đáp án cho phép chọn/bỏ chọn nhiều phương án rồi bấm “Kiểm tra đáp án”, sau đó mới chấm và khóa lựa chọn. Đề có giới hạn lượt hoặc hạn chót vẫn chỉ bắt đầu ở `EXAM`. Lịch sử vẫn nhận diện các record `PRACTICE` cũ.
 
 ### SKILL-05: Kết quả và câu sai
 

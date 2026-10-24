@@ -58,6 +58,7 @@ test('full water bucket opens a large accessible celebration and closes with Esc
     setAttribute(name, value) { this.attributes[name] = value; }
   };
   const countLabel = { textContent: '' };
+  const floatingMascot = { classList: createClassList() };
   let focused = false;
   const closeButton = { focus() { focused = true; } };
   let escapeHandler;
@@ -72,6 +73,7 @@ test('full water bucket opens a large accessible celebration and closes with Esc
         if (id === 'water-celebration-count') return countLabel;
         if (id === 'water-celebration-bucket-holder') return bucketHolder;
         if (id === 'btn-close-water-celebration') return closeButton;
+        if (id === 'student-mascot-floating') return floatingMascot;
         return null;
       },
       querySelector(selector) {
@@ -91,6 +93,7 @@ test('full water bucket opens a large accessible celebration and closes with Esc
   assert.equal(modal.hidden, false);
   assert.equal(modal.attributes['aria-hidden'], 'false');
   assert.equal(modal.classList.contains('is-celebrating'), true);
+  assert.equal(floatingMascot.classList.contains('water-celebration-mascot-hidden'), true);
   assert.equal(countLabel.textContent, 'Bạn đang có 3 xô nước để tưới cây!');
   assert.equal(bucketHolder.children[0], bucketClone);
   assert.equal(bucketClone.classList.contains('water-celebration-mascot-bucket'), true);
@@ -105,6 +108,7 @@ test('full water bucket opens a large accessible celebration and closes with Esc
   assert.equal(modal.hidden, true);
   assert.equal(modal.attributes['aria-hidden'], 'true');
   assert.equal(modal.classList.contains('is-celebrating'), false);
+  assert.equal(floatingMascot.classList.contains('water-celebration-mascot-hidden'), false);
 });
 
 test('filling the fifth water mark triggers the celebration after navigating to results', () => {
@@ -171,7 +175,10 @@ test('celebration uses the mascot bucket with a 3D horizontal turn and reduced-m
   assert.match(template, /class="water-celebration-overflow">🌊/);
   assert.match(mascotSource, /cloneNode\(true\)[\s\S]*water-celebration-mascot-bucket/);
   assert.match(styles, /\.water-celebration-mascot-bucket \.water-container\s*\{\s*height:\s*100%/);
+  assert.match(styles, /\.water-celebration-mascot-bucket \.bucket-handle-svg\s*\{[^}]*left:\s*5px;[^}]*width:\s*115px/s);
   assert.match(styles, /@keyframes waterBucketHorizontalTurn[\s\S]*rotateY\(360deg\)/);
+  assert.match(styles, /\.water-celebration-overlay\.is-celebrating \.water-celebration-bucket-holder\s*\{[^}]*waterBucketPostTurnSway[^}]*infinite/s);
+  assert.match(styles, /@keyframes waterBucketPostTurnSway[\s\S]*rotate\(-2deg\)[\s\S]*rotate\(2deg\)/);
   assert.match(styles, /@keyframes waterOverflowBurst/);
   assert.match(styles, /@media \(prefers-reduced-motion: reduce\)[\s\S]*\.water-celebration-overlay \*/);
 });
